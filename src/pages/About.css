@@ -1,0 +1,14 @@
+.about {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.about h1 {
+  margin-bottom: 0.5rem;
+}
+
+.about p {
+  line-height: 1.6;
+  color: #333;
+}

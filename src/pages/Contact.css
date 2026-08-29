@@ -1,0 +1,18 @@
+.contact {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.contact h1 {
+  margin-bottom: 0.5rem;
+}
+
+.contact p {
+  line-height: 1.6;
+  color: #333;
+}
+
+.contact a {
+  color: #0066cc;
+}
