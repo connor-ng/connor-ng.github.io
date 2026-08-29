@@ -25,16 +25,32 @@ function buildPopupHtml(project) {
   }
 
   const tags = (project.stack ?? [])
-    .map((s) => `<span>${s}</span>`)
+    .map((tag) => `<span>${tag}</span>`)
     .join('')
 
+  const caseStudyLink = project.caseStudyLink
+    ? `<a class="popup-link popup-link-secondary" href="${project.caseStudyLink}" target="_blank" rel="noreferrer">Case study →</a>`
+    : ''
+
   return `
-    <div class="popup-eyebrow">${project.tag} · ${project.year}</div>
-    <div class="popup-title">${project.title}</div>
-    <p class="popup-blurb">${project.blurb}</p>
-    <div class="popup-tags">${tags}</div>
-    <br/><a class="popup-link" href="${project.link}">View project →</a>
+    <div class="popup-card">
+      <img class="popup-screenshot" src="${project.screenshot}" alt="${project.title} screenshot" />
+      <div class="popup-eyebrow">${project.roleAndTimeframe}</div>
+      <div class="popup-title">${project.title}</div>
+      <p class="popup-problem">${project.oneLinerProblem}</p>
+      <p class="popup-blurb">${project.description}</p>
+      <div class="popup-tags">${tags}</div>
+      <div class="popup-links">
+        <a class="popup-link" href="${project.liveLink}" target="_blank" rel="noreferrer">Live product →</a>
+        ${caseStudyLink}
+      </div>
+    </div>
   `
+}
+
+function markerLabel(project) {
+  if (project.status === 'locked') return '🔒'
+  return project.title.charAt(0)
 }
 
 function Map() {
@@ -111,7 +127,7 @@ function Map() {
       const isLocked = project.status === 'locked'
       const html = `
         <div class="pixel-pin ${isLocked ? 'locked' : ''}" style="--ring:${RING[project.status]}">
-          <div class="body">${project.icon}</div>
+          <div class="body">${markerLabel(project)}</div>
           <div class="badge">${BADGE[project.status]}</div>
         </div>`
 
@@ -128,7 +144,7 @@ function Map() {
       ).addTo(map)
 
       markerByIdRef.current[project.id] = marker
-      marker.bindPopup(buildPopupHtml(project))
+      marker.bindPopup(buildPopupHtml(project), { maxWidth: 320 })
     })
 
     map.on('mousemove', (event) => {
@@ -277,7 +293,13 @@ function Map() {
               style={{ '--ring': RING[project.status] }}
               onClick={() => jumpTo(project.id)}
             >
-              <div className="icon">{project.icon}</div>
+              <div className="icon">
+                {project.screenshot ? (
+                  <img src={project.screenshot} alt="" className="search-thumb" />
+                ) : (
+                  markerLabel(project)
+                )}
+              </div>
               <div className="label">{project.title}</div>
             </button>
           ))}
@@ -304,15 +326,20 @@ function Map() {
           <a
             key={project.id}
             className="map-list-row"
-            href={project.link}
+            href={project.liveLink}
             style={{ '--ring': RING[project.status] }}
           >
-            <div className="icon">{project.icon}</div>
+            <div className="icon">
+              {project.screenshot ? (
+                <img src={project.screenshot} alt="" className="list-thumb" />
+              ) : (
+                markerLabel(project)
+              )}
+            </div>
             <div className="meta">
               <div className="title">{project.title}</div>
-              <div className="tag">
-                {project.tag} · {project.year}
-              </div>
+              <div className="tag">{project.roleAndTimeframe}</div>
+              <div className="problem">{project.oneLinerProblem}</div>
             </div>
             <div className="status">{project.status}</div>
           </a>
