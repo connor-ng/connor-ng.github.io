@@ -4,15 +4,27 @@
   box-sizing: border-box;
 }
 
+:root {
+  --color-bg: #f0ead8;
+  --color-bg-muted: #e8e2d4;
+  --color-surface: #faf6ee;
+  --color-text: #1a2836;
+  --color-text-muted: #8a8378;
+  --color-text-active: #0f1a24;
+  --color-accent: #3d5a6e;
+  --color-border-subtle: rgba(26, 40, 54, 0.1);
+}
+
 body {
   margin: 0;
   font-family: system-ui, -apple-system, sans-serif;
-  color: #222;
-  background: #fff;
+  color: var(--color-text);
+  background: var(--color-bg);
 }
 
 #root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: var(--color-bg);
 }

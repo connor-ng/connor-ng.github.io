@@ -6,19 +6,19 @@
   justify-content: space-between;
   gap: 1.5rem;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--color-bg);
   font-family: 'Press Start 2P', monospace;
 }
 
 .nav-brand {
   font-size: 0.65rem;
   line-height: 1.6;
-  color: #0a1622;
+  color: var(--color-text-active);
   text-decoration: none;
 }
 
 .nav-brand:hover {
-  color: #2d4a56;
+  color: var(--color-accent);
 }
 
 .nav-links {
@@ -30,21 +30,21 @@
 .nav-link {
   font-size: 0.55rem;
   line-height: 1.6;
-  color: #8b95a0;
+  color: var(--color-text-muted);
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .nav-link:hover {
-  color: #5c6770;
+  color: var(--color-accent);
 }
 
 .nav-link--active {
-  color: #0a1622;
+  color: var(--color-text-active);
 }
 
 .nav-link--active:hover {
-  color: #0a1622;
+  color: var(--color-text-active);
 }
 
 @media (max-width: 520px) {

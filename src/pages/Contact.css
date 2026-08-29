@@ -9,7 +9,7 @@
 .contact-header h1 {
   margin: 0 0 0.35rem;
   font-size: clamp(1.75rem, 4vw, 2.25rem);
-  color: #0a1622;
+  color: var(--color-text-active);
 }
 
 .contact-header p {
@@ -32,10 +32,10 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.1rem;
-  border: 1px solid #d8dee4;
+  border: 1px solid var(--color-border-subtle);
   border-radius: 10px;
-  background: #fff;
-  color: #0a1622;
+  background: var(--color-surface);
+  color: var(--color-text-active);
   text-decoration: none;
   transition:
     background-color 0.15s ease,
@@ -45,10 +45,10 @@
 }
 
 .contact-row:hover {
-  background: #f4f8fb;
-  border-color: #9fd6c9;
+  background: #fffdf8;
+  border-color: rgba(61, 90, 110, 0.35);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(10, 22, 34, 0.08);
+  box-shadow: 0 6px 18px rgba(26, 40, 54, 0.08);
 }
 
 .contact-row:focus-visible {
@@ -64,14 +64,14 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background: #eef4f7;
-  color: #2d4a56;
+  background: var(--color-bg-muted);
+  color: var(--color-accent);
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .contact-row:hover .contact-icon {
-  background: #dff1ec;
-  color: #1f5c52;
+  background: #e0d9c8;
+  color: #2d4a56;
 }
 
 .contact-icon-svg {
