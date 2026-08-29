@@ -1,13 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 .nav {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 1.5rem;
-  padding: 1rem 2rem;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid #e0e0e0;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.nav-brand {
+  font-size: 0.65rem;
+  line-height: 1.6;
+  color: #0a1622;
+  text-decoration: none;
+}
+
+.nav-brand:hover {
+  color: #2d4a56;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
 }
 
 .nav-link {
+  font-size: 0.55rem;
+  line-height: 1.6;
   color: #8b95a0;
-  font-weight: 400;
   text-decoration: none;
   transition: color 0.15s ease;
 }
@@ -18,9 +41,21 @@
 
 .nav-link--active {
   color: #0a1622;
-  font-weight: 700;
 }
 
 .nav-link--active:hover {
   color: #0a1622;
+}
+
+@media (max-width: 520px) {
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    gap: 0.85rem 1rem;
+  }
 }
