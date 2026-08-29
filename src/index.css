@@ -10,3 +10,9 @@ body {
   color: #222;
   background: #fff;
 }
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}

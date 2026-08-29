@@ -1,37 +1,5 @@
 .home {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.home h1 {
-  margin-bottom: 0.5rem;
-}
-
-.projects {
-  margin-top: 2rem;
-}
-
-.projects ul {
-  list-style: none;
-  padding: 0;
-}
-
-.projects li {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.projects li:last-child {
-  border-bottom: none;
-}
-
-.projects h3 {
-  margin: 0 0 0.25rem;
-}
-
-.projects p {
-  margin: 0;
-  color: #555;
+  position: relative;
+  flex: 1;
+  min-height: 0;
 }
