@@ -5,7 +5,11 @@ import projects from '../data/projects'
 import { BIOMES, generatePlaceholderMap } from '../utils/generatePlaceholderMap'
 import './Map.css'
 
-const RING = { done: '#7fae6b', current: '#e0b04a', locked: '#8892a0' }
+const RING = {
+  done: 'var(--color-status-done)',
+  current: 'var(--color-status-current)',
+  locked: 'var(--color-status-locked)',
+}
 const BADGE = { done: '✓', current: '⏳', locked: '🔒' }
 
 function toLatLng(gx, gy, height, tileSize) {
@@ -226,21 +230,21 @@ function Map() {
         <h2>Status</h2>
         <div className="map-sidebar-row">
           <span>
-            <span className="sw" style={{ background: '#7fae6b' }} />
+            <span className="sw" style={{ background: 'var(--color-status-done)' }} />
             shipped
           </span>
           <span className="count">{statusCounts.done}</span>
         </div>
         <div className="map-sidebar-row">
           <span>
-            <span className="sw" style={{ background: '#e0b04a' }} />
+            <span className="sw" style={{ background: 'var(--color-status-current)' }} />
             building
           </span>
           <span className="count">{statusCounts.current}</span>
         </div>
         <div className="map-sidebar-row">
           <span>
-            <span className="sw" style={{ background: '#8892a0' }} />
+            <span className="sw" style={{ background: 'var(--color-status-locked)' }} />
             sealed
           </span>
           <span className="count">{statusCounts.locked}</span>
@@ -250,15 +254,15 @@ function Map() {
       <div className="map-topright">
         <div className="map-legend map-panel">
           <div className="row">
-            <span className="sw" style={{ borderColor: '#7fae6b' }} />
+            <span className="sw" style={{ borderColor: 'var(--color-status-done)' }} />
             shipped
           </div>
           <div className="row">
-            <span className="sw" style={{ borderColor: '#e0b04a' }} />
+            <span className="sw" style={{ borderColor: 'var(--color-status-current)' }} />
             building
           </div>
           <div className="row">
-            <span className="sw" style={{ borderColor: '#8892a0' }} />
+            <span className="sw" style={{ borderColor: 'var(--color-status-locked)' }} />
             sealed
           </div>
         </div>

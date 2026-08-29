@@ -5,14 +5,25 @@
 }
 
 :root {
+  /* Warm Atlas palette */
   --color-bg: #f0ead8;
   --color-bg-muted: #e8e2d4;
   --color-surface: #faf6ee;
+  --color-surface-raised: #fffdf8;
   --color-text: #1a2836;
-  --color-text-muted: #8a8378;
+  --color-text-muted: #6b6358;
   --color-text-active: #0f1a24;
-  --color-accent: #3d5a6e;
+  --color-accent: #c45a48;
+  --color-accent-secondary: #6b7f4a;
+  --color-border: rgba(26, 40, 54, 0.14);
+  --color-border-strong: rgba(26, 40, 54, 0.22);
   --color-border-subtle: rgba(26, 40, 54, 0.1);
+  --color-shadow: rgba(26, 40, 54, 0.1);
+
+  /* Project status */
+  --color-status-done: #6b7f4a;
+  --color-status-current: #d4a04a;
+  --color-status-locked: #9a9285;
 }
 
 body {
