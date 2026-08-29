@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
 .map-root {
-  --map-bg: #0a1622;
-  --map-panel-bg: rgba(10, 22, 34, 0.9);
-  --map-panel-border: #2e3a44;
-  --map-text: #e8e4d8;
-  --map-text-muted: #8892a0;
-  --map-accent: #9fd6c9;
-  --map-input-bg: rgba(255, 255, 255, 0.06);
+  --map-bg: var(--theme-bg);
+  --map-panel-bg: var(--theme-panel-bg);
+  --map-panel-border: var(--theme-panel-border);
+  --map-text: var(--theme-text);
+  --map-text-muted: var(--theme-text-muted);
+  --map-accent: var(--theme-accent);
+  --map-input-bg: var(--theme-input-bg);
   --map-marker-bg: #17202a;
   --map-marker-badge-bg: #0e151c;
 
@@ -44,7 +44,7 @@
   top: calc(var(--nav-height, 52px) + 12px);
   left: 20px;
   z-index: 1000;
-  color: #f0ead8;
+  color: var(--theme-cream);
   pointer-events: none;
 }
 

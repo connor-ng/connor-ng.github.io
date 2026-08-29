@@ -1,20 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Press+Start+2P&display=swap');
+
 .contact {
-  flex: 1;
+  min-height: 100vh;
   max-width: 560px;
   margin: 0 auto;
-  padding: 2.5rem 1.5rem 3rem;
+  padding: calc(var(--nav-height) + 2.5rem) 1.5rem 3rem;
   width: 100%;
+  box-sizing: border-box;
+  background: var(--theme-bg);
 }
 
 .contact-header h1 {
   margin: 0 0 0.35rem;
-  font-size: clamp(1.75rem, 4vw, 2.25rem);
-  color: var(--color-text-active);
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--theme-cream);
+  text-shadow: 2px 2px 0 var(--theme-bg);
 }
 
 .contact-header p {
   margin: 0 0 1.75rem;
-  color: #4a5560;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--theme-text-muted);
   line-height: 1.5;
 }
 
@@ -32,27 +42,25 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.1rem;
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 10px;
-  background: var(--color-surface);
-  color: var(--color-text-active);
+  border: 1px solid var(--theme-panel-border);
+  border-radius: 8px;
+  background: var(--theme-panel-bg);
+  color: var(--theme-text);
   text-decoration: none;
   transition:
     background-color 0.15s ease,
     border-color 0.15s ease,
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+    transform 0.15s ease;
 }
 
 .contact-row:hover {
-  background: var(--color-surface-raised);
-  border-color: var(--color-accent-bright);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--theme-accent);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px var(--color-shadow);
 }
 
 .contact-row:focus-visible {
-  outline: 2px solid var(--color-accent-bright);
+  outline: 2px solid var(--theme-accent);
   outline-offset: 2px;
 }
 
@@ -63,15 +71,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  background: var(--color-bg-muted);
-  color: var(--color-accent-secondary);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--theme-panel-border);
+  color: var(--theme-accent);
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .contact-row:hover .contact-icon {
-  background: var(--color-bg-muted);
-  color: var(--color-accent-bright);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--theme-cream);
 }
 
 .contact-icon-svg {
@@ -97,23 +106,25 @@
 }
 
 .contact-label {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1rem;
+  color: var(--theme-text);
 }
 
 .contact-description {
-  font-size: 0.9rem;
-  color: #5c6770;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--theme-text-muted);
 }
 
 .contact-arrow {
   flex-shrink: 0;
-  color: #8892a0;
+  color: var(--theme-text-muted);
   font-size: 1.1rem;
   transition: color 0.15s ease, transform 0.15s ease;
 }
 
 .contact-row:hover .contact-arrow {
-  color: #2d4a56;
+  color: var(--theme-accent);
   transform: translateX(2px);
 }
