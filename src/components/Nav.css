@@ -6,14 +6,21 @@
 }
 
 .nav-link {
-  color: #333;
+  color: #8b95a0;
+  font-weight: 400;
   text-decoration: none;
+  transition: color 0.15s ease;
 }
 
 .nav-link:hover {
-  text-decoration: underline;
+  color: #5c6770;
 }
 
-.nav-link.active {
-  font-weight: 600;
+.nav-link--active {
+  color: #0a1622;
+  font-weight: 700;
+}
+
+.nav-link--active:hover {
+  color: #0a1622;
 }
