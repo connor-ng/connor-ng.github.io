@@ -3,7 +3,7 @@
 .map-root {
   position: absolute;
   inset: 0;
-  background: #0a1622;
+  background: var(--color-bg);
   overflow: hidden;
   font-family: 'Inter', sans-serif;
 }
@@ -11,7 +11,7 @@
 .map-container {
   position: absolute;
   inset: 0;
-  background: #0a1622;
+  background: var(--color-bg);
 }
 
 .map-container.hidden {
@@ -33,7 +33,7 @@
   top: 18px;
   left: 20px;
   z-index: 1000;
-  color: var(--color-bg);
+  color: var(--color-text-active);
   pointer-events: none;
 }
 
@@ -42,7 +42,7 @@
   font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #9fd6c9;
+  color: var(--color-accent);
   margin-bottom: 4px;
 }
 
@@ -50,7 +50,7 @@
   font-family: 'Press Start 2P', monospace;
   font-size: 15px;
   margin: 0;
-  text-shadow: 2px 2px 0 #0a1622;
+  text-shadow: 1px 1px 0 var(--color-bg-muted);
 }
 
 .map-panel {
