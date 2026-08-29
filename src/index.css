@@ -5,25 +5,30 @@
 }
 
 :root {
-  /* Warm Atlas palette */
-  --color-bg: #f0ead8;
-  --color-bg-muted: #e8e2d4;
-  --color-surface: #faf6ee;
-  --color-surface-raised: #fffdf8;
-  --color-text: #1a2836;
-  --color-text-muted: #6b6358;
-  --color-text-active: #0f1a24;
-  --color-accent: #c45a48;
-  --color-accent-secondary: #6b7f4a;
-  --color-border: rgba(26, 40, 54, 0.14);
-  --color-border-strong: rgba(26, 40, 54, 0.22);
-  --color-border-subtle: rgba(26, 40, 54, 0.1);
-  --color-shadow: rgba(26, 40, 54, 0.1);
+  /* Coastal Cream & Blue */
+  --color-bg: #f3ede0;
+  --color-bg-muted: #e6dfd0;
+  --color-surface: #faf7f0;
+  --color-surface-raised: #fffdf9;
 
-  /* Project status */
-  --color-status-done: #6b7f4a;
-  --color-status-current: #d4a04a;
-  --color-status-locked: #9a9285;
+  --color-text: #243b4d;
+  --color-text-muted: #6e8494;
+  --color-text-active: #1a2f3f;
+
+  --color-accent: #3d6278;
+  --color-accent-secondary: #6b92ab;
+  --color-accent-bright: #4a84a8;
+  --color-accent-dark: #2f4f63;
+
+  --color-border: rgba(36, 59, 77, 0.12);
+  --color-border-strong: rgba(36, 59, 77, 0.2);
+  --color-border-subtle: rgba(36, 59, 77, 0.08);
+  --color-shadow: rgba(36, 59, 77, 0.1);
+
+  /* Project status — blue family */
+  --color-status-done: #5a8a7a;
+  --color-status-current: #5b8eb5;
+  --color-status-locked: #9aabb8;
 }
 
 body {

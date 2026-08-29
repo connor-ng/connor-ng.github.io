@@ -18,7 +18,7 @@
 }
 
 .nav-brand:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-bright);
 }
 
 .nav-links {
@@ -36,7 +36,7 @@
 }
 
 .nav-link:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-bright);
 }
 
 .nav-link--active {

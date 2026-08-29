@@ -160,7 +160,7 @@
 
 .map-view-toggle:hover {
   background: var(--color-bg-muted);
-  border-color: var(--color-accent);
+  border-color: var(--color-accent-bright);
   color: var(--color-text-active);
 }
 
@@ -191,7 +191,7 @@
 
 .map-zoom-controls button:hover {
   background: var(--color-bg-muted);
-  color: var(--color-accent);
+  color: var(--color-accent-bright);
 }
 
 .map-coords {
@@ -411,7 +411,7 @@
 .map-root .popup-problem {
   font-size: 12.5px;
   line-height: 1.45;
-  color: var(--color-accent);
+  color: var(--color-accent-bright);
   margin: 0 0 8px;
   font-style: italic;
 }
@@ -441,7 +441,7 @@
 }
 
 .map-root .popup-link:hover {
-  background: #a83f32;
+  background: var(--color-accent-dark);
 }
 
 .map-root .popup-links {
@@ -496,7 +496,7 @@
 }
 
 .map-list-row:hover {
-  border-color: var(--color-accent);
+  border-color: var(--color-accent-bright);
   transform: translateY(-1px);
   box-shadow: 0 6px 18px var(--color-shadow);
 }

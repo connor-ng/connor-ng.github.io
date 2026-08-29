@@ -12,7 +12,7 @@
   flex: 1;
   min-height: calc(100vh - 49px);
   overflow: hidden;
-  background: linear-gradient(180deg, #9aadb8 0%, #c8d2da 42%, #6f8798 100%);
+  background: linear-gradient(180deg, #a8bcc8 0%, #dce4ec 42%, #7a96a8 100%);
 }
 
 .about-bridge {
@@ -39,7 +39,7 @@
   margin: 0 auto;
   padding: 3.5rem 1.5rem 10rem;
   text-align: center;
-  color: #0f1a24;
+  color: var(--color-text);
   opacity: 0;
   transform: translateY(12px);
   transition:
@@ -65,7 +65,7 @@
 .about-content h1 {
   margin: 0 0 0.35rem;
   font-size: clamp(1.6rem, 4vw, 2rem);
-  color: #0a1622;
+  color: var(--color-text-active);
 }
 
 .about-role {
@@ -74,14 +74,14 @@
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #3d5563;
+  color: var(--color-accent);
 }
 
 .about-bio {
   margin: 0;
   line-height: 1.65;
   font-size: 1rem;
-  color: #1c2b36;
+  color: var(--color-text);
 }
 
 .about-fog {

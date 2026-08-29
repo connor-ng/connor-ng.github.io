@@ -3,7 +3,7 @@ const COLS = 96
 const ROWS = 72
 
 export const BIOMES = {
-  ocean: { color: [130, 145, 158] },
+  ocean: { color: [145, 175, 195] },
   forest: { color: [58, 92, 48] },
   snow: { color: [206, 222, 224] },
   desert: { color: [196, 172, 122] },

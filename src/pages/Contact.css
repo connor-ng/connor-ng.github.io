@@ -46,13 +46,13 @@
 
 .contact-row:hover {
   background: var(--color-surface-raised);
-  border-color: var(--color-accent);
+  border-color: var(--color-accent-bright);
   transform: translateY(-1px);
   box-shadow: 0 6px 18px var(--color-shadow);
 }
 
 .contact-row:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-accent-bright);
   outline-offset: 2px;
 }
 
@@ -71,7 +71,7 @@
 
 .contact-row:hover .contact-icon {
   background: var(--color-bg-muted);
-  color: var(--color-accent);
+  color: var(--color-accent-bright);
 }
 
 .contact-icon-svg {
