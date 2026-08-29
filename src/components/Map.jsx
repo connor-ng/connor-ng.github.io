@@ -2,15 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import projects from '../data/projects'
+import { PROJECT_STATUS, STATUS_ORDER } from '../constants/projectStatus'
 import { BIOMES, generatePlaceholderMap } from '../utils/generatePlaceholderMap'
+import { buildMarkerHtml } from '../utils/markerHtml'
 import './Map.css'
-
-const RING = {
-  done: 'var(--color-status-done)',
-  current: 'var(--color-status-current)',
-  locked: 'var(--color-status-locked)',
-}
-const BADGE = { done: '✓', current: '⏳', locked: '🔒' }
 
 function toLatLng(gx, gy, height, tileSize) {
   return [height - gy * tileSize, gx * tileSize]
@@ -50,11 +45,6 @@ function buildPopupHtml(project) {
       </div>
     </div>
   `
-}
-
-function markerLabel(project) {
-  if (project.status === 'locked') return '🔒'
-  return project.title.charAt(0)
 }
 
 function Map() {
@@ -128,18 +118,11 @@ function Map() {
 
     markerByIdRef.current = {}
     projects.forEach((project) => {
-      const isLocked = project.status === 'locked'
-      const html = `
-        <div class="pixel-pin ${isLocked ? 'locked' : ''}" style="--ring:${RING[project.status]}">
-          <div class="body">${markerLabel(project)}</div>
-          <div class="badge">${BADGE[project.status]}</div>
-        </div>`
-
       const icon = L.divIcon({
-        html,
+        html: buildMarkerHtml(project, 'map'),
         className: '',
-        iconSize: [26, 26],
-        iconAnchor: [13, 13],
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
       })
 
       const marker = L.marker(
@@ -217,7 +200,7 @@ function Map() {
             <div key={biome} className="map-sidebar-row">
               <span>
                 <span
-                  className="sw"
+                  className="sw sw--filled"
                   style={{ background: `rgb(${r}, ${g}, ${b})` }}
                 />
                 {biome}
@@ -228,52 +211,40 @@ function Map() {
         })}
         <div className="map-sidebar-divider" />
         <h2>Status</h2>
-        <div className="map-sidebar-row">
-          <span>
-            <span className="sw" style={{ background: 'var(--color-status-done)' }} />
-            shipped
-          </span>
-          <span className="count">{statusCounts.done}</span>
-        </div>
-        <div className="map-sidebar-row">
-          <span>
-            <span className="sw" style={{ background: 'var(--color-status-current)' }} />
-            building
-          </span>
-          <span className="count">{statusCounts.current}</span>
-        </div>
-        <div className="map-sidebar-row">
-          <span>
-            <span className="sw" style={{ background: 'var(--color-status-locked)' }} />
-            sealed
-          </span>
-          <span className="count">{statusCounts.locked}</span>
-        </div>
+        {STATUS_ORDER.map((status) => (
+          <div key={status} className="map-sidebar-row">
+            <span>
+              <span
+                className="sw sw--filled"
+                style={{ background: PROJECT_STATUS[status].color }}
+              />
+              {PROJECT_STATUS[status].label}
+            </span>
+            <span className="count">{statusCounts[status]}</span>
+          </div>
+        ))}
       </div>
 
       <div className="map-topright">
         <div className="map-legend map-panel">
-          <div className="row">
-            <span className="sw" style={{ borderColor: 'var(--color-status-done)' }} />
-            shipped
-          </div>
-          <div className="row">
-            <span className="sw" style={{ borderColor: 'var(--color-status-current)' }} />
-            building
-          </div>
-          <div className="row">
-            <span className="sw" style={{ borderColor: 'var(--color-status-locked)' }} />
-            sealed
-          </div>
+          {STATUS_ORDER.map((status) => (
+            <div key={status} className="row">
+              <span
+                className="legend-swatch"
+                style={{ borderColor: PROJECT_STATUS[status].color }}
+              />
+              {PROJECT_STATUS[status].label}
+            </div>
+          ))}
         </div>
-        <button type="button" className="map-view-toggle" onClick={toggleView}>
+        <button type="button" className="map-view-toggle map-panel" onClick={toggleView}>
           {showingList ? '🗺 Map view' : '☰ List view'}
         </button>
         <div className="map-zoom-controls">
-          <button type="button" onClick={handleZoomIn} aria-label="Zoom in">
+          <button type="button" className="map-panel" onClick={handleZoomIn} aria-label="Zoom in">
             +
           </button>
-          <button type="button" onClick={handleZoomOut} aria-label="Zoom out">
+          <button type="button" className="map-panel" onClick={handleZoomOut} aria-label="Zoom out">
             −
           </button>
         </div>
@@ -294,16 +265,12 @@ function Map() {
               key={project.id}
               type="button"
               className="map-search-item"
-              style={{ '--ring': RING[project.status] }}
               onClick={() => jumpTo(project.id)}
             >
-              <div className="icon">
-                {project.screenshot ? (
-                  <img src={project.screenshot} alt="" className="search-thumb" />
-                ) : (
-                  markerLabel(project)
-                )}
-              </div>
+              <div
+                className="search-marker"
+                dangerouslySetInnerHTML={{ __html: buildMarkerHtml(project, 'search') }}
+              />
               <div className="label">{project.title}</div>
             </button>
           ))}
@@ -329,23 +296,24 @@ function Map() {
         {listProjects.map((project) => (
           <a
             key={project.id}
-            className="map-list-row"
+            className="map-list-row map-panel"
             href={project.liveLink}
-            style={{ '--ring': RING[project.status] }}
           >
-            <div className="icon">
-              {project.screenshot ? (
-                <img src={project.screenshot} alt="" className="list-thumb" />
-              ) : (
-                markerLabel(project)
-              )}
-            </div>
+            <div
+              className="list-marker"
+              dangerouslySetInnerHTML={{ __html: buildMarkerHtml(project, 'list') }}
+            />
             <div className="meta">
               <div className="title">{project.title}</div>
               <div className="tag">{project.roleAndTimeframe}</div>
               <div className="problem">{project.oneLinerProblem}</div>
             </div>
-            <div className="status">{project.status}</div>
+            <div
+              className="status"
+              style={{ color: PROJECT_STATUS[project.status].color }}
+            >
+              {PROJECT_STATUS[project.status].label}
+            </div>
           </a>
         ))}
       </div>

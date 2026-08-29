@@ -63,10 +63,34 @@ function nearestBiome(gx, gy) {
   return best
 }
 
+function tileBiome(gx, gy) {
+  if (gx < 0 || gy < 0 || gx >= COLS || gy >= ROWS || !isLand(gx, gy)) {
+    return 'ocean'
+  }
+  return nearestBiome(gx, gy)
+}
+
+function touchesOcean(grid, gx, gy) {
+  return (
+    tileBiome(gx + 1, gy) === 'ocean' ||
+    tileBiome(gx - 1, gy) === 'ocean' ||
+    tileBiome(gx, gy + 1) === 'ocean' ||
+    tileBiome(gx, gy - 1) === 'ocean'
+  )
+}
+
 export function generatePlaceholderMap() {
   const width = COLS * TILE
   const height = ROWS * TILE
   const biomeTileCounts = {}
+
+  const grid = Array.from({ length: ROWS }, (_, gy) =>
+    Array.from({ length: COLS }, (_, gx) => {
+      const biome = tileBiome(gx, gy)
+      biomeTileCounts[biome] = (biomeTileCounts[biome] || 0) + 1
+      return biome
+    }),
+  )
 
   const canvas = document.createElement('canvas')
   canvas.width = width
@@ -75,23 +99,15 @@ export function generatePlaceholderMap() {
 
   for (let gy = 0; gy < ROWS; gy++) {
     for (let gx = 0; gx < COLS; gx++) {
-      const land = isLand(gx, gy)
-      const biome = land ? nearestBiome(gx, gy) : 'ocean'
-      biomeTileCounts[biome] = (biomeTileCounts[biome] || 0) + 1
+      const biome = grid[gy][gx]
       const [r, g, b] = BIOMES[biome].color
       const n = (hash(gx, gy) - 0.5) * 26
       ctx.fillStyle = `rgb(${r + n | 0}, ${g + n | 0}, ${b + n | 0})`
       ctx.fillRect(gx * TILE, gy * TILE, TILE, TILE)
-      if (land) {
-        const neighborsOcean =
-          !isLand(gx + 1, gy) ||
-          !isLand(gx - 1, gy) ||
-          !isLand(gx, gy + 1) ||
-          !isLand(gx, gy - 1)
-        if (neighborsOcean) {
-          ctx.fillStyle = 'rgba(20,30,20,0.35)'
-          ctx.fillRect(gx * TILE, gy * TILE, TILE, TILE)
-        }
+
+      if (biome !== 'ocean' && touchesOcean(grid, gx, gy)) {
+        ctx.fillStyle = 'rgba(20, 30, 20, 0.35)'
+        ctx.fillRect(gx * TILE, gy * TILE, TILE, TILE)
       }
     }
   }
