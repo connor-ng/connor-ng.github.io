@@ -1,13 +1,64 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+:root {
+  --nav-height: 52px;
+}
+
 .nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  padding: 1rem 1.5rem;
-  background: var(--color-bg);
+  height: var(--nav-height);
+  padding: 0 1.5rem;
   font-family: 'Press Start 2P', monospace;
+}
+
+.nav--default {
+  background: rgba(243, 237, 224, 0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.nav--on-map {
+  background: transparent;
+  border-bottom: none;
+  pointer-events: none;
+}
+
+.nav--on-map .nav-brand,
+.nav--on-map .nav-links {
+  pointer-events: auto;
+}
+
+.nav--on-map .nav-brand {
+  color: #f0ead8;
+  text-shadow: 2px 2px 0 #0a1622;
+}
+
+.nav--on-map .nav-brand:hover {
+  color: #9fd6c9;
+}
+
+.nav--on-map .nav-link {
+  color: #8892a0;
+}
+
+.nav--on-map .nav-link:hover {
+  color: #9fd6c9;
+}
+
+.nav--on-map .nav-link--active {
+  color: #f0ead8;
+}
+
+.nav--on-map .nav-link--active:hover {
+  color: #f0ead8;
 }
 
 .nav-brand {
@@ -48,10 +99,16 @@
 }
 
 @media (max-width: 520px) {
+  :root {
+    --nav-height: 72px;
+  }
+
   .nav {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.85rem;
+    justify-content: center;
+    height: var(--nav-height);
+    padding: 0.5rem 1.5rem;
   }
 
   .nav-links {

@@ -39,8 +39,21 @@ body {
 }
 
 #root {
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
   background: var(--color-bg);
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.app-main {
+  min-height: 100vh;
+}
+
+.app-main .about,
+.app-main .contact {
+  padding-top: var(--nav-height, 52px);
+  min-height: 100vh;
+  box-sizing: border-box;
 }

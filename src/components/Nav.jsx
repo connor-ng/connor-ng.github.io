@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import './Nav.css'
 
 const navLinks = [
@@ -8,8 +8,14 @@ const navLinks = [
 ]
 
 function Nav() {
+  const { pathname } = useLocation()
+  const onMap = pathname === '/'
+
   return (
-    <nav className="nav" aria-label="Main">
+    <nav
+      className={`nav ${onMap ? 'nav--on-map' : 'nav--default'}`}
+      aria-label="Main"
+    >
       <Link to="/" className="nav-brand">
         Connor Ng
       </Link>

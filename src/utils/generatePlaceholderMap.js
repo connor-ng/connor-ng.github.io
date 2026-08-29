@@ -70,7 +70,7 @@ function tileBiome(gx, gy) {
   return nearestBiome(gx, gy)
 }
 
-function touchesOcean(grid, gx, gy) {
+function touchesOcean(gx, gy) {
   return (
     tileBiome(gx + 1, gy) === 'ocean' ||
     tileBiome(gx - 1, gy) === 'ocean' ||
@@ -105,7 +105,7 @@ export function generatePlaceholderMap() {
       ctx.fillStyle = `rgb(${r + n | 0}, ${g + n | 0}, ${b + n | 0})`
       ctx.fillRect(gx * TILE, gy * TILE, TILE, TILE)
 
-      if (biome !== 'ocean' && touchesOcean(grid, gx, gy)) {
+      if (biome !== 'ocean' && touchesOcean(gx, gy)) {
         ctx.fillStyle = 'rgba(20, 30, 20, 0.35)'
         ctx.fillRect(gx * TILE, gy * TILE, TILE, TILE)
       }

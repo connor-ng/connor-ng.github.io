@@ -10,7 +10,7 @@
 .about-scene {
   position: relative;
   flex: 1;
-  min-height: calc(100vh - 49px);
+  min-height: calc(100vh - var(--nav-height, 52px));
   overflow: hidden;
   background: linear-gradient(180deg, #a8bcc8 0%, #dce4ec 42%, #7a96a8 100%);
 }

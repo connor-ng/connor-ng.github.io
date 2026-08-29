@@ -1,5 +1,4 @@
 .home {
-  position: relative;
-  flex: 1;
-  min-height: 0;
+  position: fixed;
+  inset: 0;
 }
