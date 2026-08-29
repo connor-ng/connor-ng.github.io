@@ -30,22 +30,22 @@ const projects = [
     liveLink: 'https://example.com',
     caseStudyLink: 'https://example.com/case-study',
     status: 'done',
-    gx: 48,
-    gy: 35,
+    gx: 128,
+    gy: 96,
   },
   {
     id: 'p7',
     title: '???',
     status: 'locked',
-    gx: 72,
-    gy: 49,
+    gx: 192,
+    gy: 124,
   },
   {
     id: 'p8',
     title: '???',
     status: 'locked',
-    gx: 14,
-    gy: 61,
+    gx: 56,
+    gy: 158,
   },
 ]
 

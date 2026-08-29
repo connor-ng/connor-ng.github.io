@@ -1,6 +1,6 @@
-const TILE = 10
-const COLS = 96
-const ROWS = 72
+export const TILE = 10
+export const COLS = 256
+export const ROWS = 192
 
 export const BIOMES = {
   ocean: { color: [145, 175, 195] },
@@ -15,24 +15,24 @@ export const BIOMES = {
 }
 
 const SEEDS = [
-  { x: 20, y: 14, b: 'snow' },
-  { x: 26, y: 8, b: 'snow' },
-  { x: 14, y: 20, b: 'snow' },
-  { x: 40, y: 10, b: 'plains' },
-  { x: 62, y: 16, b: 'desert' },
-  { x: 30, y: 30, b: 'forest' },
-  { x: 48, y: 34, b: 'swamp' },
-  { x: 66, y: 32, b: 'forest' },
-  { x: 18, y: 46, b: 'forest' },
-  { x: 34, y: 50, b: 'plains' },
-  { x: 55, y: 52, b: 'swamp' },
-  { x: 72, y: 48, b: 'desert' },
-  { x: 14, y: 60, b: 'volcanic' },
-  { x: 44, y: 62, b: 'plains' },
-  { x: 64, y: 62, b: 'forest' },
-  { x: 80, y: 20, b: 'tundra' },
-  { x: 8, y: 34, b: 'jungle' },
-  { x: 78, y: 64, b: 'jungle' },
+  { x: 128, y: 28, b: 'snow' },
+  { x: 98, y: 38, b: 'snow' },
+  { x: 158, y: 34, b: 'snow' },
+  { x: 108, y: 52, b: 'plains' },
+  { x: 198, y: 44, b: 'desert' },
+  { x: 88, y: 82, b: 'forest' },
+  { x: 128, y: 96, b: 'swamp' },
+  { x: 176, y: 88, b: 'forest' },
+  { x: 72, y: 118, b: 'forest' },
+  { x: 104, y: 132, b: 'plains' },
+  { x: 148, y: 138, b: 'swamp' },
+  { x: 192, y: 124, b: 'desert' },
+  { x: 56, y: 158, b: 'volcanic' },
+  { x: 118, y: 164, b: 'plains' },
+  { x: 172, y: 168, b: 'forest' },
+  { x: 214, y: 36, b: 'tundra' },
+  { x: 42, y: 96, b: 'jungle' },
+  { x: 208, y: 172, b: 'jungle' },
 ]
 
 function hash(x, y) {
@@ -46,8 +46,8 @@ function isLand(gx, gy) {
   const dx = (gx - cx) / (COLS / 2)
   const dy = (gy - cy) / (ROWS / 2)
   const dist = Math.sqrt(dx * dx + dy * dy)
-  const wobble = Math.sin(gx * 0.35) * 0.06 + Math.cos(gy * 0.4) * 0.06
-  return dist < 0.92 + wobble
+  const wobble = Math.sin(gx * 0.12) * 0.06 + Math.cos(gy * 0.14) * 0.06
+  return dist < 0.9 + wobble
 }
 
 function nearestBiome(gx, gy) {
@@ -118,5 +118,7 @@ export function generatePlaceholderMap() {
     width,
     height,
     tileSize: TILE,
+    cols: COLS,
+    rows: ROWS,
   }
 }

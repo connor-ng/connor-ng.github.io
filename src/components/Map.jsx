@@ -97,8 +97,8 @@ function Map() {
 
     const map = L.map(container, {
       crs: L.CRS.Simple,
-      minZoom: -2,
-      maxZoom: 3,
+      minZoom: -3,
+      maxZoom: 4,
       zoomSnap: 0.25,
       zoomControl: false,
       attributionControl: false,
@@ -110,9 +110,12 @@ function Map() {
     ]
     L.imageOverlay(mapImageUrl, bounds).addTo(map)
     map.fitBounds(bounds)
+    const boundsPadding = Math.max(width, height) * 0.08
     map.setMaxBounds(
       bounds.map((point, index) =>
-        index === 0 ? [point[0] - 100, point[1] - 100] : [point[0] + 100, point[1] + 100],
+        index === 0
+          ? [point[0] - boundsPadding, point[1] - boundsPadding]
+          : [point[0] + boundsPadding, point[1] + boundsPadding],
       ),
     )
 
@@ -167,7 +170,7 @@ function Map() {
     if (!project || !marker || !map) return
 
     const { height, tileSize } = mapConfig
-    map.flyTo(toLatLng(project.gx, project.gy, height, tileSize), 1, {
+    map.flyTo(toLatLng(project.gx, project.gy, height, tileSize), 2, {
       duration: 0.6,
     })
     window.setTimeout(() => marker.openPopup(), 400)
