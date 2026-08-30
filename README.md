@@ -35,7 +35,9 @@ src/
     Contact.jsx
   data/
     projects.js      # Project markers and list-view data
+    districts.js     # SF district zones (bounds, colors, art-direction notes)
   utils/
+    districtUtils.js           # District lookup and project counts
     generatePlaceholderMap.js  # Procedural map image (swap for real asset later)
 public/
   map/               # Placeholder for a map image

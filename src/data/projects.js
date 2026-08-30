@@ -14,6 +14,7 @@
  * @property {ProjectStatus} status
  * @property {number} gx - grid x coordinate on the map
  * @property {number} gy - grid y coordinate on the map
+ * @property {string} [districtId] - optional override; otherwise inferred from gx/gy
  */
 
 /** @type {Project[]} */
@@ -30,6 +31,7 @@ const projects = [
     liveLink: 'https://example.com',
     caseStudyLink: 'https://example.com/case-study',
     status: 'done',
+    districtId: 'mission',
     gx: 128,
     gy: 96,
   },
@@ -37,6 +39,7 @@ const projects = [
     id: 'p7',
     title: '???',
     status: 'locked',
+    districtId: 'bayview',
     gx: 192,
     gy: 124,
   },
@@ -46,6 +49,7 @@ const projects = [
     status: 'locked',
     gx: 56,
     gy: 158,
+    districtId: 'sunset',
   },
 ]
 

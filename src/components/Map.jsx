@@ -3,7 +3,12 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import projects from '../data/projects'
 import { PROJECT_STATUS, STATUS_ORDER } from '../constants/projectStatus'
-import { BIOMES, generatePlaceholderMap } from '../utils/generatePlaceholderMap'
+import {
+  countProjectsByDistrict,
+  getDistrictAt,
+  getSortedDistricts,
+} from '../utils/districtUtils'
+import { generatePlaceholderMap } from '../utils/generatePlaceholderMap'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import './Map.css'
 
@@ -60,12 +65,16 @@ function Map() {
   const [showHint, setShowHint] = useState(() => !localStorage.getItem('map-visited'))
   const [hintFaded, setHintFaded] = useState(false)
 
-  const biomeEntries = useMemo(
-    () =>
-      Object.entries(mapConfig.biomeTileCounts)
-        .filter(([biome]) => biome !== 'ocean')
-        .sort((a, b) => b[1] - a[1]),
-    [mapConfig.biomeTileCounts],
+  const sortedDistricts = useMemo(() => getSortedDistricts(), [])
+
+  const projectCountsByDistrict = useMemo(
+    () => countProjectsByDistrict(projects),
+    [],
+  )
+
+  const activeDistrict = useMemo(
+    () => getDistrictAt(coords.gx, coords.gy),
+    [coords.gx, coords.gy],
   )
 
   const statusCounts = useMemo(
@@ -196,19 +205,24 @@ function Map() {
       </div>
 
       <div className="map-sidebar map-panel">
-        <h2>Biomes</h2>
-        {biomeEntries.map(([biome, count]) => {
-          const [r, g, b] = BIOMES[biome].color
+        <h2>Districts</h2>
+        {sortedDistricts.map((district) => {
+          const [r, g, b] = district.color
+          const isActive = activeDistrict?.id === district.id
           return (
-            <div key={biome} className="map-sidebar-row">
-              <span>
+            <div
+              key={district.id}
+              className={`map-sidebar-row${isActive ? ' is-active' : ''}`}
+              title={`${district.flavor} (${district.pattern})`}
+            >
+              <span className="map-sidebar-label">
                 <span
                   className="sw sw--filled"
                   style={{ background: `rgb(${r}, ${g}, ${b})` }}
                 />
-                {biome}
+                {district.name}
               </span>
-              <span className="count">{count}</span>
+              <span className="count">{projectCountsByDistrict[district.id]}</span>
             </div>
           )
         })}
@@ -281,7 +295,12 @@ function Map() {
       </div>
 
       <div className="map-coords map-panel">
-        x: {coords.gx}, y: {coords.gy}
+        <span className="map-coords-district">
+          {activeDistrict?.name ?? 'Open water'}
+        </span>
+        <span className="map-coords-grid">
+          x: {coords.gx}, y: {coords.gy}
+        </span>
       </div>
 
       {showHint && (
