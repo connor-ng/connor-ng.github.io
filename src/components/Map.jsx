@@ -2,26 +2,19 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import projects from '../data/projects'
+import landmarks from '../data/landmarks'
 import { PROJECT_STATUS, STATUS_ORDER } from '../constants/projectStatus'
 import {
   countProjectsByDistrict,
   getDistrictAt,
   getSortedDistricts,
 } from '../utils/districtUtils'
+import { buildLandmarkHtml, buildLandmarkPopupHtml } from '../utils/landmarkHtml'
+import { countLandmarksByTier } from '../utils/landmarkUtils'
+import { formatGridCoords, toGrid, toLatLng } from '../utils/mapCoords'
 import { generatePlaceholderMap } from '../utils/generatePlaceholderMap'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import './Map.css'
-
-function toLatLng(gx, gy, height, tileSize) {
-  return [height - gy * tileSize, gx * tileSize]
-}
-
-function toGrid(lat, lng, height, tileSize) {
-  return {
-    gx: Math.round(lng / tileSize),
-    gy: Math.round((height - lat) / tileSize),
-  }
-}
 
 function buildPopupHtml(project) {
   if (project.status === 'locked') {
@@ -56,6 +49,10 @@ function Map() {
   const mapContainerRef = useRef(null)
   const mapRef = useRef(null)
   const markerByIdRef = useRef({})
+  const landmarkLayerRef = useRef(null)
+  const referenceLayerRef = useRef(null)
+  const pickMarkerRef = useRef(null)
+  const coordPickerRef = useRef(false)
 
   const mapConfig = useMemo(() => generatePlaceholderMap(), [])
 
@@ -64,6 +61,13 @@ function Map() {
   const [showingList, setShowingList] = useState(false)
   const [showHint, setShowHint] = useState(() => !localStorage.getItem('map-visited'))
   const [hintFaded, setHintFaded] = useState(false)
+  const [showLandmarks, setShowLandmarks] = useState(true)
+  const [showLandmarkLabels, setShowLandmarkLabels] = useState(false)
+  const [coordPickerMode, setCoordPickerMode] = useState(false)
+  const [pickedCoords, setPickedCoords] = useState(null)
+  const [copyFeedback, setCopyFeedback] = useState('')
+  const [showReference, setShowReference] = useState(false)
+  const [referenceAvailable, setReferenceAvailable] = useState(false)
 
   const sortedDistricts = useMemo(() => getSortedDistricts(), [])
 
@@ -71,6 +75,8 @@ function Map() {
     () => countProjectsByDistrict(projects),
     [],
   )
+
+  const landmarkCounts = useMemo(() => countLandmarksByTier(), [])
 
   const activeDistrict = useMemo(
     () => getDistrictAt(coords.gx, coords.gy),
@@ -97,6 +103,19 @@ function Map() {
     () => projects.filter((p) => p.status !== 'locked'),
     [],
   )
+
+  const displayCoords = pickedCoords ?? coords
+  const coordSnippet = formatGridCoords(displayCoords.gx, displayCoords.gy)
+
+  useEffect(() => {
+    coordPickerRef.current = coordPickerMode
+  }, [coordPickerMode])
+
+  useEffect(() => {
+    fetch('/map/reference.png', { method: 'HEAD' })
+      .then((response) => setReferenceAvailable(response.ok))
+      .catch(() => setReferenceAvailable(false))
+  }, [])
 
   useEffect(() => {
     const container = mapContainerRef.current
@@ -128,6 +147,38 @@ function Map() {
       ),
     )
 
+    const referenceLayer = L.imageOverlay('/map/reference.png', bounds, {
+      opacity: 0.42,
+      interactive: false,
+    })
+    referenceLayerRef.current = referenceLayer
+
+    const landmarkLayer = L.layerGroup()
+    landmarks.forEach((landmark) => {
+      const icon = L.divIcon({
+        html: buildLandmarkHtml(landmark, { useSprite: true }),
+        className: 'landmark-icon-wrap',
+        iconSize: [landmark.width, landmark.height],
+        iconAnchor: [landmark.anchorX, landmark.anchorY],
+      })
+
+      const marker = L.marker(
+        toLatLng(landmark.gx, landmark.gy, height, tileSize),
+        {
+          icon,
+          zIndexOffset: landmark.tier === 1 ? 250 : 150,
+        },
+      )
+
+      marker.bindPopup(buildLandmarkPopupHtml(landmark), {
+        maxWidth: 280,
+        className: 'landmark-popup-wrapper',
+      })
+      landmarkLayer.addLayer(marker)
+    })
+    landmarkLayer.addTo(map)
+    landmarkLayerRef.current = landmarkLayer
+
     markerByIdRef.current = {}
     projects.forEach((project) => {
       const icon = L.divIcon({
@@ -139,7 +190,7 @@ function Map() {
 
       const marker = L.marker(
         toLatLng(project.gx, project.gy, height, tileSize),
-        { icon },
+        { icon, zIndexOffset: 500 },
       ).addTo(map)
 
       markerByIdRef.current[project.id] = marker
@@ -149,6 +200,28 @@ function Map() {
     map.on('mousemove', (event) => {
       const grid = toGrid(event.latlng.lat, event.latlng.lng, height, tileSize)
       setCoords(grid)
+    })
+
+    map.on('click', (event) => {
+      if (!coordPickerRef.current) return
+
+      const grid = toGrid(event.latlng.lat, event.latlng.lng, height, tileSize)
+      setPickedCoords(grid)
+
+      if (pickMarkerRef.current) {
+        pickMarkerRef.current.setLatLng(event.latlng)
+      } else {
+        const pickIcon = L.divIcon({
+          html: '<div class="coord-pick-marker"></div>',
+          className: '',
+          iconSize: [12, 12],
+          iconAnchor: [6, 6],
+        })
+        pickMarkerRef.current = L.marker(event.latlng, {
+          icon: pickIcon,
+          zIndexOffset: 800,
+        }).addTo(map)
+      }
     })
 
     if (!localStorage.getItem('map-visited')) {
@@ -169,8 +242,43 @@ function Map() {
       map.remove()
       mapRef.current = null
       markerByIdRef.current = {}
+      landmarkLayerRef.current = null
+      referenceLayerRef.current = null
+      pickMarkerRef.current = null
     }
   }, [mapConfig])
+
+  useEffect(() => {
+    const layer = landmarkLayerRef.current
+    const map = mapRef.current
+    if (!layer || !map) return
+
+    if (showLandmarks) {
+      layer.addTo(map)
+    } else {
+      map.removeLayer(layer)
+    }
+  }, [showLandmarks])
+
+  useEffect(() => {
+    const layer = referenceLayerRef.current
+    const map = mapRef.current
+    if (!layer || !map || !referenceAvailable) return
+
+    if (showReference) {
+      layer.addTo(map)
+    } else {
+      map.removeLayer(layer)
+    }
+  }, [showReference, referenceAvailable])
+
+  useEffect(() => {
+    if (!coordPickerMode && pickMarkerRef.current && mapRef.current) {
+      mapRef.current.removeLayer(pickMarkerRef.current)
+      pickMarkerRef.current = null
+      setPickedCoords(null)
+    }
+  }, [coordPickerMode])
 
   function jumpTo(id) {
     const project = projects.find((p) => p.id === id)
@@ -183,6 +291,28 @@ function Map() {
       duration: 0.6,
     })
     window.setTimeout(() => marker.openPopup(), 400)
+  }
+
+  function jumpToLandmark(id) {
+    const landmark = landmarks.find((item) => item.id === id)
+    const map = mapRef.current
+    if (!landmark || !map) return
+
+    const { height, tileSize } = mapConfig
+    map.flyTo(toLatLng(landmark.gx, landmark.gy, height, tileSize), 2, {
+      duration: 0.6,
+    })
+  }
+
+  async function copyCoords() {
+    try {
+      await navigator.clipboard.writeText(coordSnippet)
+      setCopyFeedback('Copied')
+      window.setTimeout(() => setCopyFeedback(''), 1500)
+    } catch {
+      setCopyFeedback('Failed')
+      window.setTimeout(() => setCopyFeedback(''), 1500)
+    }
   }
 
   function handleZoomIn() {
@@ -198,7 +328,9 @@ function Map() {
   }
 
   return (
-    <div className="map-root">
+    <div
+      className={`map-root${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
+    >
       <div className="map-hud">
         <div className="eyebrow">Charted Works</div>
         <h1>PROJECT ATLAS</h1>
@@ -226,6 +358,30 @@ function Map() {
             </div>
           )
         })}
+        <div className="map-sidebar-divider" />
+        <h2>Landmarks</h2>
+        <div className="map-sidebar-meta">
+          Tier 1: {landmarkCounts[1]} · Tier 2: {landmarkCounts[2]}
+        </div>
+        {landmarks
+          .filter((landmark) => landmark.tier === 1)
+          .map((landmark) => (
+            <button
+              key={landmark.id}
+              type="button"
+              className="map-sidebar-row map-sidebar-row--button"
+              onClick={() => jumpToLandmark(landmark.id)}
+              title={landmark.blurb}
+            >
+              <span className="map-sidebar-label">
+                <span
+                  className="sw sw--filled"
+                  style={{ background: landmark.accent }}
+                />
+                {landmark.name}
+              </span>
+            </button>
+          ))}
         <div className="map-sidebar-divider" />
         <h2>Status</h2>
         {STATUS_ORDER.map((status) => (
@@ -265,6 +421,58 @@ function Map() {
             −
           </button>
         </div>
+      </div>
+
+      <div className="map-atlas-tools map-panel">
+        <h2>Atlas tools</h2>
+        <label className="map-tool-toggle">
+          <input
+            type="checkbox"
+            checked={showLandmarks}
+            onChange={(event) => setShowLandmarks(event.target.checked)}
+          />
+          Show landmarks
+        </label>
+        <label className="map-tool-toggle">
+          <input
+            type="checkbox"
+            checked={showLandmarkLabels}
+            onChange={(event) => setShowLandmarkLabels(event.target.checked)}
+          />
+          Landmark labels
+        </label>
+        <label className="map-tool-toggle">
+          <input
+            type="checkbox"
+            checked={coordPickerMode}
+            onChange={(event) => setCoordPickerMode(event.target.checked)}
+          />
+          Coord picker
+        </label>
+        {referenceAvailable && (
+          <label className="map-tool-toggle">
+            <input
+              type="checkbox"
+              checked={showReference}
+              onChange={(event) => setShowReference(event.target.checked)}
+            />
+            Reference overlay
+          </label>
+        )}
+        <div className="map-tool-coords">
+          <code>{coordSnippet}</code>
+          <button type="button" className="map-tool-copy" onClick={copyCoords}>
+            {copyFeedback || 'Copy'}
+          </button>
+        </div>
+        {coordPickerMode && (
+          <p className="map-tool-hint">Click the map to pin coordinates for Aseprite.</p>
+        )}
+        {!referenceAvailable && (
+          <p className="map-tool-hint">
+            Drop a traced reference at <code>public/map/reference.png</code> to overlay it.
+          </p>
+        )}
       </div>
 
       <div className="map-search-panel map-panel">

@@ -249,7 +249,8 @@
 .map-onboarding {
   position: absolute;
   bottom: 18px;
-  left: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1000;
   font-family: 'DM Mono', monospace;
   font-size: 11.5px;
@@ -580,4 +581,213 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* —— Landmarks —— */
+.map-root .landmark-icon-wrap {
+  background: transparent;
+  border: none;
+}
+
+.map-root .landmark-marker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.map-root .landmark-marker-body {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  filter: drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.45));
+}
+
+.map-root .landmark-sprite {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.map-root .landmark-placeholder-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.map-root .landmark-label {
+  display: none;
+  margin-top: 2px;
+  max-width: 120px;
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--theme-cream);
+  text-shadow: 1px 1px 0 var(--map-bg);
+  pointer-events: none;
+}
+
+.map-root--landmark-labels .landmark-label {
+  display: block;
+}
+
+.map-root--coord-picker .map-container {
+  cursor: crosshair;
+}
+
+.map-root .coord-pick-marker {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #9fd6c9;
+  border: 2px solid #0a1622;
+  box-shadow: 0 0 0 2px rgba(159, 214, 201, 0.35);
+}
+
+.map-root .landmark-popup-wrapper .leaflet-popup-content-wrapper {
+  background: #1a1410;
+  border: 2px solid #6a5040;
+  border-radius: 4px;
+}
+
+.map-root .landmark-popup {
+  padding: 12px 14px;
+}
+
+.map-root .landmark-popup-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #c87848;
+  margin-bottom: 4px;
+}
+
+.map-root .landmark-popup-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--theme-cream);
+  margin-bottom: 8px;
+}
+
+.map-root .landmark-popup-blurb {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--map-text-muted);
+  margin: 0 0 8px;
+}
+
+.map-root .landmark-popup-coords {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--map-accent);
+}
+
+/* —— Atlas tools —— */
+.map-atlas-tools {
+  position: absolute;
+  bottom: 18px;
+  left: 20px;
+  z-index: 1000;
+  width: 240px;
+  padding: 12px;
+}
+
+.map-atlas-tools h2 {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--map-accent);
+  margin: 0 0 10px;
+}
+
+.map-tool-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  color: var(--map-text);
+}
+
+.map-tool-toggle input {
+  accent-color: var(--map-accent);
+}
+
+.map-tool-coords {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--map-panel-border);
+}
+
+.map-tool-coords code {
+  flex: 1;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--map-accent);
+  word-break: break-all;
+}
+
+.map-tool-copy {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--map-panel-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--map-text);
+  cursor: pointer;
+}
+
+.map-tool-copy:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.map-tool-hint {
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--map-text-muted);
+  margin: 8px 0 0;
+}
+
+.map-tool-hint code {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  color: var(--map-accent);
+}
+
+.map-sidebar-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--map-text-muted);
+  margin: -4px 0 8px;
+}
+
+.map-sidebar-row--button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+@media (max-width: 900px) {
+  .map-atlas-tools {
+    width: calc(100% - 40px);
+    max-width: 280px;
+  }
+
+  .map-onboarding {
+    display: none;
+  }
 }
