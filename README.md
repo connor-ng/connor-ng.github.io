@@ -57,11 +57,20 @@ npm run preview
 
 ## Painting the map
 
-Landmark data lives in `src/data/landmarks.js` but is hidden on the map by default.
+You're **not** painting over the old biome blobs. The on-screen map is now a **San Francisco scaffold**:
 
-When painting locally, open `?tools=1` (or run `npm run dev`) to access Atlas tools:
+- Pacific Ocean on the **left**, San Francisco Bay on the **right**
+- Peninsula shape with **district-colored zones** (Marina, Mission, Sunset, etc.)
+- A rough **Golden Gate** line and **Golden Gate Park** green strip
+- Light **street-grid hints** per district
 
-1. Enable **Coord picker** and click the map to copy `{ gx, gy }` into `landmarks.js` or `projects.js`.
-2. Toggle **Show landmarks** to preview placement while you paint sprites in `public/landmarks/`.
-3. Drop a traced reference at `public/map/reference.png`, then enable **Reference overlay**.
-4. Export the finished base map as `public/map/world.png` (256×192 tiles at 10px = 2560×1920 px).
+That scaffold is a layout guide. Your finished pixel art replaces it entirely.
+
+### When you're ready to paint
+
+1. In Aseprite, create a **2560×1920** canvas (256×192 tiles at 10px).
+2. Optionally drop a traced antique map at `public/map/reference.png` and use `?tools=1` → **Reference overlay**.
+3. Paint districts, streets, landmarks, and water on top of the scaffold layout.
+4. Export as **`public/map/world.png`** — the app loads that file automatically and stops using the scaffold.
+
+Until `world.png` exists, the district scaffold is what you see. Landmark data in `landmarks.js` is for later — toggle with `?tools=1` → **Show landmarks** while placing art.

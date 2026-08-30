@@ -1,96 +1,125 @@
+import districts from '../data/districts'
+
 export const TILE = 10
 export const COLS = 256
 export const ROWS = 192
 
-export const BIOMES = {
-  ocean: { color: [145, 175, 195] },
-  forest: { color: [58, 92, 48] },
-  snow: { color: [206, 222, 224] },
-  desert: { color: [196, 172, 122] },
-  swamp: { color: [98, 118, 66] },
-  volcanic: { color: [74, 58, 78] },
-  plains: { color: [138, 158, 88] },
-  tundra: { color: [150, 170, 168] },
-  jungle: { color: [36, 74, 40] },
+const WATER = {
+  pacific: [72, 108, 132],
+  bay: [88, 128, 152],
 }
 
-const SEEDS = [
-  { x: 128, y: 28, b: 'snow' },
-  { x: 98, y: 38, b: 'snow' },
-  { x: 158, y: 34, b: 'snow' },
-  { x: 108, y: 52, b: 'plains' },
-  { x: 198, y: 44, b: 'desert' },
-  { x: 88, y: 82, b: 'forest' },
-  { x: 128, y: 96, b: 'swamp' },
-  { x: 176, y: 88, b: 'forest' },
-  { x: 72, y: 118, b: 'forest' },
-  { x: 104, y: 132, b: 'plains' },
-  { x: 148, y: 138, b: 'swamp' },
-  { x: 192, y: 124, b: 'desert' },
-  { x: 56, y: 158, b: 'volcanic' },
-  { x: 118, y: 164, b: 'plains' },
-  { x: 172, y: 168, b: 'forest' },
-  { x: 214, y: 36, b: 'tundra' },
-  { x: 42, y: 96, b: 'jungle' },
-  { x: 208, y: 172, b: 'jungle' },
-]
+const LAND_FILL = [108, 104, 98]
 
 function hash(x, y) {
   const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453
   return n - Math.floor(n)
 }
 
-function isLand(gx, gy) {
-  const cx = COLS / 2
-  const cy = ROWS / 2
-  const dx = (gx - cx) / (COLS / 2)
-  const dy = (gy - cy) / (ROWS / 2)
-  const dist = Math.sqrt(dx * dx + dy * dy)
-  const wobble = Math.sin(gx * 0.12) * 0.06 + Math.cos(gy * 0.14) * 0.06
-  return dist < 0.9 + wobble
-}
-
-function nearestBiome(gx, gy) {
-  let best = null
-  let bestD = Infinity
-  for (const s of SEEDS) {
-    const d = (s.x - gx) ** 2 + (s.y - gy) ** 2
-    if (d < bestD) {
-      bestD = d
-      best = s.b
-    }
-  }
-  return best
-}
-
-function tileBiome(gx, gy) {
-  if (gx < 0 || gy < 0 || gx >= COLS || gy >= ROWS || !isLand(gx, gy)) {
-    return 'ocean'
-  }
-  return nearestBiome(gx, gy)
-}
-
-function touchesOcean(gx, gy) {
+function westShore(gy) {
   return (
-    tileBiome(gx + 1, gy) === 'ocean' ||
-    tileBiome(gx - 1, gy) === 'ocean' ||
-    tileBiome(gx, gy + 1) === 'ocean' ||
-    tileBiome(gx, gy - 1) === 'ocean'
+    16 +
+    Math.sin(gy * 0.09) * 9 +
+    Math.cos(gy * 0.17) * 5 +
+    (gy / ROWS) * 10
   )
+}
+
+function eastShore(gy) {
+  return (
+    246 -
+    Math.sin(gy * 0.08) * 11 -
+    Math.cos(gy * 0.12) * 7 -
+    (gy / ROWS) * 6
+  )
+}
+
+/** Stylized SF peninsula — Pacific west, bay east, bridge gap north. */
+function getTerrain(gx, gy) {
+  if (gx < 0 || gy < 0 || gx >= COLS || gy >= ROWS) {
+    return { kind: 'pacific' }
+  }
+
+  const west = westShore(gy)
+  const east = eastShore(gy)
+
+  if (gx < west) return { kind: 'pacific' }
+  if (gx > east) return { kind: 'bay' }
+
+  // North bay opening (Marin / Golden Gate channel)
+  if (gy < 20 && gx > 108) return { kind: 'bay' }
+  if (gy < 14 && gx > 72) return { kind: 'bay' }
+
+  // South bay / channel east of Dogpatch
+  if (gy > 168 && gx > 198) return { kind: 'bay' }
+
+  const district = getDistrictAt(gx, gy)
+  if (district) return { kind: 'district', district }
+
+  return { kind: 'land' }
+}
+
+function getDistrictAt(gx, gy) {
+  const matches = districts.filter(
+    (district) =>
+      gx >= district.bounds.x &&
+      gx < district.bounds.x + district.bounds.w &&
+      gy >= district.bounds.y &&
+      gy < district.bounds.y + district.bounds.h,
+  )
+
+  if (matches.length === 0) return null
+
+  matches.sort(
+    (a, b) => a.bounds.w * a.bounds.h - b.bounds.w * b.bounds.h,
+  )
+
+  return matches[0]
+}
+
+function touchesWater(gx, gy) {
+  const here = getTerrain(gx, gy)
+  if (here.kind === 'pacific' || here.kind === 'bay') return false
+
+  const neighbors = [
+    getTerrain(gx + 1, gy),
+    getTerrain(gx - 1, gy),
+    getTerrain(gx, gy + 1),
+    getTerrain(gx, gy - 1),
+  ]
+
+  return neighbors.some((tile) => tile.kind === 'pacific' || tile.kind === 'bay')
+}
+
+function isGoldenGate(gx, gy) {
+  return gy >= 24 && gy <= 30 && gx >= 58 && gx <= 98 && (gy === 27 || gx === 58 || gx === 98)
+}
+
+function isGoldenGatePark(gx, gy) {
+  return gy >= 88 && gy <= 108 && gx >= 38 && gx <= 118
+}
+
+function streetOverlay(gx, gy, terrain) {
+  if (terrain.kind === 'pacific' || terrain.kind === 'bay') return false
+
+  const district = terrain.district
+  if (district?.pattern === 'diagonal-grid') {
+    return (gx + gy) % 7 === 0 || (gx - gy + ROWS) % 9 === 0
+  }
+  if (district?.pattern === 'piers') {
+    return gx % 5 === 0 || gy % 6 === 0
+  }
+  if (district?.pattern === 'wide-avenues') {
+    return gx % 9 === 0 || gy % 11 === 0
+  }
+
+  return gx % 6 === 0 || gy % 6 === 0
 }
 
 export function generatePlaceholderMap() {
   const width = COLS * TILE
   const height = ROWS * TILE
-  const biomeTileCounts = {}
-
-  const grid = Array.from({ length: ROWS }, (_, gy) =>
-    Array.from({ length: COLS }, (_, gx) => {
-      const biome = tileBiome(gx, gy)
-      biomeTileCounts[biome] = (biomeTileCounts[biome] || 0) + 1
-      return biome
-    }),
-  )
+  const districtTileCounts = {}
 
   const canvas = document.createElement('canvas')
   canvas.width = width
@@ -99,14 +128,44 @@ export function generatePlaceholderMap() {
 
   for (let gy = 0; gy < ROWS; gy++) {
     for (let gx = 0; gx < COLS; gx++) {
-      const biome = grid[gy][gx]
-      const [r, g, b] = BIOMES[biome].color
-      const n = (hash(gx, gy) - 0.5) * 26
+      const terrain = getTerrain(gx, gy)
+      let r
+      let g
+      let b
+
+      if (terrain.kind === 'pacific') {
+        ;[r, g, b] = WATER.pacific
+      } else if (terrain.kind === 'bay') {
+        ;[r, g, b] = WATER.bay
+      } else if (terrain.kind === 'district') {
+        const { district } = terrain
+        districtTileCounts[district.id] = (districtTileCounts[district.id] || 0) + 1
+        ;[r, g, b] = district.color
+      } else {
+        ;[r, g, b] = LAND_FILL
+      }
+
+      const n = (hash(gx, gy) - 0.5) * 18
       ctx.fillStyle = `rgb(${r + n | 0}, ${g + n | 0}, ${b + n | 0})`
       ctx.fillRect(gx * TILE, gy * TILE, TILE, TILE)
 
-      if (biome !== 'ocean' && touchesOcean(gx, gy)) {
-        ctx.fillStyle = 'rgba(20, 30, 20, 0.35)'
+      if (isGoldenGatePark(gx, gy) && terrain.kind !== 'pacific' && terrain.kind !== 'bay') {
+        ctx.fillStyle = 'rgba(70, 110, 62, 0.55)'
+        ctx.fillRect(gx * TILE, gy * TILE, TILE, TILE)
+      }
+
+      if (streetOverlay(gx, gy, terrain)) {
+        ctx.fillStyle = 'rgba(20, 24, 30, 0.12)'
+        ctx.fillRect(gx * TILE, gy * TILE, TILE, TILE)
+      }
+
+      if (touchesWater(gx, gy)) {
+        ctx.fillStyle = 'rgba(12, 20, 32, 0.28)'
+        ctx.fillRect(gx * TILE, gy * TILE, TILE, TILE)
+      }
+
+      if (isGoldenGate(gx, gy)) {
+        ctx.fillStyle = '#c45c3a'
         ctx.fillRect(gx * TILE, gy * TILE, TILE, TILE)
       }
     }
@@ -114,7 +173,7 @@ export function generatePlaceholderMap() {
 
   return {
     mapImageUrl: canvas.toDataURL(),
-    biomeTileCounts,
+    districtTileCounts,
     width,
     height,
     tileSize: TILE,

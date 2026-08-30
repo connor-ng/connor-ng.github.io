@@ -11,7 +11,7 @@ import {
 } from '../utils/districtUtils'
 import { buildLandmarkHtml, buildLandmarkPopupHtml } from '../utils/landmarkHtml'
 import { formatGridCoords, toGrid, toLatLng } from '../utils/mapCoords'
-import { generatePlaceholderMap } from '../utils/generatePlaceholderMap'
+import { loadMapConfig } from '../utils/loadMapConfig'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import './Map.css'
 
@@ -53,7 +53,7 @@ function Map() {
   const pickMarkerRef = useRef(null)
   const coordPickerRef = useRef(false)
 
-  const mapConfig = useMemo(() => generatePlaceholderMap(), [])
+  const [mapConfig, setMapConfig] = useState(null)
 
   const [coords, setCoords] = useState({ gx: 0, gy: 0 })
   const [searchQuery, setSearchQuery] = useState('')
@@ -112,6 +112,16 @@ function Map() {
   const coordSnippet = formatGridCoords(displayCoords.gx, displayCoords.gy)
 
   useEffect(() => {
+    let cancelled = false
+    loadMapConfig().then((config) => {
+      if (!cancelled) setMapConfig(config)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
     coordPickerRef.current = coordPickerMode
   }, [coordPickerMode])
 
@@ -123,7 +133,7 @@ function Map() {
 
   useEffect(() => {
     const container = mapContainerRef.current
-    if (!container) return
+    if (!container || !mapConfig) return
 
     const { mapImageUrl, width, height, tileSize } = mapConfig
 
@@ -317,6 +327,14 @@ function Map() {
 
   function toggleView() {
     setShowingList((prev) => !prev)
+  }
+
+  if (!mapConfig) {
+    return (
+      <div className="map-root map-root--loading">
+        <div className="map-loading map-panel">Loading atlas…</div>
+      </div>
+    )
   }
 
   return (

@@ -64,6 +64,19 @@
   text-shadow: 2px 2px 0 var(--map-bg);
 }
 
+.map-root--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-loading {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  padding: 12px 16px;
+  color: var(--map-text-muted);
+}
+
 .map-panel {
   background: var(--map-panel-bg);
   border: 1px solid var(--map-panel-border);
