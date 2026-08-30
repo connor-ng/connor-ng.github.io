@@ -57,8 +57,11 @@ npm run preview
 
 ## Painting the map
 
-1. Enable **Coord picker** in Atlas tools (bottom-left) and click the map to copy `{ gx, gy }` values into `landmarks.js` or `projects.js`.
-2. Replace placeholder sprites in `public/landmarks/` with hand-painted pixel art (keep the same filenames).
-3. Drop a traced antique-map reference at `public/map/reference.png`, then toggle **Reference overlay** in Atlas tools.
+Landmark data lives in `src/data/landmarks.js` but is hidden on the map by default.
+
+When painting locally, open `?tools=1` (or run `npm run dev`) to access Atlas tools:
+
+1. Enable **Coord picker** and click the map to copy `{ gx, gy }` into `landmarks.js` or `projects.js`.
+2. Toggle **Show landmarks** to preview placement while you paint sprites in `public/landmarks/`.
+3. Drop a traced reference at `public/map/reference.png`, then enable **Reference overlay**.
 4. Export the finished base map as `public/map/world.png` (256×192 tiles at 10px = 2560×1920 px).
-5. Regenerate placeholder sprites after editing landmark colors: `npm run landmarks:sprites`

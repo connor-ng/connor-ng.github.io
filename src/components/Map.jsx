@@ -10,7 +10,6 @@ import {
   getSortedDistricts,
 } from '../utils/districtUtils'
 import { buildLandmarkHtml, buildLandmarkPopupHtml } from '../utils/landmarkHtml'
-import { countLandmarksByTier } from '../utils/landmarkUtils'
 import { formatGridCoords, toGrid, toLatLng } from '../utils/mapCoords'
 import { generatePlaceholderMap } from '../utils/generatePlaceholderMap'
 import { buildMarkerHtml } from '../utils/markerHtml'
@@ -61,7 +60,7 @@ function Map() {
   const [showingList, setShowingList] = useState(false)
   const [showHint, setShowHint] = useState(() => !localStorage.getItem('map-visited'))
   const [hintFaded, setHintFaded] = useState(false)
-  const [showLandmarks, setShowLandmarks] = useState(true)
+  const [showLandmarks, setShowLandmarks] = useState(false)
   const [showLandmarkLabels, setShowLandmarkLabels] = useState(false)
   const [coordPickerMode, setCoordPickerMode] = useState(false)
   const [pickedCoords, setPickedCoords] = useState(null)
@@ -76,7 +75,12 @@ function Map() {
     [],
   )
 
-  const landmarkCounts = useMemo(() => countLandmarksByTier(), [])
+  const showAtlasTools = useMemo(
+    () =>
+      import.meta.env.DEV ||
+      new URLSearchParams(window.location.search).has('tools'),
+    [],
+  )
 
   const activeDistrict = useMemo(
     () => getDistrictAt(coords.gx, coords.gy),
@@ -176,7 +180,6 @@ function Map() {
       })
       landmarkLayer.addLayer(marker)
     })
-    landmarkLayer.addTo(map)
     landmarkLayerRef.current = landmarkLayer
 
     markerByIdRef.current = {}
@@ -293,17 +296,6 @@ function Map() {
     window.setTimeout(() => marker.openPopup(), 400)
   }
 
-  function jumpToLandmark(id) {
-    const landmark = landmarks.find((item) => item.id === id)
-    const map = mapRef.current
-    if (!landmark || !map) return
-
-    const { height, tileSize } = mapConfig
-    map.flyTo(toLatLng(landmark.gx, landmark.gy, height, tileSize), 2, {
-      duration: 0.6,
-    })
-  }
-
   async function copyCoords() {
     try {
       await navigator.clipboard.writeText(coordSnippet)
@@ -359,30 +351,6 @@ function Map() {
           )
         })}
         <div className="map-sidebar-divider" />
-        <h2>Landmarks</h2>
-        <div className="map-sidebar-meta">
-          Tier 1: {landmarkCounts[1]} · Tier 2: {landmarkCounts[2]}
-        </div>
-        {landmarks
-          .filter((landmark) => landmark.tier === 1)
-          .map((landmark) => (
-            <button
-              key={landmark.id}
-              type="button"
-              className="map-sidebar-row map-sidebar-row--button"
-              onClick={() => jumpToLandmark(landmark.id)}
-              title={landmark.blurb}
-            >
-              <span className="map-sidebar-label">
-                <span
-                  className="sw sw--filled"
-                  style={{ background: landmark.accent }}
-                />
-                {landmark.name}
-              </span>
-            </button>
-          ))}
-        <div className="map-sidebar-divider" />
         <h2>Status</h2>
         {STATUS_ORDER.map((status) => (
           <div key={status} className="map-sidebar-row">
@@ -423,7 +391,8 @@ function Map() {
         </div>
       </div>
 
-      <div className="map-atlas-tools map-panel">
+      {showAtlasTools && (
+        <div className="map-atlas-tools map-panel">
         <h2>Atlas tools</h2>
         <label className="map-tool-toggle">
           <input
@@ -473,7 +442,8 @@ function Map() {
             Drop a traced reference at <code>public/map/reference.png</code> to overlay it.
           </p>
         )}
-      </div>
+        </div>
+      )}
 
       <div className="map-search-panel map-panel">
         <h2>Find a project</h2>
