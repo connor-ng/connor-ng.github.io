@@ -55,22 +55,24 @@ npm run build
 npm run preview
 ```
 
-## Painting the map
+## Map
 
-You're **not** painting over the old biome blobs. The on-screen map is now a **San Francisco scaffold**:
+The home page uses a **live San Francisco street map** (OpenStreetMap data via [OpenFreeMap](https://openfreemap.org)) with your project markers on top. No hand-painted `world.png` required.
 
-- Pacific Ocean on the **left**, San Francisco Bay on the **right**
-- Peninsula shape with **district-colored zones** (Marina, Mission, Sunset, etc.)
-- A rough **Golden Gate** line and **Golden Gate Park** green strip
-- Light **street-grid hints** per district
+- **Real streets, parks, and coastline** at every zoom level
+- **Dark theme** matching the rest of the site
+- Project pins use `lat` / `lng` in `projects.js` (with `gx` / `gy` kept for district lookup)
 
-That scaffold is a layout guide. Your finished pixel art replaces it entirely.
+### Atlas tools (`?tools=1`)
 
-### When you're ready to paint
+- **Coord picker** — click the map, copy `{ lat, lng, gx, gy }` into `projects.js`
+- **District zones** — overlay approximate neighborhood bounds
+- **Show landmarks** — preview landmark placement (hidden by default)
 
-1. In Aseprite, create a **2560×1920** canvas (256×192 tiles at 10px).
-2. Optionally drop a traced antique map at `public/map/reference.png` and use `?tools=1` → **Reference overlay**.
-3. Paint districts, streets, landmarks, and water on top of the scaffold layout.
-4. Export as **`public/map/world.png`** — the app loads that file automatically and stops using the scaffold.
+### Pixel map mode (optional)
 
-Until `world.png` exists, the district scaffold is what you see. Landmark data in `landmarks.js` is for later — toggle with `?tools=1` → **Show landmarks** while placing art.
+Add `?pixel=1` to use the old painted/scaffold image map instead of live streets.
+
+## Painting the map (optional)
+
+If you later want a custom pixel-art `world.png`, use Pixelorama and add `?pixel=1`. The live street map is the default.

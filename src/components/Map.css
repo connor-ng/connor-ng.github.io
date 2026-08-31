@@ -35,6 +35,34 @@
   image-rendering: crisp-edges;
 }
 
+.map-root--geo .leaflet-image-layer,
+.map-root--geo .leaflet-tile {
+  image-rendering: auto;
+}
+
+.map-root .leaflet-container {
+  background: var(--map-bg);
+  font-family: 'Inter', sans-serif;
+}
+
+.map-root .leaflet-control-attribution {
+  background: rgba(10, 22, 34, 0.82);
+  color: var(--map-text-muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px 0 0 0;
+}
+
+.map-root .leaflet-control-attribution a {
+  color: var(--map-accent);
+}
+
+.map-coords-grid--muted {
+  color: var(--map-text-muted);
+  font-size: 10px;
+}
+
 .map-root .leaflet-control-zoom {
   display: none;
 }

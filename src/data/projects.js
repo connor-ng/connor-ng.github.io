@@ -14,6 +14,8 @@
  * @property {ProjectStatus} status
  * @property {number} gx - grid x coordinate on the map
  * @property {number} gy - grid y coordinate on the map
+ * @property {number} [lat] - WGS84 latitude (preferred on the live street map)
+ * @property {number} [lng] - WGS84 longitude (preferred on the live street map)
  * @property {string} [districtId] - optional override; otherwise inferred from gx/gy
  */
 
@@ -32,6 +34,8 @@ const projects = [
     caseStudyLink: 'https://example.com/case-study',
     status: 'done',
     districtId: 'mission',
+    lat: 37.7594,
+    lng: -122.4214,
     gx: 128,
     gy: 96,
   },
@@ -40,6 +44,8 @@ const projects = [
     title: '???',
     status: 'locked',
     districtId: 'bayview',
+    lat: 37.7346,
+    lng: -122.389,
     gx: 192,
     gy: 124,
   },
@@ -47,9 +53,11 @@ const projects = [
     id: 'p8',
     title: '???',
     status: 'locked',
+    lat: 37.7434,
+    lng: -122.4832,
+    districtId: 'sunset',
     gx: 56,
     gy: 158,
-    districtId: 'sunset',
   },
 ]
 

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
+import '@maplibre/maplibre-gl-leaflet'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import 'leaflet/dist/leaflet.css'
 import projects from '../data/projects'
 import landmarks from '../data/landmarks'
@@ -9,9 +11,21 @@ import {
   getDistrictAt,
   getSortedDistricts,
 } from '../utils/districtUtils'
+import { districtsToGeoJSON } from '../utils/districtsGeo'
 import { buildLandmarkHtml, buildLandmarkPopupHtml } from '../utils/landmarkHtml'
-import { formatGridCoords, toGrid, toLatLng } from '../utils/mapCoords'
 import { loadMapConfig } from '../utils/loadMapConfig'
+import { formatGridCoords, toGrid, toLatLng } from '../utils/mapCoords'
+import {
+  formatGeoCoords,
+  getPointLatLng,
+  getSfMaxBounds,
+  latLngToGrid,
+  MAP_STYLE_URL,
+  SF_CENTER,
+  SF_DEFAULT_ZOOM,
+  SF_MAX_ZOOM,
+  SF_MIN_ZOOM,
+} from '../utils/sfGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import './Map.css'
 
@@ -49,19 +63,30 @@ function Map() {
   const mapRef = useRef(null)
   const markerByIdRef = useRef({})
   const landmarkLayerRef = useRef(null)
+  const districtLayerRef = useRef(null)
   const referenceLayerRef = useRef(null)
   const pickMarkerRef = useRef(null)
   const coordPickerRef = useRef(false)
 
-  const [mapConfig, setMapConfig] = useState(null)
+  const isPixelMode = useMemo(
+    () => new URLSearchParams(window.location.search).has('pixel'),
+    [],
+  )
 
-  const [coords, setCoords] = useState({ gx: 0, gy: 0 })
+  const [mapConfig, setMapConfig] = useState(null)
+  const [coords, setCoords] = useState({
+    gx: 0,
+    gy: 0,
+    lat: SF_CENTER.lat,
+    lng: SF_CENTER.lng,
+  })
   const [searchQuery, setSearchQuery] = useState('')
   const [showingList, setShowingList] = useState(false)
   const [showHint, setShowHint] = useState(() => !localStorage.getItem('map-visited'))
   const [hintFaded, setHintFaded] = useState(false)
   const [showLandmarks, setShowLandmarks] = useState(false)
   const [showLandmarkLabels, setShowLandmarkLabels] = useState(false)
+  const [showDistrictZones, setShowDistrictZones] = useState(false)
   const [coordPickerMode, setCoordPickerMode] = useState(false)
   const [pickedCoords, setPickedCoords] = useState(null)
   const [copyFeedback, setCopyFeedback] = useState('')
@@ -109,9 +134,17 @@ function Map() {
   )
 
   const displayCoords = pickedCoords ?? coords
-  const coordSnippet = formatGridCoords(displayCoords.gx, displayCoords.gy)
+  const coordSnippet = isPixelMode
+    ? formatGridCoords(displayCoords.gx, displayCoords.gy)
+    : formatGeoCoords(
+        displayCoords.lat,
+        displayCoords.lng,
+        displayCoords.gx,
+        displayCoords.gy,
+      )
 
   useEffect(() => {
+    if (!isPixelMode) return undefined
     let cancelled = false
     loadMapConfig().then((config) => {
       if (!cancelled) setMapConfig(config)
@@ -119,21 +152,155 @@ function Map() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [isPixelMode])
 
   useEffect(() => {
     coordPickerRef.current = coordPickerMode
   }, [coordPickerMode])
 
   useEffect(() => {
+    if (!isPixelMode) return undefined
     fetch('/map/reference.png', { method: 'HEAD' })
       .then((response) => setReferenceAvailable(response.ok))
       .catch(() => setReferenceAvailable(false))
-  }, [])
+    return undefined
+  }, [isPixelMode])
 
   useEffect(() => {
     const container = mapContainerRef.current
-    if (!container || !mapConfig) return
+    if (!container || isPixelMode) return undefined
+
+    const map = L.map(container, {
+      center: [SF_CENTER.lat, SF_CENTER.lng],
+      zoom: SF_DEFAULT_ZOOM,
+      minZoom: SF_MIN_ZOOM,
+      maxZoom: SF_MAX_ZOOM,
+      zoomControl: false,
+      attributionControl: true,
+    })
+
+    L.maplibreGL({
+      style: MAP_STYLE_URL,
+    }).addTo(map)
+
+    map.setMaxBounds(getSfMaxBounds())
+    map.attributionControl.setPrefix('')
+    map.attributionControl.addAttribution(
+      '© OpenStreetMap · OpenFreeMap',
+    )
+
+    const districtLayer = L.geoJSON(districtsToGeoJSON(), {
+      style(feature) {
+        const color = feature?.properties?.color ?? [120, 120, 120]
+        return {
+          color: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.55)`,
+          weight: 1.5,
+          fillColor: `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
+          fillOpacity: 0.14,
+        }
+      },
+    })
+    districtLayerRef.current = districtLayer
+
+    const landmarkLayer = L.layerGroup()
+    landmarks.forEach((landmark) => {
+      const icon = L.divIcon({
+        html: buildLandmarkHtml(landmark, { useSprite: true }),
+        className: 'landmark-icon-wrap',
+        iconSize: [landmark.width, landmark.height],
+        iconAnchor: [landmark.anchorX, landmark.anchorY],
+      })
+
+      const marker = L.marker(getPointLatLng(landmark), {
+        icon,
+        zIndexOffset: landmark.tier === 1 ? 250 : 150,
+      })
+
+      marker.bindPopup(buildLandmarkPopupHtml(landmark), {
+        maxWidth: 280,
+        className: 'landmark-popup-wrapper',
+      })
+      landmarkLayer.addLayer(marker)
+    })
+    landmarkLayerRef.current = landmarkLayer
+
+    markerByIdRef.current = {}
+    projects.forEach((project) => {
+      const icon = L.divIcon({
+        html: buildMarkerHtml(project, 'map'),
+        className: '',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+      })
+
+      const marker = L.marker(getPointLatLng(project), {
+        icon,
+        zIndexOffset: 500,
+      }).addTo(map)
+
+      markerByIdRef.current[project.id] = marker
+      marker.bindPopup(buildPopupHtml(project), { maxWidth: 320 })
+    })
+
+    const updateCoords = (lat, lng) => {
+      const grid = latLngToGrid(lat, lng)
+      setCoords({ gx: grid.gx, gy: grid.gy, lat, lng })
+    }
+
+    map.on('mousemove', (event) => {
+      updateCoords(event.latlng.lat, event.latlng.lng)
+    })
+
+    map.on('click', (event) => {
+      if (!coordPickerRef.current) return
+
+      const { lat, lng } = event.latlng
+      const grid = latLngToGrid(lat, lng)
+      setPickedCoords({ gx: grid.gx, gy: grid.gy, lat, lng })
+
+      if (pickMarkerRef.current) {
+        pickMarkerRef.current.setLatLng(event.latlng)
+      } else {
+        const pickIcon = L.divIcon({
+          html: '<div class="coord-pick-marker"></div>',
+          className: '',
+          iconSize: [12, 12],
+          iconAnchor: [6, 6],
+        })
+        pickMarkerRef.current = L.marker(event.latlng, {
+          icon: pickIcon,
+          zIndexOffset: 800,
+        }).addTo(map)
+      }
+    })
+
+    if (!localStorage.getItem('map-visited')) {
+      const dismissHint = () => {
+        setHintFaded(true)
+        localStorage.setItem('map-visited', '1')
+        map.off('movestart', dismissHint)
+        map.off('zoomstart', dismissHint)
+        window.setTimeout(() => setShowHint(false), 600)
+      }
+      map.on('movestart', dismissHint)
+      map.on('zoomstart', dismissHint)
+    }
+
+    mapRef.current = map
+
+    return () => {
+      map.remove()
+      mapRef.current = null
+      markerByIdRef.current = {}
+      landmarkLayerRef.current = null
+      districtLayerRef.current = null
+      pickMarkerRef.current = null
+    }
+  }, [isPixelMode])
+
+  useEffect(() => {
+    const container = mapContainerRef.current
+    if (!container || !isPixelMode || !mapConfig) return undefined
 
     const { mapImageUrl, width, height, tileSize } = mapConfig
 
@@ -212,14 +379,24 @@ function Map() {
 
     map.on('mousemove', (event) => {
       const grid = toGrid(event.latlng.lat, event.latlng.lng, height, tileSize)
-      setCoords(grid)
+      setCoords({
+        gx: grid.gx,
+        gy: grid.gy,
+        lat: SF_CENTER.lat,
+        lng: SF_CENTER.lng,
+      })
     })
 
     map.on('click', (event) => {
       if (!coordPickerRef.current) return
 
       const grid = toGrid(event.latlng.lat, event.latlng.lng, height, tileSize)
-      setPickedCoords(grid)
+      setPickedCoords({
+        gx: grid.gx,
+        gy: grid.gy,
+        lat: SF_CENTER.lat,
+        lng: SF_CENTER.lng,
+      })
 
       if (pickMarkerRef.current) {
         pickMarkerRef.current.setLatLng(event.latlng)
@@ -259,7 +436,7 @@ function Map() {
       referenceLayerRef.current = null
       pickMarkerRef.current = null
     }
-  }, [mapConfig])
+  }, [isPixelMode, mapConfig])
 
   useEffect(() => {
     const layer = landmarkLayerRef.current
@@ -274,16 +451,28 @@ function Map() {
   }, [showLandmarks])
 
   useEffect(() => {
+    const layer = districtLayerRef.current
+    const map = mapRef.current
+    if (!layer || !map || isPixelMode) return
+
+    if (showDistrictZones) {
+      layer.addTo(map)
+    } else {
+      map.removeLayer(layer)
+    }
+  }, [showDistrictZones, isPixelMode])
+
+  useEffect(() => {
     const layer = referenceLayerRef.current
     const map = mapRef.current
-    if (!layer || !map || !referenceAvailable) return
+    if (!layer || !map || !referenceAvailable || !isPixelMode) return
 
     if (showReference) {
       layer.addTo(map)
     } else {
       map.removeLayer(layer)
     }
-  }, [showReference, referenceAvailable])
+  }, [showReference, referenceAvailable, isPixelMode])
 
   useEffect(() => {
     if (!coordPickerMode && pickMarkerRef.current && mapRef.current) {
@@ -299,10 +488,15 @@ function Map() {
     const map = mapRef.current
     if (!project || !marker || !map) return
 
-    const { height, tileSize } = mapConfig
-    map.flyTo(toLatLng(project.gx, project.gy, height, tileSize), 2, {
-      duration: 0.6,
-    })
+    if (isPixelMode && mapConfig) {
+      const { height, tileSize } = mapConfig
+      map.flyTo(toLatLng(project.gx, project.gy, height, tileSize), 2, {
+        duration: 0.6,
+      })
+    } else {
+      map.flyTo(getPointLatLng(project), 15, { duration: 0.6 })
+    }
+
     window.setTimeout(() => marker.openPopup(), 400)
   }
 
@@ -329,7 +523,7 @@ function Map() {
     setShowingList((prev) => !prev)
   }
 
-  if (!mapConfig) {
+  if (isPixelMode && !mapConfig) {
     return (
       <div className="map-root map-root--loading">
         <div className="map-loading map-panel">Loading atlas…</div>
@@ -339,7 +533,7 @@ function Map() {
 
   return (
     <div
-      className={`map-root${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
+      className={`map-root map-root--geo${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
     >
       <div className="map-hud">
         <div className="eyebrow">Charted Works</div>
@@ -411,55 +605,67 @@ function Map() {
 
       {showAtlasTools && (
         <div className="map-atlas-tools map-panel">
-        <h2>Atlas tools</h2>
-        <label className="map-tool-toggle">
-          <input
-            type="checkbox"
-            checked={showLandmarks}
-            onChange={(event) => setShowLandmarks(event.target.checked)}
-          />
-          Show landmarks
-        </label>
-        <label className="map-tool-toggle">
-          <input
-            type="checkbox"
-            checked={showLandmarkLabels}
-            onChange={(event) => setShowLandmarkLabels(event.target.checked)}
-          />
-          Landmark labels
-        </label>
-        <label className="map-tool-toggle">
-          <input
-            type="checkbox"
-            checked={coordPickerMode}
-            onChange={(event) => setCoordPickerMode(event.target.checked)}
-          />
-          Coord picker
-        </label>
-        {referenceAvailable && (
+          <h2>Atlas tools</h2>
+          {!isPixelMode && (
+            <label className="map-tool-toggle">
+              <input
+                type="checkbox"
+                checked={showDistrictZones}
+                onChange={(event) => setShowDistrictZones(event.target.checked)}
+              />
+              District zones
+            </label>
+          )}
           <label className="map-tool-toggle">
             <input
               type="checkbox"
-              checked={showReference}
-              onChange={(event) => setShowReference(event.target.checked)}
+              checked={showLandmarks}
+              onChange={(event) => setShowLandmarks(event.target.checked)}
             />
-            Reference overlay
+            Show landmarks
           </label>
-        )}
-        <div className="map-tool-coords">
-          <code>{coordSnippet}</code>
-          <button type="button" className="map-tool-copy" onClick={copyCoords}>
-            {copyFeedback || 'Copy'}
-          </button>
-        </div>
-        {coordPickerMode && (
-          <p className="map-tool-hint">Click the map to pin coordinates for Aseprite.</p>
-        )}
-        {!referenceAvailable && (
-          <p className="map-tool-hint">
-            Drop a traced reference at <code>public/map/reference.png</code> to overlay it.
-          </p>
-        )}
+          <label className="map-tool-toggle">
+            <input
+              type="checkbox"
+              checked={showLandmarkLabels}
+              onChange={(event) => setShowLandmarkLabels(event.target.checked)}
+            />
+            Landmark labels
+          </label>
+          <label className="map-tool-toggle">
+            <input
+              type="checkbox"
+              checked={coordPickerMode}
+              onChange={(event) => setCoordPickerMode(event.target.checked)}
+            />
+            Coord picker
+          </label>
+          {isPixelMode && referenceAvailable && (
+            <label className="map-tool-toggle">
+              <input
+                type="checkbox"
+                checked={showReference}
+                onChange={(event) => setShowReference(event.target.checked)}
+              />
+              Reference overlay
+            </label>
+          )}
+          <div className="map-tool-coords">
+            <code>{coordSnippet}</code>
+            <button type="button" className="map-tool-copy" onClick={copyCoords}>
+              {copyFeedback || 'Copy'}
+            </button>
+          </div>
+          {coordPickerMode && (
+            <p className="map-tool-hint">
+              Click the map to copy coordinates into projects.js.
+            </p>
+          )}
+          {isPixelMode && !referenceAvailable && (
+            <p className="map-tool-hint">
+              Drop a traced reference at <code>public/map/reference.png</code> to overlay it.
+            </p>
+          )}
         </div>
       )}
 
@@ -494,7 +700,12 @@ function Map() {
         <span className="map-coords-district">
           {activeDistrict?.name ?? 'Open water'}
         </span>
-        <span className="map-coords-grid">
+        {!isPixelMode && (
+          <span className="map-coords-grid">
+            {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
+          </span>
+        )}
+        <span className="map-coords-grid map-coords-grid--muted">
           x: {coords.gx}, y: {coords.gy}
         </span>
       </div>
