@@ -34,6 +34,19 @@ import {
 import { buildMarkerHtml } from '../utils/markerHtml'
 import './Map.css'
 
+function getDistrictStyle(feature, activeDistrictId) {
+  const color = feature?.properties?.color ?? [120, 120, 120]
+  const districtId = feature?.properties?.id
+  const isActive = activeDistrictId && districtId === activeDistrictId
+
+  return {
+    color: `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${isActive ? 0.95 : 0.72})`,
+    weight: isActive ? 2.5 : 1.75,
+    fillColor: `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
+    fillOpacity: isActive ? 0.42 : 0.28,
+  }
+}
+
 function buildPopupHtml(project) {
   if (project.status === 'locked') {
     return '<div class="popup-eyebrow">Sealed</div><div class="popup-title">???</div><p class="popup-blurb">Not revealed yet.</p>'
@@ -92,7 +105,7 @@ function Map() {
   const [showHint, setShowHint] = useState(() => !localStorage.getItem('map-visited'))
   const [hintFaded, setHintFaded] = useState(false)
   const [showLandmarks, setShowLandmarks] = useState(true)
-  const [showLandmarkLabels, setShowLandmarkLabels] = useState(false)
+  const [showLandmarkLabels, setShowLandmarkLabels] = useState(true)
   const [showDistrictZones, setShowDistrictZones] = useState(true)
   const [coordPickerMode, setCoordPickerMode] = useState(false)
   const [pickedCoords, setPickedCoords] = useState(null)
@@ -102,6 +115,7 @@ function Map() {
 
   const showDistrictZonesRef = useRef(showDistrictZones)
   const showLandmarksRef = useRef(showLandmarks)
+  const activeDistrictIdRef = useRef(null)
 
   const sortedDistricts = useMemo(() => getSortedDistricts(), [])
 
@@ -111,11 +125,16 @@ function Map() {
   )
 
   const showAtlasTools = useMemo(
-    () =>
-      import.meta.env.DEV ||
-      new URLSearchParams(window.location.search).has('tools'),
+    () => new URLSearchParams(window.location.search).has('tools'),
     [],
   )
+
+  const showProjectMarkers = useMemo(
+    () => new URLSearchParams(window.location.search).has('projects'),
+    [],
+  )
+
+  const mapFocusMode = !showAtlasTools
 
   const activeDistrict = useMemo(
     () => getDistrictAt(coords.gx, coords.gy),
@@ -175,6 +194,13 @@ function Map() {
   }, [showDistrictZones, isPixelMode])
 
   useEffect(() => {
+    activeDistrictIdRef.current = activeDistrict?.id ?? null
+    const layer = districtLayerRef.current
+    if (!layer || isPixelMode) return
+    layer.setStyle((feature) => getDistrictStyle(feature, activeDistrict?.id))
+  }, [activeDistrict?.id, isPixelMode])
+
+  useEffect(() => {
     showLandmarksRef.current = showLandmarks
     const map = mapRef.current
     if (map && !isPixelMode) map.fire('zoomend')
@@ -214,13 +240,7 @@ function Map() {
 
     const districtLayer = L.geoJSON(districtsToGeoJSON(), {
       style(feature) {
-        const color = feature?.properties?.color ?? [120, 120, 120]
-        return {
-          color: `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.55)`,
-          weight: 1.5,
-          fillColor: `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
-          fillOpacity: 0.14,
-        }
+        return getDistrictStyle(feature, activeDistrictIdRef.current)
       },
     })
     districtLayerRef.current = districtLayer
@@ -244,15 +264,18 @@ function Map() {
     const landmarkEntries = []
     landmarks.forEach((landmark) => {
       const icon = L.divIcon({
-        html: buildLandmarkHtml(landmark, { useSprite: true }),
-        className: 'landmark-icon-wrap',
-        iconSize: [landmark.width, landmark.height],
+        html: buildLandmarkHtml(landmark, {
+          useSprite: true,
+          showLabel: landmark.tier === 1,
+        }),
+        className: `landmark-icon-wrap landmark-icon-wrap--tier${landmark.tier}`,
+        iconSize: [landmark.width, landmark.height + (landmark.tier === 1 ? 14 : 0)],
         iconAnchor: [landmark.anchorX, landmark.anchorY],
       })
 
       const marker = L.marker(getPointLatLng(landmark), {
         icon,
-        zIndexOffset: landmark.tier === 1 ? 250 : 150,
+        zIndexOffset: landmark.tier === 1 ? 400 : 250,
       })
 
       marker.bindPopup(buildLandmarkPopupHtml(landmark), {
@@ -302,22 +325,24 @@ function Map() {
     syncMapDetail()
 
     markerByIdRef.current = {}
-    projects.forEach((project) => {
-      const icon = L.divIcon({
-        html: buildMarkerHtml(project, 'map'),
-        className: '',
-        iconSize: [28, 28],
-        iconAnchor: [14, 14],
+    if (showProjectMarkers) {
+      projects.forEach((project) => {
+        const icon = L.divIcon({
+          html: buildMarkerHtml(project, 'map'),
+          className: '',
+          iconSize: [28, 28],
+          iconAnchor: [14, 14],
+        })
+
+        const marker = L.marker(getPointLatLng(project), {
+          icon,
+          zIndexOffset: 500,
+        }).addTo(map)
+
+        markerByIdRef.current[project.id] = marker
+        marker.bindPopup(buildPopupHtml(project), { maxWidth: 320 })
       })
-
-      const marker = L.marker(getPointLatLng(project), {
-        icon,
-        zIndexOffset: 500,
-      }).addTo(map)
-
-      markerByIdRef.current[project.id] = marker
-      marker.bindPopup(buildPopupHtml(project), { maxWidth: 320 })
-    })
+    }
 
     const updateCoords = (lat, lng) => {
       const grid = latLngToGrid(lat, lng)
@@ -375,7 +400,7 @@ function Map() {
       landmarkEntriesRef.current = []
       pickMarkerRef.current = null
     }
-  }, [isPixelMode])
+  }, [isPixelMode, showProjectMarkers])
 
   useEffect(() => {
     const container = mapContainerRef.current
@@ -600,7 +625,7 @@ function Map() {
 
   return (
     <div
-      className={`map-root map-root--geo${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
+      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
     >
       <div className="map-hud">
         <div className="eyebrow">Charted Works</div>
@@ -608,59 +633,65 @@ function Map() {
         <p className="map-hud-subtitle">San Francisco</p>
       </div>
 
-      <div className="map-sidebar map-panel">
-        <h2>Districts</h2>
-        {sortedDistricts.map((district) => {
-          const [r, g, b] = district.color
-          const isActive = activeDistrict?.id === district.id
-          return (
-            <div
-              key={district.id}
-              className={`map-sidebar-row${isActive ? ' is-active' : ''}`}
-              title={`${district.flavor} (${district.pattern})`}
-            >
-              <span className="map-sidebar-label">
+      {!mapFocusMode && (
+        <div className="map-sidebar map-panel">
+          <h2>Districts</h2>
+          {sortedDistricts.map((district) => {
+            const [r, g, b] = district.color
+            const isActive = activeDistrict?.id === district.id
+            return (
+              <div
+                key={district.id}
+                className={`map-sidebar-row${isActive ? ' is-active' : ''}`}
+                title={`${district.flavor} (${district.pattern})`}
+              >
+                <span className="map-sidebar-label">
+                  <span
+                    className="sw sw--filled"
+                    style={{ background: `rgb(${r}, ${g}, ${b})` }}
+                  />
+                  {district.name}
+                </span>
+                <span className="count">{projectCountsByDistrict[district.id]}</span>
+              </div>
+            )
+          })}
+          <div className="map-sidebar-divider" />
+          <h2>Status</h2>
+          {STATUS_ORDER.map((status) => (
+            <div key={status} className="map-sidebar-row">
+              <span>
                 <span
                   className="sw sw--filled"
-                  style={{ background: `rgb(${r}, ${g}, ${b})` }}
+                  style={{ background: PROJECT_STATUS[status].color }}
                 />
-                {district.name}
+                {PROJECT_STATUS[status].label}
               </span>
-              <span className="count">{projectCountsByDistrict[district.id]}</span>
-            </div>
-          )
-        })}
-        <div className="map-sidebar-divider" />
-        <h2>Status</h2>
-        {STATUS_ORDER.map((status) => (
-          <div key={status} className="map-sidebar-row">
-            <span>
-              <span
-                className="sw sw--filled"
-                style={{ background: PROJECT_STATUS[status].color }}
-              />
-              {PROJECT_STATUS[status].label}
-            </span>
-            <span className="count">{statusCounts[status]}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="map-topright">
-        <div className="map-legend map-panel">
-          {STATUS_ORDER.map((status) => (
-            <div key={status} className="row">
-              <span
-                className="legend-swatch"
-                style={{ borderColor: PROJECT_STATUS[status].color }}
-              />
-              {PROJECT_STATUS[status].label}
+              <span className="count">{statusCounts[status]}</span>
             </div>
           ))}
         </div>
-        <button type="button" className="map-view-toggle map-panel" onClick={toggleView}>
-          {showingList ? '🗺 Map view' : '☰ List view'}
-        </button>
+      )}
+
+      <div className="map-topright">
+        {!mapFocusMode && (
+          <>
+            <div className="map-legend map-panel">
+              {STATUS_ORDER.map((status) => (
+                <div key={status} className="row">
+                  <span
+                    className="legend-swatch"
+                    style={{ borderColor: PROJECT_STATUS[status].color }}
+                  />
+                  {PROJECT_STATUS[status].label}
+                </div>
+              ))}
+            </div>
+            <button type="button" className="map-view-toggle map-panel" onClick={toggleView}>
+              {showingList ? '🗺 Map view' : '☰ List view'}
+            </button>
+          </>
+        )}
         <div className="map-zoom-controls">
           <button type="button" className="map-panel" onClick={handleZoomIn} aria-label="Zoom in">
             +
@@ -737,50 +768,56 @@ function Map() {
         </div>
       )}
 
-      <div className="map-search-panel map-panel">
-        <h2>Find a project</h2>
-        <input
-          className="map-search-input"
-          type="text"
-          placeholder="Search by name..."
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value)}
-        />
-        <div className="map-search-grid">
-          {searchResults.map((project) => (
-            <button
-              key={project.id}
-              type="button"
-              className="map-search-item"
-              onClick={() => jumpTo(project.id)}
-            >
-              <div
-                className="search-marker"
-                dangerouslySetInnerHTML={{ __html: buildMarkerHtml(project, 'search') }}
-              />
-              <div className="label">{project.title}</div>
-            </button>
-          ))}
+      {!mapFocusMode && (
+        <div className="map-search-panel map-panel">
+          <h2>Find a project</h2>
+          <input
+            className="map-search-input"
+            type="text"
+            placeholder="Search by name..."
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+          />
+          <div className="map-search-grid">
+            {searchResults.map((project) => (
+              <button
+                key={project.id}
+                type="button"
+                className="map-search-item"
+                onClick={() => jumpTo(project.id)}
+              >
+                <div
+                  className="search-marker"
+                  dangerouslySetInnerHTML={{ __html: buildMarkerHtml(project, 'search') }}
+                />
+                <div className="label">{project.title}</div>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="map-coords map-panel">
+      <div className={`map-coords map-panel${mapFocusMode ? ' map-coords--focus' : ''}`}>
         <span className="map-coords-district">
           {activeDistrict?.name ?? 'Open water'}
         </span>
-        {!isPixelMode && (
+        {!mapFocusMode && !isPixelMode && (
           <span className="map-coords-grid">
             {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
           </span>
         )}
-        <span className="map-coords-grid map-coords-grid--muted">
-          x: {coords.gx}, y: {coords.gy}
-        </span>
+        {!mapFocusMode && (
+          <span className="map-coords-grid map-coords-grid--muted">
+            x: {coords.gx}, y: {coords.gy}
+          </span>
+        )}
       </div>
 
       {showHint && (
         <div className={`map-onboarding map-panel${hintFaded ? ' faded' : ''}`}>
-          drag to explore, click a marker to open it
+          {mapFocusMode
+            ? 'drag to explore · click landmarks to learn more'
+            : 'drag to explore, click a marker to open it'}
         </div>
       )}
 

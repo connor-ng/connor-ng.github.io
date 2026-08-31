@@ -40,6 +40,10 @@
   image-rendering: auto;
 }
 
+.map-root--focus.map-root--geo .leaflet-tile-pane {
+  filter: saturate(0.25) brightness(0.5) contrast(1.08);
+}
+
 .map-root .leaflet-container {
   background: var(--map-bg);
   font-family: 'Inter', sans-serif;
@@ -108,18 +112,17 @@
 
 .district-map-label {
   font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.5px;
+  font-size: 10px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
   color: var(--theme-cream);
   text-shadow:
+    0 0 8px rgba(10, 22, 34, 0.9),
     1px 1px 0 var(--map-bg),
-    -1px -1px 0 var(--map-bg),
-    1px -1px 0 var(--map-bg),
-    -1px 1px 0 var(--map-bg);
+    -1px -1px 0 var(--map-bg);
   white-space: nowrap;
   pointer-events: none;
-  opacity: 0.85;
+  opacity: 0.92;
 }
 
 .map-root--loading {
@@ -311,6 +314,23 @@
   color: var(--map-text);
   font-size: 10.5px;
   letter-spacing: 0.3px;
+}
+
+.map-coords--focus {
+  bottom: 22px;
+  left: 20px;
+  right: auto;
+  align-items: flex-start;
+  padding: 8px 12px;
+  background: rgba(10, 22, 34, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.map-coords--focus .map-coords-district {
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--theme-cream);
 }
 
 .map-coords-grid {
@@ -672,7 +692,21 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  filter: drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--landmark-accent) 55%, transparent))
+    drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.55));
+}
+
+.map-root .landmark-marker--tier1 .landmark-marker-body {
+  transform: scale(1.15);
+  transform-origin: center bottom;
+}
+
+.map-root .landmark-marker--tier1 .landmark-sprite {
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--landmark-accent) 70%, transparent));
+}
+
+.map-root .landmark-icon-wrap--tier1 {
+  z-index: 500 !important;
 }
 
 .map-root .landmark-sprite {
@@ -689,19 +723,30 @@
 
 .map-root .landmark-label {
   display: none;
-  margin-top: 2px;
-  max-width: 120px;
+  margin-top: 3px;
+  max-width: 140px;
   font-family: 'DM Mono', monospace;
   font-size: 8px;
-  line-height: 1.2;
+  line-height: 1.25;
   text-align: center;
   color: var(--theme-cream);
-  text-shadow: 1px 1px 0 var(--map-bg);
+  text-shadow:
+    0 0 6px rgba(10, 22, 34, 0.95),
+    1px 1px 0 var(--map-bg);
   pointer-events: none;
 }
 
-.map-root--landmark-labels .landmark-label {
+.map-root--landmark-labels .landmark-label,
+.map-root--focus .landmark-marker--tier1 .landmark-label {
   display: block;
+}
+
+.map-root--focus .map-hud {
+  opacity: 0.92;
+}
+
+.map-root--focus .map-topright {
+  top: calc(var(--nav-height, 52px) + 16px);
 }
 
 .map-root--coord-picker .map-container {
