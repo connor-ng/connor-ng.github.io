@@ -9,6 +9,7 @@ import { PROJECT_STATUS, STATUS_ORDER } from '../constants/projectStatus'
 import {
   countProjectsByDistrict,
   getDistrictAt,
+  getProjectDistrict,
   getSortedDistricts,
 } from '../utils/districtUtils'
 import { buildLandmarkHtml, buildLandmarkPopupHtml } from '../utils/landmarkHtml'
@@ -137,8 +138,18 @@ function Map() {
   }, [searchQuery])
 
   const listProjects = useMemo(
-    () => projects.filter((p) => p.status !== 'locked'),
+    () => projects.filter((project) => project.status !== 'locked'),
     [],
+  )
+
+  const featuredProjects = useMemo(
+    () => listProjects.filter((project) => project.featured),
+    [listProjects],
+  )
+
+  const otherListProjects = useMemo(
+    () => listProjects.filter((project) => !project.featured),
+    [listProjects],
   )
 
   const displayCoords = pickedCoords ?? coords
@@ -526,6 +537,11 @@ function Map() {
     window.setTimeout(() => marker.openPopup(), 400)
   }
 
+  function openOnMap(id) {
+    setShowingList(false)
+    window.setTimeout(() => jumpTo(id), 50)
+  }
+
   async function copyCoords() {
     try {
       await navigator.clipboard.writeText(coordSnippet)
@@ -545,10 +561,6 @@ function Map() {
     mapRef.current?.zoomOut()
   }
 
-  function toggleView() {
-    setShowingList((prev) => !prev)
-  }
-
   if (isPixelMode && !mapConfig) {
     return (
       <div className="map-root map-root--loading">
@@ -559,13 +571,15 @@ function Map() {
 
   return (
     <div
-      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showHint && !hintFaded ? ' map-root--onboarding' : ''}${showLandmarks ? ' map-root--landmarks-on' : ''}${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
+      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showingList ? ' map-root--list' : ''}${showHint && !hintFaded ? ' map-root--onboarding' : ''}${showLandmarks ? ' map-root--landmarks-on' : ''}${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
     >
-      <div className="map-hud">
-        <p className="map-hud-eyebrow">Portfolio</p>
-        <h1>Work</h1>
-        <p className="map-hud-subtitle">San Francisco</p>
-      </div>
+      {!showingList && (
+        <div className="map-hud">
+          <p className="map-hud-eyebrow">Portfolio</p>
+          <h1>Work</h1>
+          <p className="map-hud-subtitle">San Francisco</p>
+        </div>
+      )}
 
       {!mapFocusMode && (
         <div className="map-sidebar map-panel">
@@ -609,24 +623,37 @@ function Map() {
 
       <div className="map-topright">
         {!mapFocusMode && (
-          <>
-            <div className="map-legend map-panel">
-              {STATUS_ORDER.map((status) => (
-                <div key={status} className="row">
-                  <span
-                    className="legend-swatch"
-                    style={{ borderColor: PROJECT_STATUS[status].color }}
-                  />
-                  {PROJECT_STATUS[status].label}
-                </div>
-              ))}
-            </div>
-            <button type="button" className="map-view-toggle map-panel" onClick={toggleView}>
-              {showingList ? '🗺 Map view' : '☰ List view'}
-            </button>
-          </>
+          <div className="map-legend map-panel">
+            {STATUS_ORDER.map((status) => (
+              <div key={status} className="row">
+                <span
+                  className="legend-swatch"
+                  style={{ borderColor: PROJECT_STATUS[status].color }}
+                />
+                {PROJECT_STATUS[status].label}
+              </div>
+            ))}
+          </div>
         )}
-        {mapFocusMode && (
+        <div className="map-view-switcher map-panel" role="group" aria-label="View mode">
+          <button
+            type="button"
+            className={`map-view-switcher-btn${!showingList ? ' is-active' : ''}`}
+            onClick={() => setShowingList(false)}
+            aria-pressed={!showingList}
+          >
+            Map
+          </button>
+          <button
+            type="button"
+            className={`map-view-switcher-btn${showingList ? ' is-active' : ''}`}
+            onClick={() => setShowingList(true)}
+            aria-pressed={showingList}
+          >
+            List
+          </button>
+        </div>
+        {mapFocusMode && !showingList && (
           <div className="map-focus-toggles map-panel">
             <label className="map-focus-toggle">
               <input
@@ -638,14 +665,16 @@ function Map() {
             </label>
           </div>
         )}
-        <div className="map-zoom-controls">
-          <button type="button" className="map-panel" onClick={handleZoomIn} aria-label="Zoom in">
-            +
-          </button>
-          <button type="button" className="map-panel" onClick={handleZoomOut} aria-label="Zoom out">
-            −
-          </button>
-        </div>
+        {!showingList && (
+          <div className="map-zoom-controls">
+            <button type="button" className="map-panel" onClick={handleZoomIn} aria-label="Zoom in">
+              +
+            </button>
+            <button type="button" className="map-panel" onClick={handleZoomOut} aria-label="Zoom out">
+              −
+            </button>
+          </div>
+        )}
       </div>
 
       {showAtlasTools && (
@@ -733,7 +762,8 @@ function Map() {
         </div>
       )}
 
-      <div className={`map-coords map-panel${mapFocusMode ? ' map-coords--focus' : ''}`}>
+      {!showingList && (
+        <div className={`map-coords map-panel${mapFocusMode ? ' map-coords--focus' : ''}`}>
         <span className="map-coords-district">
           {activeDistrict?.name ?? 'Open water'}
         </span>
@@ -758,8 +788,9 @@ function Map() {
           </span>
         )}
       </div>
+      )}
 
-      {showHint && (
+      {showHint && !showingList && (
         <div className={`map-onboarding map-panel${hintFaded ? ' faded' : ''}`}>
           Click a pin to view work · drag to explore
         </div>
@@ -771,29 +802,117 @@ function Map() {
       />
 
       <div className={`map-list-view${showingList ? ' visible' : ''}`}>
-        {listProjects.map((project) => (
-          <a
-            key={project.id}
-            className="map-list-row map-panel"
-            href={project.liveLink}
-          >
-            <div
-              className="list-marker"
-              dangerouslySetInnerHTML={{ __html: buildMarkerHtml(project, 'list') }}
-            />
-            <div className="meta">
-              <div className="title">{project.title}</div>
-              <div className="tag">{project.roleAndTimeframe}</div>
-              <div className="problem">{project.oneLinerProblem}</div>
-            </div>
-            <div
-              className="status"
-              style={{ color: PROJECT_STATUS[project.status].color }}
+        <header className="map-list-header">
+          <p className="map-list-eyebrow">Portfolio</p>
+          <h2 className="map-list-title">Work</h2>
+          <p className="map-list-intro">
+            Featured projects below — open one or jump to its pin on the map.
+          </p>
+        </header>
+
+        {featuredProjects.map((project) => {
+          const district = getProjectDistrict(project)
+          const status = PROJECT_STATUS[project.status]
+          return (
+            <article
+              key={project.id}
+              className="map-list-featured map-panel"
+              style={{ '--featured-ring': status.color }}
             >
-              {PROJECT_STATUS[project.status].label}
-            </div>
-          </a>
-        ))}
+              {project.screenshot && (
+                <img
+                  className="map-list-featured-shot"
+                  src={project.screenshot}
+                  alt=""
+                />
+              )}
+              <div className="map-list-featured-body">
+                <p className="map-list-featured-eyebrow">
+                  {project.featuredLabel ?? 'Featured'}
+                </p>
+                <h3 className="map-list-featured-title">{project.title}</h3>
+                {project.roleAndTimeframe && (
+                  <p className="map-list-featured-role">{project.roleAndTimeframe}</p>
+                )}
+                {district && (
+                  <p className="map-list-featured-district">{district.name}</p>
+                )}
+                {project.oneLinerProblem && (
+                  <p className="map-list-featured-problem">{project.oneLinerProblem}</p>
+                )}
+                <div className="map-list-actions">
+                  <button
+                    type="button"
+                    className="map-list-btn map-list-btn--primary"
+                    onClick={() => openOnMap(project.id)}
+                  >
+                    View on map
+                  </button>
+                  {project.liveLink && (
+                    <a
+                      className="map-list-btn map-list-btn--secondary"
+                      href={project.liveLink}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Live site →
+                    </a>
+                  )}
+                  {project.caseStudyLink && (
+                    <a
+                      className="map-list-btn map-list-btn--secondary"
+                      href={project.caseStudyLink}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Case study →
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          )
+        })}
+
+        {otherListProjects.length > 0 && (
+          <>
+            <h3 className="map-list-section-label">More projects</h3>
+            {otherListProjects.map((project) => (
+              <div key={project.id} className="map-list-row map-panel">
+                <div
+                  className="list-marker"
+                  dangerouslySetInnerHTML={{
+                    __html: buildMarkerHtml(project, 'list'),
+                  }}
+                />
+                <div className="meta">
+                  <div className="title">{project.title}</div>
+                  <div className="tag">{project.roleAndTimeframe}</div>
+                  <div className="problem">{project.oneLinerProblem}</div>
+                </div>
+                <div className="map-list-row-actions">
+                  <button
+                    type="button"
+                    className="map-list-btn map-list-btn--ghost"
+                    onClick={() => openOnMap(project.id)}
+                  >
+                    Map
+                  </button>
+                  {project.liveLink && (
+                    <a
+                      className="map-list-btn map-list-btn--ghost"
+                      href={project.liveLink}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Open
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </>
+        )}
       </div>
     </div>
   )

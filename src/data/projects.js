@@ -17,6 +17,8 @@
  * @property {number} [lat] - WGS84 latitude (preferred on the live street map)
  * @property {number} [lng] - WGS84 longitude (preferred on the live street map)
  * @property {string} [districtId] - optional override; otherwise inferred from gx/gy
+ * @property {boolean} [featured] - highlight in list view (featured section)
+ * @property {string} [featuredLabel] - eyebrow on featured card (default: "Featured")
  */
 
 /** @type {Project[]} */
@@ -33,6 +35,8 @@ const projects = [
     liveLink: 'https://example.com',
     caseStudyLink: 'https://example.com/case-study',
     status: 'done',
+    featured: true,
+    featuredLabel: 'Featured work',
     districtId: 'mission',
     lat: 37.7594,
     lng: -122.4214,
