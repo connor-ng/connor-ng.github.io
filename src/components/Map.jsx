@@ -11,7 +11,6 @@ import {
   getDistrictAt,
   getSortedDistricts,
 } from '../utils/districtUtils'
-import { districtsToGeoJSON, getDistrictLabels } from '../utils/districtsGeo'
 import { buildLandmarkHtml, buildLandmarkPopupHtml } from '../utils/landmarkHtml'
 import { loadMapConfig } from '../utils/loadMapConfig'
 import { formatGridCoords, toGrid, toLatLng } from '../utils/mapCoords'
@@ -26,28 +25,11 @@ import {
   SF_MAX_ZOOM,
   SF_MIN_ZOOM,
   SF_VIEW_BOUNDS,
-  ZOOM_DISTRICT_LABELS,
-  ZOOM_DISTRICTS,
   ZOOM_LANDMARKS_T1,
   ZOOM_LANDMARKS_T2,
 } from '../utils/sfGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import './Map.css'
-
-function getDistrictStyle(feature, activeDistrictId) {
-  const color = feature?.properties?.color ?? [120, 120, 120]
-  const districtId = feature?.properties?.id
-  const isActive = activeDistrictId && districtId === activeDistrictId
-
-  return {
-    color: isActive
-      ? 'rgba(240, 234, 216, 0.9)'
-      : 'rgba(240, 234, 216, 0.42)',
-    weight: isActive ? 3 : 2,
-    fillColor: `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
-    fillOpacity: isActive ? 0.74 : 0.6,
-  }
-}
 
 function buildPopupHtml(project) {
   if (project.status === 'locked') {
@@ -83,8 +65,6 @@ function Map() {
   const mapRef = useRef(null)
   const markerByIdRef = useRef({})
   const landmarkLayerRef = useRef(null)
-  const districtLayerRef = useRef(null)
-  const districtLabelLayerRef = useRef(null)
   const landmarkEntriesRef = useRef([])
   const referenceLayerRef = useRef(null)
   const pickMarkerRef = useRef(null)
@@ -111,16 +91,13 @@ function Map() {
     return saved === null ? false : saved === '1'
   })
   const [showLandmarkLabels, setShowLandmarkLabels] = useState(false)
-  const [showDistrictZones, setShowDistrictZones] = useState(true)
   const [coordPickerMode, setCoordPickerMode] = useState(false)
   const [pickedCoords, setPickedCoords] = useState(null)
   const [copyFeedback, setCopyFeedback] = useState('')
   const [showReference, setShowReference] = useState(false)
   const [referenceAvailable, setReferenceAvailable] = useState(false)
 
-  const showDistrictZonesRef = useRef(showDistrictZones)
   const showLandmarksRef = useRef(showLandmarks)
-  const activeDistrictIdRef = useRef(null)
 
   const sortedDistricts = useMemo(() => getSortedDistricts(), [])
 
@@ -190,19 +167,6 @@ function Map() {
   }, [coordPickerMode])
 
   useEffect(() => {
-    showDistrictZonesRef.current = showDistrictZones
-    const map = mapRef.current
-    if (map && !isPixelMode) map.fire('zoomend')
-  }, [showDistrictZones, isPixelMode])
-
-  useEffect(() => {
-    activeDistrictIdRef.current = activeDistrict?.id ?? null
-    const layer = districtLayerRef.current
-    if (!layer || isPixelMode) return
-    layer.setStyle((feature) => getDistrictStyle(feature, activeDistrict?.id))
-  }, [activeDistrict?.id, isPixelMode])
-
-  useEffect(() => {
     showLandmarksRef.current = showLandmarks
     localStorage.setItem('map-show-landmarks', showLandmarks ? '1' : '0')
     const map = mapRef.current
@@ -241,28 +205,6 @@ function Map() {
       '© OpenStreetMap · OpenFreeMap',
     )
 
-    const districtLayer = L.geoJSON(districtsToGeoJSON(), {
-      style(feature) {
-        return getDistrictStyle(feature, activeDistrictIdRef.current)
-      },
-    })
-    districtLayerRef.current = districtLayer
-
-    const districtLabelLayer = L.layerGroup()
-    getDistrictLabels().forEach((label) => {
-      const icon = L.divIcon({
-        html: `<span class="district-map-label">${label.name}</span>`,
-        className: 'district-label-wrap',
-        iconSize: [0, 0],
-        iconAnchor: [0, 0],
-      })
-      L.marker([label.lat, label.lng], {
-        icon,
-        interactive: false,
-      }).addTo(districtLabelLayer)
-    })
-    districtLabelLayerRef.current = districtLabelLayer
-
     const landmarkLayer = L.layerGroup()
     const landmarkEntries = []
     landmarks.forEach((landmark) => {
@@ -292,20 +234,7 @@ function Map() {
 
     function syncMapDetail() {
       const zoom = map.getZoom()
-      const zonesOn = showDistrictZonesRef.current
       const landmarksOn = showLandmarksRef.current
-
-      if (zonesOn && zoom >= ZOOM_DISTRICTS) {
-        if (!map.hasLayer(districtLayer)) districtLayer.addTo(map)
-      } else if (map.hasLayer(districtLayer)) {
-        map.removeLayer(districtLayer)
-      }
-
-      if (zoom >= ZOOM_DISTRICT_LABELS) {
-        if (!map.hasLayer(districtLabelLayer)) districtLabelLayer.addTo(map)
-      } else if (map.hasLayer(districtLabelLayer)) {
-        map.removeLayer(districtLabelLayer)
-      }
 
       landmarkLayer.clearLayers()
       if (landmarksOn) {
@@ -398,8 +327,6 @@ function Map() {
       mapRef.current = null
       markerByIdRef.current = {}
       landmarkLayerRef.current = null
-      districtLayerRef.current = null
-      districtLabelLayerRef.current = null
       landmarkEntriesRef.current = []
       pickMarkerRef.current = null
     }
@@ -628,7 +555,7 @@ function Map() {
 
   return (
     <div
-      className={`map-root map-root--geo map-root--atlas${mapFocusMode ? ' map-root--focus' : ''}${showLandmarks ? ' map-root--landmarks-on' : ''}${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
+      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showLandmarks ? ' map-root--landmarks-on' : ''}${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
     >
       <div className="map-hud">
         <div className="eyebrow">Charted Works</div>
@@ -705,14 +632,6 @@ function Map() {
               />
               <span>Landmarks</span>
             </label>
-            <label className="map-focus-toggle">
-              <input
-                type="checkbox"
-                checked={showDistrictZones}
-                onChange={(event) => setShowDistrictZones(event.target.checked)}
-              />
-              <span>Zones</span>
-            </label>
           </div>
         )}
         <div className="map-zoom-controls">
@@ -728,16 +647,6 @@ function Map() {
       {showAtlasTools && (
         <div className="map-atlas-tools map-panel">
           <h2>Atlas tools</h2>
-          {!isPixelMode && (
-            <label className="map-tool-toggle">
-              <input
-                type="checkbox"
-                checked={showDistrictZones}
-                onChange={(event) => setShowDistrictZones(event.target.checked)}
-              />
-              District zones
-            </label>
-          )}
           <label className="map-tool-toggle">
             <input
               type="checkbox"
@@ -824,14 +733,12 @@ function Map() {
         <span className="map-coords-district">
           {activeDistrict?.name ?? 'Open water'}
         </span>
+        <span className="map-coords-grid">
+          x: {coords.gx}, y: {coords.gy}
+        </span>
         {!mapFocusMode && !isPixelMode && (
-          <span className="map-coords-grid">
-            {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
-          </span>
-        )}
-        {!mapFocusMode && (
           <span className="map-coords-grid map-coords-grid--muted">
-            x: {coords.gx}, y: {coords.gy}
+            {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
           </span>
         )}
       </div>
@@ -839,7 +746,7 @@ function Map() {
       {showHint && (
         <div className={`map-onboarding map-panel${hintFaded ? ' faded' : ''}`}>
           {mapFocusMode
-            ? 'drag to explore · click landmarks to learn more'
+            ? 'drag to explore · district updates as you move the cursor'
             : 'drag to explore, click a marker to open it'}
         </div>
       )}

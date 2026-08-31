@@ -41,23 +41,7 @@
 }
 
 .map-root--focus.map-root--geo .leaflet-tile-pane {
-  filter: saturate(0.06) brightness(0.2) contrast(1.18) hue-rotate(188deg);
-}
-
-/* Palworld-style wash: streets recede, colored zones read as the map */
-.map-root--atlas.map-root--geo .leaflet-container::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 350;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 78% 68% at 48% 46%, transparent 0%, rgba(10, 22, 34, 0.72) 100%),
-    linear-gradient(180deg, rgba(10, 22, 34, 0.18) 0%, rgba(10, 22, 34, 0.48) 100%);
-}
-
-.map-root--atlas.map-root--geo .leaflet-overlay-pane {
-  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.35));
+  filter: none;
 }
 
 .map-root .leaflet-container {
@@ -358,20 +342,26 @@
 }
 
 .map-coords--focus {
-  bottom: 22px;
-  left: 20px;
-  right: auto;
-  align-items: flex-start;
+  bottom: 18px;
+  right: 20px;
+  left: auto;
+  align-items: flex-end;
   padding: 8px 12px;
-  background: rgba(10, 22, 34, 0.72);
+  background: rgba(10, 22, 34, 0.78);
   backdrop-filter: blur(6px);
+  min-width: 148px;
 }
 
 .map-coords--focus .map-coords-district {
-  font-size: 11px;
-  letter-spacing: 0.5px;
+  font-size: 10.5px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
   color: var(--theme-cream);
+}
+
+.map-coords--focus .map-coords-grid {
+  font-size: 11px;
+  color: var(--map-accent);
 }
 
 .map-coords-grid {
