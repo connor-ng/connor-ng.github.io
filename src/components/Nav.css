@@ -14,6 +14,27 @@
   background: transparent;
   border-bottom: none;
   pointer-events: none;
+  transition:
+    background 0.25s ease,
+    backdrop-filter 0.25s ease;
+}
+
+.nav--map {
+  background: linear-gradient(
+    180deg,
+    rgba(var(--theme-bg-rgb), 0.92) 0%,
+    rgba(var(--theme-bg-rgb), 0.65) 65%,
+    rgba(var(--theme-bg-rgb), 0) 100%
+  );
+  backdrop-filter: blur(10px);
+}
+
+.nav--map .nav-link {
+  color: #9aa8b6;
+}
+
+.nav--map .nav-link:hover {
+  color: var(--theme-accent-strong);
 }
 
 .nav .nav-brand,

@@ -314,10 +314,12 @@ function Map() {
         localStorage.setItem('map-visited', '1')
         map.off('movestart', dismissHint)
         map.off('zoomstart', dismissHint)
+        map.off('popupopen', dismissHint)
         window.setTimeout(() => setShowHint(false), 600)
       }
       map.on('movestart', dismissHint)
       map.on('zoomstart', dismissHint)
+      map.on('popupopen', dismissHint)
     }
 
     mapRef.current = map
@@ -454,10 +456,12 @@ function Map() {
         localStorage.setItem('map-visited', '1')
         map.off('movestart', dismissHint)
         map.off('zoomstart', dismissHint)
+        map.off('popupopen', dismissHint)
         window.setTimeout(() => setShowHint(false), 600)
       }
       map.on('movestart', dismissHint)
       map.on('zoomstart', dismissHint)
+      map.on('popupopen', dismissHint)
     }
 
     mapRef.current = map
@@ -555,7 +559,7 @@ function Map() {
 
   return (
     <div
-      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showLandmarks ? ' map-root--landmarks-on' : ''}${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
+      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showHint && !hintFaded ? ' map-root--onboarding' : ''}${showLandmarks ? ' map-root--landmarks-on' : ''}${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
     >
       <div className="map-hud">
         <p className="map-hud-eyebrow">Portfolio</p>
@@ -733,10 +737,22 @@ function Map() {
         <span className="map-coords-district">
           {activeDistrict?.name ?? 'Open water'}
         </span>
-        <span className="map-coords-grid">
-          x: {coords.gx}, y: {coords.gy}
-        </span>
-        {!mapFocusMode && !isPixelMode && (
+        {activeDistrict?.flavor && (
+          <span className="map-coords-flavor">{activeDistrict.flavor}</span>
+        )}
+        {showAtlasTools && (
+          <>
+            <span className="map-coords-grid map-coords-grid--muted">
+              x: {coords.gx}, y: {coords.gy}
+            </span>
+            {!isPixelMode && (
+              <span className="map-coords-grid map-coords-grid--muted">
+                {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
+              </span>
+            )}
+          </>
+        )}
+        {!mapFocusMode && !showAtlasTools && !isPixelMode && (
           <span className="map-coords-grid map-coords-grid--muted">
             {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
           </span>
@@ -745,9 +761,7 @@ function Map() {
 
       {showHint && (
         <div className={`map-onboarding map-panel${hintFaded ? ' faded' : ''}`}>
-          {mapFocusMode
-            ? 'drag to explore · district updates as you move the cursor'
-            : 'drag to explore, click a marker to open it'}
+          Click a pin to view work · drag to explore
         </div>
       )}
 
