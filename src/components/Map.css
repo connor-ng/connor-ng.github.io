@@ -229,6 +229,34 @@
   gap: 10px;
 }
 
+.map-focus-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+}
+
+.map-focus-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--map-text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.map-focus-toggle input {
+  accent-color: var(--map-accent);
+}
+
+.map-focus-toggle span {
+  color: var(--map-text);
+}
+
 .map-legend {
   font-family: 'DM Mono', monospace;
   font-size: 10.5px;

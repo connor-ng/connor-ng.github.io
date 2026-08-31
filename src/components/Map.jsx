@@ -104,7 +104,10 @@ function Map() {
   const [showingList, setShowingList] = useState(false)
   const [showHint, setShowHint] = useState(() => !localStorage.getItem('map-visited'))
   const [hintFaded, setHintFaded] = useState(false)
-  const [showLandmarks, setShowLandmarks] = useState(true)
+  const [showLandmarks, setShowLandmarks] = useState(() => {
+    const saved = localStorage.getItem('map-show-landmarks')
+    return saved === null ? true : saved === '1'
+  })
   const [showLandmarkLabels, setShowLandmarkLabels] = useState(true)
   const [showDistrictZones, setShowDistrictZones] = useState(true)
   const [coordPickerMode, setCoordPickerMode] = useState(false)
@@ -202,6 +205,7 @@ function Map() {
 
   useEffect(() => {
     showLandmarksRef.current = showLandmarks
+    localStorage.setItem('map-show-landmarks', showLandmarks ? '1' : '0')
     const map = mapRef.current
     if (map && !isPixelMode) map.fire('zoomend')
   }, [showLandmarks, isPixelMode])
@@ -691,6 +695,26 @@ function Map() {
               {showingList ? '🗺 Map view' : '☰ List view'}
             </button>
           </>
+        )}
+        {mapFocusMode && (
+          <div className="map-focus-toggles map-panel">
+            <label className="map-focus-toggle">
+              <input
+                type="checkbox"
+                checked={showLandmarks}
+                onChange={(event) => setShowLandmarks(event.target.checked)}
+              />
+              <span>Landmarks</span>
+            </label>
+            <label className="map-focus-toggle">
+              <input
+                type="checkbox"
+                checked={showDistrictZones}
+                onChange={(event) => setShowDistrictZones(event.target.checked)}
+              />
+              <span>Zones</span>
+            </label>
+          </div>
         )}
         <div className="map-zoom-controls">
           <button type="button" className="map-panel" onClick={handleZoomIn} aria-label="Zoom in">
