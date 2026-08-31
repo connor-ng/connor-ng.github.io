@@ -74,8 +74,6 @@ function Map() {
   const referenceLayerRef = useRef(null)
   const pickMarkerRef = useRef(null)
   const coordPickerRef = useRef(false)
-  const showDistrictZonesRef = useRef(showDistrictZones)
-  const showLandmarksRef = useRef(showLandmarks)
 
   const isPixelMode = useMemo(
     () => new URLSearchParams(window.location.search).has('pixel'),
@@ -101,6 +99,9 @@ function Map() {
   const [copyFeedback, setCopyFeedback] = useState('')
   const [showReference, setShowReference] = useState(false)
   const [referenceAvailable, setReferenceAvailable] = useState(false)
+
+  const showDistrictZonesRef = useRef(showDistrictZones)
+  const showLandmarksRef = useRef(showLandmarks)
 
   const sortedDistricts = useMemo(() => getSortedDistricts(), [])
 
