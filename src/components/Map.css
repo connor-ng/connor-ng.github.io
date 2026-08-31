@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
-
 .map-root {
   --map-bg: var(--theme-bg);
   --map-panel-bg: var(--theme-panel-bg);
@@ -15,7 +13,7 @@
   inset: 0;
   background: var(--map-bg);
   overflow: hidden;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans);
   color: var(--map-text);
 }
 
@@ -46,7 +44,7 @@
 
 .map-root .leaflet-container {
   background: var(--map-bg);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans);
 }
 
 .map-root .leaflet-control-attribution {
@@ -80,29 +78,32 @@
   pointer-events: none;
 }
 
-.map-hud .eyebrow {
-  font-family: 'DM Mono', monospace;
+.map-hud .map-hud-eyebrow {
+  font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 2px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--map-accent);
-  margin-bottom: 4px;
+  margin: 0 0 6px;
 }
 
 .map-hud h1 {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 15px;
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 3.5vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
   margin: 0;
-  text-shadow: 2px 2px 0 var(--map-bg);
+  color: var(--theme-cream);
 }
 
 .map-hud-subtitle {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 2px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--map-text-muted);
-  margin: 6px 0 0;
+  margin: 8px 0 0;
 }
 
 .district-label-wrap {
@@ -418,7 +419,7 @@
   padding: 7px 10px;
   font-size: 12.5px;
   margin-bottom: 10px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans);
 }
 
 .map-search-input::placeholder {
@@ -604,10 +605,12 @@
 }
 
 .map-root .popup-title {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   margin: 6px 0 8px;
-  line-height: 1.5;
+  line-height: 1.35;
   color: var(--map-text);
 }
 
@@ -821,11 +824,11 @@
 }
 
 .map-root--focus .map-hud h1 {
-  font-size: 13px;
+  font-size: 1.35rem;
 }
 
 .map-root--focus .map-hud-subtitle {
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 .map-root--focus .map-topright {
@@ -865,9 +868,11 @@
 }
 
 .map-root .landmark-popup-title {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  line-height: 1.5;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
   color: var(--theme-cream);
   margin-bottom: 8px;
 }

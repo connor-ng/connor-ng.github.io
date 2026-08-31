@@ -558,8 +558,8 @@ function Map() {
       className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showLandmarks ? ' map-root--landmarks-on' : ''}${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
     >
       <div className="map-hud">
-        <div className="eyebrow">Charted Works</div>
-        <h1>PROJECT ATLAS</h1>
+        <p className="map-hud-eyebrow">Portfolio</p>
+        <h1>Work</h1>
         <p className="map-hud-subtitle">San Francisco</p>
       </div>
 

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap');
+
 *,
 *::before,
 *::after {
@@ -7,7 +9,10 @@
 :root {
   --nav-height: 52px;
 
-  /* Site theme — matches Home map */
+  --font-sans: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  /* Site theme — coastal modern */
   --theme-bg: #0a1622;
   --theme-panel-bg: rgba(10, 22, 34, 0.9);
   --theme-panel-border: #2e3a44;
@@ -26,9 +31,12 @@
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
+  font-weight: 400;
   color: var(--theme-text);
   background: var(--theme-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
