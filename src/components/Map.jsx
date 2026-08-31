@@ -11,7 +11,7 @@ import {
   getDistrictAt,
   getSortedDistricts,
 } from '../utils/districtUtils'
-import { districtsToGeoJSON } from '../utils/districtsGeo'
+import { districtsToGeoJSON, getDistrictLabels } from '../utils/districtsGeo'
 import { buildLandmarkHtml, buildLandmarkPopupHtml } from '../utils/landmarkHtml'
 import { loadMapConfig } from '../utils/loadMapConfig'
 import { formatGridCoords, toGrid, toLatLng } from '../utils/mapCoords'
@@ -25,6 +25,11 @@ import {
   SF_DEFAULT_ZOOM,
   SF_MAX_ZOOM,
   SF_MIN_ZOOM,
+  SF_VIEW_BOUNDS,
+  ZOOM_DISTRICT_LABELS,
+  ZOOM_DISTRICTS,
+  ZOOM_LANDMARKS_T1,
+  ZOOM_LANDMARKS_T2,
 } from '../utils/sfGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import './Map.css'
@@ -64,9 +69,13 @@ function Map() {
   const markerByIdRef = useRef({})
   const landmarkLayerRef = useRef(null)
   const districtLayerRef = useRef(null)
+  const districtLabelLayerRef = useRef(null)
+  const landmarkEntriesRef = useRef([])
   const referenceLayerRef = useRef(null)
   const pickMarkerRef = useRef(null)
   const coordPickerRef = useRef(false)
+  const showDistrictZonesRef = useRef(showDistrictZones)
+  const showLandmarksRef = useRef(showLandmarks)
 
   const isPixelMode = useMemo(
     () => new URLSearchParams(window.location.search).has('pixel'),
@@ -84,9 +93,9 @@ function Map() {
   const [showingList, setShowingList] = useState(false)
   const [showHint, setShowHint] = useState(() => !localStorage.getItem('map-visited'))
   const [hintFaded, setHintFaded] = useState(false)
-  const [showLandmarks, setShowLandmarks] = useState(false)
+  const [showLandmarks, setShowLandmarks] = useState(true)
   const [showLandmarkLabels, setShowLandmarkLabels] = useState(false)
-  const [showDistrictZones, setShowDistrictZones] = useState(false)
+  const [showDistrictZones, setShowDistrictZones] = useState(true)
   const [coordPickerMode, setCoordPickerMode] = useState(false)
   const [pickedCoords, setPickedCoords] = useState(null)
   const [copyFeedback, setCopyFeedback] = useState('')
@@ -159,6 +168,18 @@ function Map() {
   }, [coordPickerMode])
 
   useEffect(() => {
+    showDistrictZonesRef.current = showDistrictZones
+    const map = mapRef.current
+    if (map && !isPixelMode) map.fire('zoomend')
+  }, [showDistrictZones, isPixelMode])
+
+  useEffect(() => {
+    showLandmarksRef.current = showLandmarks
+    const map = mapRef.current
+    if (map && !isPixelMode) map.fire('zoomend')
+  }, [showLandmarks, isPixelMode])
+
+  useEffect(() => {
     if (!isPixelMode) return undefined
     fetch('/map/reference.png', { method: 'HEAD' })
       .then((response) => setReferenceAvailable(response.ok))
@@ -183,6 +204,7 @@ function Map() {
       style: MAP_STYLE_URL,
     }).addTo(map)
 
+    map.fitBounds(SF_VIEW_BOUNDS, { padding: [32, 32] })
     map.setMaxBounds(getSfMaxBounds())
     map.attributionControl.setPrefix('')
     map.attributionControl.addAttribution(
@@ -202,7 +224,23 @@ function Map() {
     })
     districtLayerRef.current = districtLayer
 
+    const districtLabelLayer = L.layerGroup()
+    getDistrictLabels().forEach((label) => {
+      const icon = L.divIcon({
+        html: `<span class="district-map-label">${label.name}</span>`,
+        className: 'district-label-wrap',
+        iconSize: [0, 0],
+        iconAnchor: [0, 0],
+      })
+      L.marker([label.lat, label.lng], {
+        icon,
+        interactive: false,
+      }).addTo(districtLabelLayer)
+    })
+    districtLabelLayerRef.current = districtLabelLayer
+
     const landmarkLayer = L.layerGroup()
+    const landmarkEntries = []
     landmarks.forEach((landmark) => {
       const icon = L.divIcon({
         html: buildLandmarkHtml(landmark, { useSprite: true }),
@@ -220,9 +258,47 @@ function Map() {
         maxWidth: 280,
         className: 'landmark-popup-wrapper',
       })
-      landmarkLayer.addLayer(marker)
+      landmarkEntries.push({ marker, tier: landmark.tier })
     })
     landmarkLayerRef.current = landmarkLayer
+    landmarkEntriesRef.current = landmarkEntries
+
+    function syncMapDetail() {
+      const zoom = map.getZoom()
+      const zonesOn = showDistrictZonesRef.current
+      const landmarksOn = showLandmarksRef.current
+
+      if (zonesOn && zoom >= ZOOM_DISTRICTS) {
+        if (!map.hasLayer(districtLayer)) districtLayer.addTo(map)
+      } else if (map.hasLayer(districtLayer)) {
+        map.removeLayer(districtLayer)
+      }
+
+      if (zoom >= ZOOM_DISTRICT_LABELS) {
+        if (!map.hasLayer(districtLabelLayer)) districtLabelLayer.addTo(map)
+      } else if (map.hasLayer(districtLabelLayer)) {
+        map.removeLayer(districtLabelLayer)
+      }
+
+      landmarkLayer.clearLayers()
+      if (landmarksOn) {
+        landmarkEntries.forEach(({ marker, tier }) => {
+          const visible =
+            (tier === 1 && zoom >= ZOOM_LANDMARKS_T1) ||
+            (tier === 2 && zoom >= ZOOM_LANDMARKS_T2)
+          if (visible) landmarkLayer.addLayer(marker)
+        })
+      }
+      if (landmarkLayer.getLayers().length > 0 && !map.hasLayer(landmarkLayer)) {
+        landmarkLayer.addTo(map)
+      }
+      if (landmarkLayer.getLayers().length === 0 && map.hasLayer(landmarkLayer)) {
+        map.removeLayer(landmarkLayer)
+      }
+    }
+
+    map.on('zoomend', syncMapDetail)
+    syncMapDetail()
 
     markerByIdRef.current = {}
     projects.forEach((project) => {
@@ -294,6 +370,8 @@ function Map() {
       markerByIdRef.current = {}
       landmarkLayerRef.current = null
       districtLayerRef.current = null
+      districtLabelLayerRef.current = null
+      landmarkEntriesRef.current = []
       pickMarkerRef.current = null
     }
   }, [isPixelMode])
@@ -441,26 +519,14 @@ function Map() {
   useEffect(() => {
     const layer = landmarkLayerRef.current
     const map = mapRef.current
-    if (!layer || !map) return
+    if (!layer || !map || !isPixelMode) return
 
     if (showLandmarks) {
       layer.addTo(map)
     } else {
       map.removeLayer(layer)
     }
-  }, [showLandmarks])
-
-  useEffect(() => {
-    const layer = districtLayerRef.current
-    const map = mapRef.current
-    if (!layer || !map || isPixelMode) return
-
-    if (showDistrictZones) {
-      layer.addTo(map)
-    } else {
-      map.removeLayer(layer)
-    }
-  }, [showDistrictZones, isPixelMode])
+  }, [showLandmarks, isPixelMode])
 
   useEffect(() => {
     const layer = referenceLayerRef.current
@@ -538,6 +604,7 @@ function Map() {
       <div className="map-hud">
         <div className="eyebrow">Charted Works</div>
         <h1>PROJECT ATLAS</h1>
+        <p className="map-hud-subtitle">San Francisco</p>
       </div>
 
       <div className="map-sidebar map-panel">

@@ -1,17 +1,29 @@
 import { COLS, ROWS } from './generatePlaceholderMap'
 
-/** Geographic bounds aligned to the portfolio grid (256×192). */
+/** Geographic bounds for the San Francisco peninsula (city-focused). */
 export const SF_BOUNDS = {
-  north: 37.812,
-  south: 37.706,
-  west: -122.518,
-  east: -122.355,
+  north: 37.808,
+  south: 37.708,
+  west: -122.513,
+  east: -122.368,
 }
 
-export const SF_CENTER = { lat: 37.759, lng: -122.436 }
+/** Initial viewport — frames the city, not the whole bay area. */
+export const SF_VIEW_BOUNDS = [
+  [37.708, -122.513],
+  [37.808, -122.368],
+]
+
+export const SF_CENTER = { lat: 37.756, lng: -122.435 }
 export const SF_DEFAULT_ZOOM = 13
-export const SF_MIN_ZOOM = 11
+export const SF_MIN_ZOOM = 12
 export const SF_MAX_ZOOM = 18
+
+/** Zoom thresholds for layered map detail. */
+export const ZOOM_DISTRICTS = 12
+export const ZOOM_LANDMARKS_T1 = 13
+export const ZOOM_LANDMARKS_T2 = 14.5
+export const ZOOM_DISTRICT_LABELS = 12.5
 
 export const MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/dark'
 
@@ -57,7 +69,7 @@ export function formatGeoCoords(lat, lng, gx, gy) {
 
 export function getSfMaxBounds() {
   return [
-    [SF_BOUNDS.south - 0.01, SF_BOUNDS.west - 0.01],
-    [SF_BOUNDS.north + 0.01, SF_BOUNDS.east + 0.01],
+    [SF_BOUNDS.south, SF_BOUNDS.west],
+    [SF_BOUNDS.north, SF_BOUNDS.east],
   ]
 }

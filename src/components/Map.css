@@ -92,6 +92,36 @@
   text-shadow: 2px 2px 0 var(--map-bg);
 }
 
+.map-hud-subtitle {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--map-text-muted);
+  margin: 6px 0 0;
+}
+
+.district-label-wrap {
+  background: transparent;
+  border: none;
+}
+
+.district-map-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--theme-cream);
+  text-shadow:
+    1px 1px 0 var(--map-bg),
+    -1px -1px 0 var(--map-bg),
+    1px -1px 0 var(--map-bg),
+    -1px 1px 0 var(--map-bg);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
 .map-root--loading {
   display: flex;
   align-items: center;

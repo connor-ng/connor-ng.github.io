@@ -57,22 +57,37 @@ npm run preview
 
 ## Map
 
-The home page uses a **live San Francisco street map** (OpenStreetMap data via [OpenFreeMap](https://openfreemap.org)) with your project markers on top. No hand-painted `world.png` required.
+The home page uses a **live San Francisco street map** (OpenStreetMap via OpenFreeMap) focused on the **city peninsula only** — you can't pan away to Oakland or Marin.
 
-- **Real streets, parks, and coastline** at every zoom level
-- **Dark theme** matching the rest of the site
-- Project pins use `lat` / `lng` in `projects.js` (with `gx` / `gy` kept for district lookup)
+### What's on the map
+
+| Zoom level | Detail |
+|------------|--------|
+| City view | Real streets, parks, waterfront |
+| District zones | Colored neighborhood overlays + labels |
+| Zoom in further | Tier 1 landmarks (Golden Gate, Ferry Building, etc.) |
+| Zoom in more | Tier 2 landmarks (Pier 39, Painted Ladies, etc.) |
+
+### Add more detail yourself
+
+**1. Projects (your portfolio pins)**  
+Open `/?tools=1` → enable **Coord picker** → click a spot → copy coords into `src/data/projects.js`:
+
+```js
+lat: 37.7594,
+lng: -122.4214,
+districtId: 'mission',
+```
+
+**2. Landmarks**  
+Edit `src/data/landmarks.js` — each entry has `lat`, `lng`, `name`, `blurb`, and `tier` (1 = major, 2 = neighborhood). Find coords on [openstreetmap.org](https://www.openstreetmap.org).
+
+**3. Districts**  
+Edit `src/data/districts.js` — adjust `bounds`, `color`, and `flavor` text for each neighborhood zone.
+
+**4. Even more street detail**  
+Zoom in — OpenStreetMap already has building-level data. For a custom illustrated look later, add `?pixel=1` and paint `public/map/world.png` in Pixelorama.
 
 ### Atlas tools (`?tools=1`)
 
-- **Coord picker** — click the map, copy `{ lat, lng, gx, gy }` into `projects.js`
-- **District zones** — overlay approximate neighborhood bounds
-- **Show landmarks** — preview landmark placement (hidden by default)
-
-### Pixel map mode (optional)
-
-Add `?pixel=1` to use the old painted/scaffold image map instead of live streets.
-
-## Painting the map (optional)
-
-If you later want a custom pixel-art `world.png`, use Pixelorama and add `?pixel=1`. The live street map is the default.
+Toggle district zones, landmarks, and coord picker.
