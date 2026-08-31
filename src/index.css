@@ -12,21 +12,26 @@
   --font-sans: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'DM Mono', ui-monospace, 'Cascadia Code', monospace;
 
-  /* Site theme — coastal modern */
-  --theme-bg: #0a1622;
-  --theme-panel-bg: rgba(10, 22, 34, 0.9);
-  --theme-panel-border: #2e3a44;
-  --theme-text: #e8e4d8;
-  --theme-text-muted: #8892a0;
-  --theme-accent: #9fd6c9;
-  --theme-cream: #f0ead8;
-  --theme-input-bg: rgba(255, 255, 255, 0.06);
-  --theme-shadow: rgba(0, 0, 0, 0.35);
+  /* Refined coastal — consistent site-wide */
+  --theme-bg-rgb: 11, 21, 32;
+  --theme-bg: #0b1520;
+  --theme-surface: #141d28;
+  --theme-surface-raised: #1a2530;
+  --theme-panel-bg: rgba(var(--theme-bg-rgb), 0.92);
+  --theme-panel-border: #2a3844;
+  --theme-text: #ebe6dc;
+  --theme-text-body: #c5cdd6;
+  --theme-text-muted: #7a8794;
+  --theme-accent: #8ec4b8;
+  --theme-accent-strong: #a5d4ca;
+  --theme-cream: #f2ebe0;
+  --theme-input-bg: rgba(255, 255, 255, 0.05);
+  --theme-shadow: rgba(0, 0, 0, 0.38);
 
   /* Project status */
   --color-status-done: #7fae6b;
   --color-status-current: #e0b04a;
-  --color-status-locked: #8892a0;
+  --color-status-locked: #7a8794;
 }
 
 body {

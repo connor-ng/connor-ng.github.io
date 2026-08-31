@@ -13,7 +13,7 @@
     180deg,
     #1a2a38 0%,
     #243442 38%,
-    #0a1622 100%
+    #0b1520 100%
   );
 }
 
@@ -87,7 +87,7 @@
   margin: 0;
   line-height: 1.65;
   font-size: 1.05rem;
-  color: #cfd6dc;
+  color: var(--theme-text-body);
 }
 
 .about-fog {
