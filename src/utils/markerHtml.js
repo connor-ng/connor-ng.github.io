@@ -10,7 +10,7 @@ export function buildMarkerHtml(project, size = 'map') {
   const icon = markerIconContent(project)
 
   return `
-    <div class="project-marker project-marker--${size}" style="--ring:${color}">
+    <div class="project-marker project-marker--${size}" data-status="${project.status}" style="--ring:${color}">
       <div class="marker-icon">${icon}</div>
       <div class="marker-badge">${badge}</div>
     </div>

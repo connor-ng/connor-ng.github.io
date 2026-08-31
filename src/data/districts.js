@@ -34,7 +34,7 @@ const districts = [
   {
     id: 'marina',
     name: 'Marina & Presidio',
-    color: [218, 188, 138],
+    color: [232, 198, 142],
     polygon: rect(-122.513, -122.445, 37.775, 37.808),
     bounds: { x: 52, y: 14, w: 78, h: 50 },
     flavor: 'Cream row houses, yacht harbor, Golden Gate towers to the west.',
@@ -44,7 +44,7 @@ const districts = [
   {
     id: 'northern-waterfront',
     name: 'Northern Waterfront',
-    color: [228, 138, 88],
+    color: [238, 148, 92],
     polygon: rect(-122.445, -122.385, 37.775, 37.808),
     bounds: { x: 128, y: 12, w: 88, h: 42 },
     flavor: 'Fisherman’s Wharf, North Beach — warm stone, curved shoreline.',
@@ -54,7 +54,7 @@ const districts = [
   {
     id: 'embarcadero',
     name: 'Embarcadero',
-    color: [72, 158, 198],
+    color: [82, 178, 228],
     polygon: rect(-122.385, -122.368, 37.718, 37.808),
     bounds: { x: 198, y: 48, w: 58, h: 88 },
     flavor: 'Piers into the bay, Ferry Building cupola.',
@@ -64,7 +64,7 @@ const districts = [
   {
     id: 'western',
     name: 'Western Neighborhoods',
-    color: [88, 178, 108],
+    color: [98, 198, 118],
     polygon: rect(-122.513, -122.435, 37.728, 37.775),
     bounds: { x: 18, y: 42, w: 72, h: 78 },
     flavor: 'Richmond & Inner Sunset — fog-muted row houses, Golden Gate Park.',
@@ -74,7 +74,7 @@ const districts = [
   {
     id: 'castro',
     name: 'Castro & Haight',
-    color: [198, 128, 188],
+    color: [212, 138, 202],
     polygon: rect(-122.435, -122.418, 37.728, 37.775),
     bounds: { x: 72, y: 82, w: 48, h: 44 },
     flavor: 'Victorian peaks, pastel highlights.',
@@ -94,7 +94,7 @@ const districts = [
   {
     id: 'mission',
     name: 'Mission District',
-    color: [228, 108, 68],
+    color: [238, 118, 72],
     polygon: rect(-122.418, -122.385, 37.708, 37.728),
     bounds: { x: 108, y: 88, w: 68, h: 54 },
     flavor: 'Terracotta roofs, diagonal grid, mural color accents.',
@@ -104,7 +104,7 @@ const districts = [
   {
     id: 'sunset',
     name: 'Sunset & Ocean Beach',
-    color: [118, 148, 208],
+    color: [128, 162, 228],
     polygon: rect(-122.513, -122.435, 37.708, 37.728),
     bounds: { x: 14, y: 112, w: 76, h: 68 },
     flavor: 'Regular grid dissolving into fog; Ocean Beach sand strip.',
@@ -114,7 +114,7 @@ const districts = [
   {
     id: 'bayview',
     name: 'Bayview & Dogpatch',
-    color: [178, 138, 88],
+    color: [192, 152, 98],
     polygon: rect(-122.385, -122.368, 37.708, 37.718),
     bounds: { x: 152, y: 128, w: 78, h: 50 },
     flavor: 'Industrial waterfront, cranes, wider blocks.',

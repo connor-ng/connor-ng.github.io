@@ -41,7 +41,23 @@
 }
 
 .map-root--focus.map-root--geo .leaflet-tile-pane {
-  filter: saturate(0.25) brightness(0.5) contrast(1.08);
+  filter: saturate(0.06) brightness(0.2) contrast(1.18) hue-rotate(188deg);
+}
+
+/* Palworld-style wash: streets recede, colored zones read as the map */
+.map-root--atlas.map-root--geo .leaflet-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 350;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 78% 68% at 48% 46%, transparent 0%, rgba(10, 22, 34, 0.72) 100%),
+    linear-gradient(180deg, rgba(10, 22, 34, 0.18) 0%, rgba(10, 22, 34, 0.48) 100%);
+}
+
+.map-root--atlas.map-root--geo .leaflet-overlay-pane {
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.35));
 }
 
 .map-root .leaflet-container {
@@ -112,17 +128,14 @@
 
 .district-map-label {
   font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.6px;
+  font-size: 9px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: var(--theme-cream);
-  text-shadow:
-    0 0 8px rgba(10, 22, 34, 0.9),
-    1px 1px 0 var(--map-bg),
-    -1px -1px 0 var(--map-bg);
+  color: rgba(240, 234, 216, 0.72);
+  text-shadow: 0 1px 2px rgba(10, 22, 34, 0.95);
   white-space: nowrap;
   pointer-events: none;
-  opacity: 0.92;
+  opacity: 0.8;
 }
 
 .map-root--loading {
@@ -458,7 +471,28 @@
   line-height: 1.2;
 }
 
-/* Shared marker: circular icon + corner badge */
+/* Shared marker: circular icon + corner badge — hero layer (Palworld-style pins) */
+.map-root .project-marker-layer {
+  z-index: 1200 !important;
+}
+
+@keyframes map-marker-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 2px rgba(240, 234, 216, 0.95),
+      0 0 0 0 color-mix(in srgb, var(--ring) 55%, transparent),
+      0 3px 10px rgba(0, 0, 0, 0.65);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 2px rgba(240, 234, 216, 0.95),
+      0 0 0 7px color-mix(in srgb, var(--ring) 0%, transparent),
+      0 3px 10px rgba(0, 0, 0, 0.65);
+  }
+}
+
 .map-root .project-marker {
   position: relative;
   display: flex;
@@ -467,8 +501,8 @@
 }
 
 .map-root .project-marker--map {
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
 }
 
 .map-root .project-marker--search {
@@ -483,19 +517,29 @@
 
 .map-root .marker-icon {
   border-radius: 50%;
-  background: var(--map-marker-bg);
-  border: 3px solid var(--ring);
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+  background: #1a2430;
+  border: 4px solid var(--ring);
+  box-shadow:
+    0 0 0 2px rgba(240, 234, 216, 0.92),
+    0 3px 10px rgba(0, 0, 0, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--map-text);
+  color: var(--theme-cream);
+  font-weight: 600;
 }
 
 .map-root .project-marker--map .marker-icon {
-  width: 22px;
-  height: 22px;
-  font-size: 10px;
+  width: 34px;
+  height: 34px;
+  font-size: 12px;
+  animation: map-marker-pulse 2.8s ease-in-out infinite;
+}
+
+.map-root .project-marker--map[data-status='locked'] .marker-icon,
+.map-root .project-marker--map:has(.marker-icon:empty) .marker-icon {
+  animation: none;
+  opacity: 0.88;
 }
 
 .map-root .project-marker--search .marker-icon {
@@ -512,18 +556,19 @@
 
 .map-root .marker-badge {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 12px;
-  height: 12px;
-  background: var(--map-marker-badge-bg);
+  bottom: -1px;
+  right: -1px;
+  width: 14px;
+  height: 14px;
+  background: #0a1622;
   border: 2px solid var(--ring);
   border-radius: 50%;
-  font-size: 7px;
+  font-size: 8px;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .map-root .leaflet-popup-content-wrapper {
@@ -720,21 +765,35 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--landmark-accent) 55%, transparent))
-    drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.5));
+  opacity: 0.82;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.map-root--landmarks-on .landmark-marker-body {
+  opacity: 0.9;
+}
+
+.map-root--landmarks-on .landmark-icon-wrap:hover .landmark-marker-body {
+  opacity: 1;
+  transform: scale(1.06);
 }
 
 .map-root .landmark-marker--tier1 .landmark-marker-body {
-  transform: scale(1.15);
+  transform: scale(0.92);
   transform-origin: center bottom;
 }
 
-.map-root .landmark-marker--tier1 .landmark-sprite {
-  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--landmark-accent) 70%, transparent));
+.map-root--landmarks-on .landmark-marker--tier1 .landmark-marker-body {
+  transform: scale(0.95);
 }
 
-.map-root .landmark-icon-wrap--tier1 {
-  z-index: 500 !important;
+.map-root .landmark-marker--tier1 .landmark-sprite {
+  filter: none;
+}
+
+.map-root--landmarks-on .landmark-marker--tier1 .landmark-sprite {
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--landmark-accent) 35%, transparent));
 }
 
 .map-root .landmark-sprite {
@@ -765,12 +824,18 @@
 }
 
 .map-root--landmark-labels .landmark-label,
-.map-root--focus .landmark-marker--tier1 .landmark-label {
+.map-root--landmark-labels.map-root--landmarks-on .landmark-marker--tier1 .landmark-label {
   display: block;
+  font-size: 7px;
+  opacity: 0.75;
 }
 
-.map-root--focus .map-hud {
-  opacity: 0.92;
+.map-root--focus .map-hud h1 {
+  font-size: 13px;
+}
+
+.map-root--focus .map-hud-subtitle {
+  opacity: 0.7;
 }
 
 .map-root--focus .map-topright {

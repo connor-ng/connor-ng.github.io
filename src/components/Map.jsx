@@ -40,10 +40,12 @@ function getDistrictStyle(feature, activeDistrictId) {
   const isActive = activeDistrictId && districtId === activeDistrictId
 
   return {
-    color: `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${isActive ? 0.95 : 0.72})`,
-    weight: isActive ? 2.5 : 1.75,
+    color: isActive
+      ? 'rgba(240, 234, 216, 0.9)'
+      : 'rgba(240, 234, 216, 0.42)',
+    weight: isActive ? 3 : 2,
     fillColor: `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
-    fillOpacity: isActive ? 0.42 : 0.28,
+    fillOpacity: isActive ? 0.74 : 0.6,
   }
 }
 
@@ -106,9 +108,9 @@ function Map() {
   const [hintFaded, setHintFaded] = useState(false)
   const [showLandmarks, setShowLandmarks] = useState(() => {
     const saved = localStorage.getItem('map-show-landmarks')
-    return saved === null ? true : saved === '1'
+    return saved === null ? false : saved === '1'
   })
-  const [showLandmarkLabels, setShowLandmarkLabels] = useState(true)
+  const [showLandmarkLabels, setShowLandmarkLabels] = useState(false)
   const [showDistrictZones, setShowDistrictZones] = useState(true)
   const [coordPickerMode, setCoordPickerMode] = useState(false)
   const [pickedCoords, setPickedCoords] = useState(null)
@@ -132,10 +134,7 @@ function Map() {
     [],
   )
 
-  const showProjectMarkers = useMemo(
-    () => new URLSearchParams(window.location.search).has('projects'),
-    [],
-  )
+  const showProjectMarkers = true
 
   const mapFocusMode = !showAtlasTools
 
@@ -270,16 +269,16 @@ function Map() {
       const icon = L.divIcon({
         html: buildLandmarkHtml(landmark, {
           useSprite: true,
-          showLabel: landmark.tier === 1,
+          showLabel: showLandmarkLabels && landmark.tier === 1,
         }),
         className: `landmark-icon-wrap landmark-icon-wrap--tier${landmark.tier}`,
-        iconSize: [landmark.width, landmark.height + (landmark.tier === 1 ? 14 : 0)],
+        iconSize: [landmark.width, landmark.height + (showLandmarkLabels && landmark.tier === 1 ? 14 : 0)],
         iconAnchor: [landmark.anchorX, landmark.anchorY],
       })
 
       const marker = L.marker(getPointLatLng(landmark), {
         icon,
-        zIndexOffset: landmark.tier === 1 ? 400 : 250,
+        zIndexOffset: landmark.tier === 1 ? 180 : 120,
       })
 
       marker.bindPopup(buildLandmarkPopupHtml(landmark), {
@@ -333,14 +332,14 @@ function Map() {
       projects.forEach((project) => {
         const icon = L.divIcon({
           html: buildMarkerHtml(project, 'map'),
-          className: '',
-          iconSize: [28, 28],
-          iconAnchor: [14, 14],
+          className: 'project-marker-layer',
+          iconSize: [40, 40],
+          iconAnchor: [20, 20],
         })
 
         const marker = L.marker(getPointLatLng(project), {
           icon,
-          zIndexOffset: 500,
+          zIndexOffset: project.status === 'locked' ? 900 : 1200,
         }).addTo(map)
 
         markerByIdRef.current[project.id] = marker
@@ -404,7 +403,7 @@ function Map() {
       landmarkEntriesRef.current = []
       pickMarkerRef.current = null
     }
-  }, [isPixelMode, showProjectMarkers])
+  }, [isPixelMode])
 
   useEffect(() => {
     const container = mapContainerRef.current
@@ -629,7 +628,7 @@ function Map() {
 
   return (
     <div
-      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
+      className={`map-root map-root--geo map-root--atlas${mapFocusMode ? ' map-root--focus' : ''}${showLandmarks ? ' map-root--landmarks-on' : ''}${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
     >
       <div className="map-hud">
         <div className="eyebrow">Charted Works</div>

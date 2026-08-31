@@ -20,10 +20,10 @@ export const SF_MIN_ZOOM = 12
 export const SF_MAX_ZOOM = 18
 
 /** Zoom thresholds for layered map detail. */
-export const ZOOM_DISTRICTS = 11.5
-export const ZOOM_LANDMARKS_T1 = 12.25
-export const ZOOM_LANDMARKS_T2 = 13.25
-export const ZOOM_DISTRICT_LABELS = 12
+export const ZOOM_DISTRICTS = 11
+export const ZOOM_LANDMARKS_T1 = 13.75
+export const ZOOM_LANDMARKS_T2 = 14.75
+export const ZOOM_DISTRICT_LABELS = 13.75
 
 export const MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/dark'
 
