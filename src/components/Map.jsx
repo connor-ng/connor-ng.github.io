@@ -461,9 +461,7 @@ function Map() {
     >
       {!showingList && (
         <div className="map-hud">
-          <p className="map-hud-eyebrow">Portfolio</p>
-          <h1>Work</h1>
-          <p className="map-hud-subtitle">San Francisco</p>
+          <p className="map-hud-tagline">Designer &amp; developer</p>
         </div>
       )}
 
@@ -645,10 +643,9 @@ function Map() {
 
       <div className={`map-list-view${showingList ? ' visible' : ''}`}>
         <header className="map-list-header">
-          <p className="map-list-eyebrow">Portfolio</p>
-          <h2 className="map-list-title">Work</h2>
+          <h2 className="map-list-title">Selected work</h2>
           <p className="map-list-intro">
-            Featured projects below — open one or jump to its pin on the map.
+            Featured projects — open one or view it on the map.
           </p>
         </header>
 

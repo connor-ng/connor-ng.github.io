@@ -60,32 +60,13 @@
   pointer-events: none;
 }
 
-.map-hud .map-hud-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--map-accent);
-  margin: 0 0 6px;
-}
-
-.map-hud h1 {
-  font-family: var(--font-sans);
-  font-size: clamp(1.5rem, 3.5vw, 1.85rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
+.map-hud-tagline {
   margin: 0;
-  color: var(--theme-cream);
-}
-
-.map-hud-subtitle {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--map-text-muted);
-  margin: 8px 0 0;
 }
 
 .district-label-wrap {
@@ -683,15 +664,6 @@
   text-align: left;
 }
 
-.map-list-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--map-accent);
-  margin: 0 0 6px;
-}
-
 .map-list-title {
   font-family: var(--font-sans);
   font-size: clamp(1.5rem, 4vw, 1.85rem);
@@ -904,14 +876,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.map-root--focus .map-hud h1 {
-  font-size: 1.35rem;
-}
-
-.map-root--focus .map-hud-subtitle {
-  opacity: 0.75;
 }
 
 .map-root--focus .map-topright {
