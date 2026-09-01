@@ -5,20 +5,20 @@
   padding: calc(var(--nav-height) + 2.5rem) 1.5rem 3rem;
   width: 100%;
   box-sizing: border-box;
-  background: var(--theme-bg);
+  background: var(--page-light-bg);
 }
 
 .about-content {
   text-align: center;
-  color: var(--theme-text);
+  color: var(--page-light-text-body);
 }
 
 .about-photo {
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  border: 3px solid var(--theme-panel-border);
-  box-shadow: 0 10px 30px var(--theme-shadow);
+  border: 3px solid var(--page-light-border);
+  box-shadow: 0 10px 30px var(--page-light-shadow);
   object-fit: cover;
   margin-bottom: 1.25rem;
 }
@@ -30,7 +30,7 @@
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.2;
-  color: var(--theme-cream);
+  color: var(--page-light-text);
 }
 
 .about-role {
@@ -39,14 +39,14 @@
   font-size: 0.8rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--theme-accent);
+  color: var(--page-light-accent);
 }
 
 .about-bio {
   margin: 0;
   line-height: 1.65;
   font-size: 1.05rem;
-  color: var(--theme-text-body);
+  color: var(--page-light-text-body);
   text-align: left;
 }
 

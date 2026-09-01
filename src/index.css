@@ -28,6 +28,17 @@
   --theme-input-bg: rgba(255, 255, 255, 0.05);
   --theme-shadow: rgba(0, 0, 0, 0.38);
 
+  /* Light pages (About, Contact) */
+  --page-light-bg: #f2ebe0;
+  --page-light-surface: #faf6f0;
+  --page-light-border: #d8cfc2;
+  --page-light-text: #0b1520;
+  --page-light-text-body: #4a5560;
+  --page-light-text-muted: #6b7680;
+  --page-light-accent: #4d7f74;
+  --page-light-accent-hover: #3d6b62;
+  --page-light-shadow: rgba(11, 21, 32, 0.08);
+
   /* Project status */
   --color-status-done: #7fae6b;
   --color-status-current: #e0b04a;
@@ -49,12 +60,28 @@ body {
   background: var(--theme-bg);
 }
 
+html.light-page,
+html.light-page body,
+html.light-page #root {
+  background: var(--page-light-bg);
+}
+
 .app {
   min-height: 100vh;
 }
 
 .app-main {
   min-height: 100vh;
+}
+
+.app--light {
+  min-height: 100vh;
+  background: var(--page-light-bg);
+  color: var(--page-light-text-body);
+}
+
+.app--light .app-main {
+  background: var(--page-light-bg);
 }
 
 @media (max-width: 520px) {

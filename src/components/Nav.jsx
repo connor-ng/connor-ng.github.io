@@ -10,9 +10,13 @@ const navLinks = [
 function Nav() {
   const { pathname } = useLocation()
   const isMapHome = pathname === '/'
+  const isLightPage = pathname === '/about' || pathname === '/contact'
 
   return (
-    <nav className={`nav${isMapHome ? ' nav--map' : ''}`} aria-label="Main">
+    <nav
+      className={`nav${isMapHome ? ' nav--map' : ''}${isLightPage ? ' nav--light' : ''}`}
+      aria-label="Main"
+    >
       <Link to="/" className="nav-brand">
         Connor Ng
       </Link>

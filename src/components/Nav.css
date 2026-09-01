@@ -37,6 +37,36 @@
   color: var(--theme-accent-strong);
 }
 
+.nav--light {
+  background: var(--page-light-bg);
+  border-bottom: 1px solid var(--page-light-border);
+  pointer-events: auto;
+}
+
+.nav--light .nav-brand {
+  color: var(--page-light-text);
+}
+
+.nav--light .nav-brand:hover {
+  color: var(--page-light-accent);
+}
+
+.nav--light .nav-link {
+  color: var(--page-light-text-muted);
+}
+
+.nav--light .nav-link:hover {
+  color: var(--page-light-accent);
+}
+
+.nav--light .nav-link--active {
+  color: var(--page-light-text);
+}
+
+.nav--light .nav-link--active:hover {
+  color: var(--page-light-text);
+}
+
 .nav .nav-brand,
 .nav .nav-links {
   pointer-events: auto;
