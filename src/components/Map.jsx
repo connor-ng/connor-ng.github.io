@@ -182,19 +182,16 @@ function Map() {
       minZoom: SF_MIN_ZOOM,
       maxZoom: SF_MAX_ZOOM,
       zoomControl: false,
-      attributionControl: true,
+      attributionControl: false,
     })
 
     L.maplibreGL({
       style: MAP_STYLE_URL,
+      attributionControl: false,
     }).addTo(map)
 
     map.fitBounds(SF_VIEW_BOUNDS, { padding: [32, 32] })
     map.setMaxBounds(getSfMaxBounds())
-    map.attributionControl.setPrefix('')
-    map.attributionControl.addAttribution(
-      '© OpenStreetMap · OpenFreeMap',
-    )
 
     markerByIdRef.current = {}
     if (showProjectMarkers) {

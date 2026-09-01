@@ -47,19 +47,6 @@
   font-family: var(--font-sans);
 }
 
-.map-root .leaflet-control-attribution {
-  background: rgba(var(--theme-bg-rgb), 0.82);
-  color: var(--map-text-muted);
-  font-family: var(--font-mono);
-  font-size: 9px;
-  padding: 2px 6px;
-  border-radius: 4px 0 0 0;
-}
-
-.map-root .leaflet-control-attribution a {
-  color: var(--map-accent);
-}
-
 .map-root .leaflet-control-zoom {
   display: none;
 }
