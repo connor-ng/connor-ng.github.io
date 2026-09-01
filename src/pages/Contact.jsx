@@ -4,7 +4,6 @@ const contactLinks = [
   {
     id: 'email',
     label: 'Email',
-    description: 'connorng1738@gmail.com',
     href: 'mailto:connorng1738@gmail.com',
     external: false,
     icon: (
@@ -17,7 +16,6 @@ const contactLinks = [
   {
     id: 'linkedin',
     label: 'LinkedIn',
-    description: 'linkedin.com/in/ngconnor',
     href: 'https://www.linkedin.com/in/ngconnor/',
     external: true,
     icon: (
@@ -29,7 +27,6 @@ const contactLinks = [
   {
     id: 'github',
     label: 'GitHub',
-    description: 'github.com/gitraccd',
     href: 'https://github.com/gitraccd',
     external: true,
     icon: (
@@ -41,7 +38,6 @@ const contactLinks = [
   {
     id: 'resume',
     label: 'Resume',
-    description: 'Connor_Ng_Resume_2028_P.pdf',
     href: '/resume.pdf',
     download: 'Connor_Ng_Resume_2028_P.pdf',
     external: false,
@@ -76,7 +72,6 @@ function Contact() {
               <span className="contact-icon">{item.icon}</span>
               <span className="contact-meta">
                 <span className="contact-label">{item.label}</span>
-                <span className="contact-description">{item.description}</span>
               </span>
               <span className="contact-arrow" aria-hidden="true">
                 →

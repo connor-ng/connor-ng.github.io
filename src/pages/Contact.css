@@ -110,12 +110,6 @@
   color: var(--theme-text);
 }
 
-.contact-description {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--theme-text-muted);
-}
-
 .contact-arrow {
   flex-shrink: 0;
   color: var(--theme-text-muted);
