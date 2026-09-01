@@ -4,8 +4,8 @@ const contactLinks = [
   {
     id: 'email',
     label: 'Email',
-    description: 'hello@example.com',
-    href: 'mailto:hello@example.com',
+    description: 'connorng1738@gmail.com',
+    href: 'mailto:connorng1738@gmail.com',
     external: false,
     icon: (
       <svg className="contact-icon-svg contact-icon-svg--stroke" viewBox="0 0 24 24" aria-hidden="true">
@@ -17,8 +17,8 @@ const contactLinks = [
   {
     id: 'linkedin',
     label: 'LinkedIn',
-    description: 'linkedin.com/in/your-handle',
-    href: 'https://www.linkedin.com/in/your-handle',
+    description: 'linkedin.com/in/ngconnor',
+    href: 'https://www.linkedin.com/in/ngconnor/',
     external: true,
     icon: (
       <svg className="contact-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
@@ -29,8 +29,8 @@ const contactLinks = [
   {
     id: 'github',
     label: 'GitHub',
-    description: 'github.com/your-handle',
-    href: 'https://github.com/your-handle',
+    description: 'github.com/gitraccd',
+    href: 'https://github.com/gitraccd',
     external: true,
     icon: (
       <svg className="contact-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
@@ -41,9 +41,10 @@ const contactLinks = [
   {
     id: 'resume',
     label: 'Resume',
-    description: 'PDF download',
+    description: 'Connor_Ng_Resume_2028_P.pdf',
     href: '/resume.pdf',
-    external: true,
+    download: 'Connor_Ng_Resume_2028_P.pdf',
+    external: false,
     icon: (
       <svg className="contact-icon-svg contact-icon-svg--stroke" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z" />
@@ -67,6 +68,7 @@ function Contact() {
             <a
               className="contact-row"
               href={item.href}
+              {...(item.download ? { download: item.download } : {})}
               {...(item.external
                 ? { target: '_blank', rel: 'noreferrer' }
                 : {})}
