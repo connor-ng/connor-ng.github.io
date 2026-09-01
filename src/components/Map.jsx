@@ -623,34 +623,6 @@ function Map() {
         </div>
       )}
 
-      {!showingList && (
-        <div className={`map-coords map-panel${mapFocusMode ? ' map-coords--focus' : ''}`}>
-        <span className="map-coords-district">
-          {activeDistrict?.name ?? 'Open water'}
-        </span>
-        {activeDistrict?.flavor && (
-          <span className="map-coords-flavor">{activeDistrict.flavor}</span>
-        )}
-        {showAtlasTools && (
-          <>
-            <span className="map-coords-grid map-coords-grid--muted">
-              x: {coords.gx}, y: {coords.gy}
-            </span>
-            {!isPixelMode && (
-              <span className="map-coords-grid map-coords-grid--muted">
-                {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
-              </span>
-            )}
-          </>
-        )}
-        {!mapFocusMode && !showAtlasTools && !isPixelMode && (
-          <span className="map-coords-grid map-coords-grid--muted">
-            {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
-          </span>
-        )}
-      </div>
-      )}
-
       {showHint && !showingList && (
         <div className={`map-onboarding map-panel${hintFaded ? ' faded' : ''}`}>
           Click a pin to view work · drag to explore
