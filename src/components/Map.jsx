@@ -4,7 +4,6 @@ import '@maplibre/maplibre-gl-leaflet'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import 'leaflet/dist/leaflet.css'
 import projects from '../data/projects'
-import landmarks from '../data/landmarks'
 import { PROJECT_STATUS, STATUS_ORDER } from '../constants/projectStatus'
 import {
   countProjectsByDistrict,
@@ -12,7 +11,6 @@ import {
   getProjectDistrict,
   getSortedDistricts,
 } from '../utils/districtUtils'
-import { buildLandmarkHtml, buildLandmarkPopupHtml } from '../utils/landmarkHtml'
 import { loadMapConfig } from '../utils/loadMapConfig'
 import { formatGridCoords, toGrid, toLatLng } from '../utils/mapCoords'
 import {
@@ -26,8 +24,6 @@ import {
   SF_MAX_ZOOM,
   SF_MIN_ZOOM,
   SF_VIEW_BOUNDS,
-  ZOOM_LANDMARKS_T1,
-  ZOOM_LANDMARKS_T2,
 } from '../utils/sfGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import './Map.css'
@@ -65,8 +61,6 @@ function Map() {
   const mapContainerRef = useRef(null)
   const mapRef = useRef(null)
   const markerByIdRef = useRef({})
-  const landmarkLayerRef = useRef(null)
-  const landmarkEntriesRef = useRef([])
   const referenceLayerRef = useRef(null)
   const pickMarkerRef = useRef(null)
   const coordPickerRef = useRef(false)
@@ -87,18 +81,11 @@ function Map() {
   const [showingList, setShowingList] = useState(false)
   const [showHint, setShowHint] = useState(() => !localStorage.getItem('map-visited'))
   const [hintFaded, setHintFaded] = useState(false)
-  const [showLandmarks, setShowLandmarks] = useState(() => {
-    const saved = localStorage.getItem('map-show-landmarks')
-    return saved === null ? false : saved === '1'
-  })
-  const [showLandmarkLabels, setShowLandmarkLabels] = useState(false)
   const [coordPickerMode, setCoordPickerMode] = useState(false)
   const [pickedCoords, setPickedCoords] = useState(null)
   const [copyFeedback, setCopyFeedback] = useState('')
   const [showReference, setShowReference] = useState(false)
   const [referenceAvailable, setReferenceAvailable] = useState(false)
-
-  const showLandmarksRef = useRef(showLandmarks)
 
   const sortedDistricts = useMemo(() => getSortedDistricts(), [])
 
@@ -178,13 +165,6 @@ function Map() {
   }, [coordPickerMode])
 
   useEffect(() => {
-    showLandmarksRef.current = showLandmarks
-    localStorage.setItem('map-show-landmarks', showLandmarks ? '1' : '0')
-    const map = mapRef.current
-    if (map && !isPixelMode) map.fire('zoomend')
-  }, [showLandmarks, isPixelMode])
-
-  useEffect(() => {
     if (!isPixelMode) return undefined
     fetch('/map/reference.png', { method: 'HEAD' })
       .then((response) => setReferenceAvailable(response.ok))
@@ -215,57 +195,6 @@ function Map() {
     map.attributionControl.addAttribution(
       '© OpenStreetMap · OpenFreeMap',
     )
-
-    const landmarkLayer = L.layerGroup()
-    const landmarkEntries = []
-    landmarks.forEach((landmark) => {
-      const icon = L.divIcon({
-        html: buildLandmarkHtml(landmark, {
-          useSprite: true,
-          showLabel: showLandmarkLabels && landmark.tier === 1,
-        }),
-        className: `landmark-icon-wrap landmark-icon-wrap--tier${landmark.tier}`,
-        iconSize: [landmark.width, landmark.height + (showLandmarkLabels && landmark.tier === 1 ? 14 : 0)],
-        iconAnchor: [landmark.anchorX, landmark.anchorY],
-      })
-
-      const marker = L.marker(getPointLatLng(landmark), {
-        icon,
-        zIndexOffset: landmark.tier === 1 ? 180 : 120,
-      })
-
-      marker.bindPopup(buildLandmarkPopupHtml(landmark), {
-        maxWidth: 280,
-        className: 'landmark-popup-wrapper',
-      })
-      landmarkEntries.push({ marker, tier: landmark.tier })
-    })
-    landmarkLayerRef.current = landmarkLayer
-    landmarkEntriesRef.current = landmarkEntries
-
-    function syncMapDetail() {
-      const zoom = map.getZoom()
-      const landmarksOn = showLandmarksRef.current
-
-      landmarkLayer.clearLayers()
-      if (landmarksOn) {
-        landmarkEntries.forEach(({ marker, tier }) => {
-          const visible =
-            (tier === 1 && zoom >= ZOOM_LANDMARKS_T1) ||
-            (tier === 2 && zoom >= ZOOM_LANDMARKS_T2)
-          if (visible) landmarkLayer.addLayer(marker)
-        })
-      }
-      if (landmarkLayer.getLayers().length > 0 && !map.hasLayer(landmarkLayer)) {
-        landmarkLayer.addTo(map)
-      }
-      if (landmarkLayer.getLayers().length === 0 && map.hasLayer(landmarkLayer)) {
-        map.removeLayer(landmarkLayer)
-      }
-    }
-
-    map.on('zoomend', syncMapDetail)
-    syncMapDetail()
 
     markerByIdRef.current = {}
     if (showProjectMarkers) {
@@ -339,8 +268,6 @@ function Map() {
       map.remove()
       mapRef.current = null
       markerByIdRef.current = {}
-      landmarkLayerRef.current = null
-      landmarkEntriesRef.current = []
       pickMarkerRef.current = null
     }
   }, [isPixelMode])
@@ -380,31 +307,6 @@ function Map() {
       interactive: false,
     })
     referenceLayerRef.current = referenceLayer
-
-    const landmarkLayer = L.layerGroup()
-    landmarks.forEach((landmark) => {
-      const icon = L.divIcon({
-        html: buildLandmarkHtml(landmark, { useSprite: true }),
-        className: 'landmark-icon-wrap',
-        iconSize: [landmark.width, landmark.height],
-        iconAnchor: [landmark.anchorX, landmark.anchorY],
-      })
-
-      const marker = L.marker(
-        toLatLng(landmark.gx, landmark.gy, height, tileSize),
-        {
-          icon,
-          zIndexOffset: landmark.tier === 1 ? 250 : 150,
-        },
-      )
-
-      marker.bindPopup(buildLandmarkPopupHtml(landmark), {
-        maxWidth: 280,
-        className: 'landmark-popup-wrapper',
-      })
-      landmarkLayer.addLayer(marker)
-    })
-    landmarkLayerRef.current = landmarkLayer
 
     markerByIdRef.current = {}
     projects.forEach((project) => {
@@ -481,23 +383,10 @@ function Map() {
       map.remove()
       mapRef.current = null
       markerByIdRef.current = {}
-      landmarkLayerRef.current = null
       referenceLayerRef.current = null
       pickMarkerRef.current = null
     }
   }, [isPixelMode, mapConfig])
-
-  useEffect(() => {
-    const layer = landmarkLayerRef.current
-    const map = mapRef.current
-    if (!layer || !map || !isPixelMode) return
-
-    if (showLandmarks) {
-      layer.addTo(map)
-    } else {
-      map.removeLayer(layer)
-    }
-  }, [showLandmarks, isPixelMode])
 
   useEffect(() => {
     const layer = referenceLayerRef.current
@@ -571,7 +460,7 @@ function Map() {
 
   return (
     <div
-      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showingList ? ' map-root--list' : ''}${showHint && !hintFaded ? ' map-root--onboarding' : ''}${showLandmarks ? ' map-root--landmarks-on' : ''}${showLandmarkLabels ? ' map-root--landmark-labels' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
+      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showingList ? ' map-root--list' : ''}${showHint && !hintFaded ? ' map-root--onboarding' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
     >
       {!showingList && (
         <div className="map-hud">
@@ -653,18 +542,6 @@ function Map() {
             List
           </button>
         </div>
-        {mapFocusMode && !showingList && (
-          <div className="map-focus-toggles map-panel">
-            <label className="map-focus-toggle">
-              <input
-                type="checkbox"
-                checked={showLandmarks}
-                onChange={(event) => setShowLandmarks(event.target.checked)}
-              />
-              <span>Landmarks</span>
-            </label>
-          </div>
-        )}
         {!showingList && (
           <div className="map-zoom-controls">
             <button type="button" className="map-panel" onClick={handleZoomIn} aria-label="Zoom in">
@@ -680,22 +557,6 @@ function Map() {
       {showAtlasTools && (
         <div className="map-atlas-tools map-panel">
           <h2>Atlas tools</h2>
-          <label className="map-tool-toggle">
-            <input
-              type="checkbox"
-              checked={showLandmarks}
-              onChange={(event) => setShowLandmarks(event.target.checked)}
-            />
-            Show landmarks
-          </label>
-          <label className="map-tool-toggle">
-            <input
-              type="checkbox"
-              checked={showLandmarkLabels}
-              onChange={(event) => setShowLandmarkLabels(event.target.checked)}
-            />
-            Landmark labels
-          </label>
           <label className="map-tool-toggle">
             <input
               type="checkbox"

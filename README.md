@@ -36,16 +36,12 @@ src/
   data/
     projects.js      # Project markers and list-view data
     districts.js     # SF district zones (bounds, colors, art-direction notes)
-    landmarks.js     # SF landmarks (coords, tiers, blurbs, sprite paths)
   utils/
     districtUtils.js           # District lookup and project counts
-    landmarkUtils.js           # Landmark helpers
-    landmarkHtml.js            # Landmark marker + popup HTML
     mapCoords.js                 # Grid ↔ Leaflet coordinate helpers
     generatePlaceholderMap.js  # Procedural map image (swap for real asset later)
 public/
   map/               # world.png + optional reference.png overlay for painting
-  landmarks/         # Per-landmark sprite SVGs (replace with hand-painted art)
 ```
 
 ## Build
@@ -64,9 +60,7 @@ The home page uses a **live San Francisco street map** (OpenStreetMap via OpenFr
 | Zoom level | Detail |
 |------------|--------|
 | City view | Real streets, parks, waterfront |
-| District zones | Colored neighborhood overlays + labels |
-| Zoom in further | Tier 1 landmarks (Golden Gate, Ferry Building, etc.) |
-| Zoom in more | Tier 2 landmarks (Pier 39, Painted Ladies, etc.) |
+| District zones | Colored neighborhood overlays + labels (atlas tools) |
 
 ### Add more detail yourself
 
@@ -79,15 +73,12 @@ lng: -122.4214,
 districtId: 'mission',
 ```
 
-**2. Landmarks**  
-Edit `src/data/landmarks.js` — each entry has `lat`, `lng`, `name`, `blurb`, and `tier` (1 = major, 2 = neighborhood). Find coords on [openstreetmap.org](https://www.openstreetmap.org).
-
-**3. Districts**  
+**2. Districts**  
 Edit `src/data/districts.js` — adjust `bounds`, `color`, and `flavor` text for each neighborhood zone.
 
-**4. Even more street detail**  
+**3. Even more street detail**  
 Zoom in — OpenStreetMap already has building-level data. For a custom illustrated look later, add `?pixel=1` and paint `public/map/world.png` in Pixelorama.
 
 ### Atlas tools (`?tools=1`)
 
-Toggle district zones, landmarks, and coord picker.
+Toggle district zones and coord picker.
