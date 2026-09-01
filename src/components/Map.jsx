@@ -461,7 +461,7 @@ function Map() {
     >
       {!showingList && (
         <div className="map-hud">
-          <p className="map-hud-tagline">Product &amp; business</p>
+          <p className="map-hud-tagline">Personal portfolio</p>
         </div>
       )}
 
