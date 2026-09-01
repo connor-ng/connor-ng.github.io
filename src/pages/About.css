@@ -8,7 +8,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto;
   background: linear-gradient(
     180deg,
     #1a2a38 0%,
@@ -25,12 +25,12 @@
   align-items: flex-end;
   justify-content: center;
   pointer-events: none;
+  opacity: 0.45;
 }
 
 .about-bridge-svg {
   width: min(1100px, 100%);
   height: auto;
-  opacity: 0.88;
   transform: translateY(8%);
 }
 
@@ -39,19 +39,9 @@
   z-index: 2;
   max-width: 520px;
   margin: 0 auto;
-  padding: calc(var(--nav-height) + 2.5rem) 1.5rem 10rem;
+  padding: calc(var(--nav-height) + 2.5rem) 1.5rem 3rem;
   text-align: center;
   color: var(--theme-text);
-  opacity: 0;
-  transform: translateY(12px);
-  transition:
-    opacity 1.1s ease,
-    transform 1.1s ease;
-}
-
-.about-scene--revealed .about-content {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .about-photo {
@@ -90,59 +80,9 @@
   color: var(--theme-text-body);
 }
 
-.about-fog {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  background:
-    radial-gradient(ellipse at 50% 35%, rgba(180, 200, 210, 0.35) 0%, rgba(120, 145, 160, 0.65) 45%, rgba(60, 80, 95, 0.88) 100%),
-    linear-gradient(180deg, rgba(140, 165, 180, 0.55) 0%, rgba(80, 105, 120, 0.8) 55%, rgba(40, 58, 72, 0.92) 100%);
-  backdrop-filter: blur(2px);
-  opacity: 1;
-  transition: opacity 1.2s ease;
-}
-
-.about-fog--cleared {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.about-fog-hint {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--theme-text-muted);
-  background: var(--theme-panel-bg);
-  border: 1px dashed #4a6a6a;
-  padding: 0.55rem 0.9rem;
-  border-radius: 8px;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .about-content {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
-  .about-fog {
-    display: none;
-  }
-}
-
 @media (max-width: 640px) {
   .about-content {
     padding-top: calc(var(--nav-height) + 1.5rem);
-    padding-bottom: 8rem;
   }
 
   .about-bridge-svg {

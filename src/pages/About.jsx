@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import './About.css'
 
 function BridgeIllustration() {
@@ -7,7 +6,7 @@ function BridgeIllustration() {
       className="about-bridge-svg"
       viewBox="0 0 800 320"
       role="img"
-      aria-label="Golden Gate Bridge illustration"
+      aria-hidden="true"
     >
       <defs>
         <linearGradient id="bridge-sky" x1="0" y1="0" x2="0" y2="1">
@@ -64,33 +63,9 @@ function BridgeIllustration() {
 }
 
 function About() {
-  const [revealed, setRevealed] = useState(false)
-  const [reducedMotion, setReducedMotion] = useState(false)
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const syncMotionPreference = () => {
-      const prefersReduced = mediaQuery.matches
-      setReducedMotion(prefersReduced)
-      if (prefersReduced) {
-        setRevealed(true)
-      }
-    }
-
-    syncMotionPreference()
-    mediaQuery.addEventListener('change', syncMotionPreference)
-    return () => mediaQuery.removeEventListener('change', syncMotionPreference)
-  }, [])
-
-  function handleReveal() {
-    setRevealed(true)
-  }
-
-  const showFog = !reducedMotion
-
   return (
     <main className="about">
-      <div className={`about-scene${revealed ? ' about-scene--revealed' : ''}`}>
+      <div className="about-scene">
         <div className="about-bridge" aria-hidden="true">
           <BridgeIllustration />
         </div>
@@ -111,19 +86,6 @@ function About() {
             background, and what you are looking for next.
           </p>
         </section>
-
-        {showFog && (
-          <button
-            type="button"
-            className={`about-fog${revealed ? ' about-fog--cleared' : ''}`}
-            onClick={handleReveal}
-            aria-label="Clear the fog to reveal profile"
-            aria-hidden={revealed}
-            tabIndex={revealed ? -1 : 0}
-          >
-            <span className="about-fog-hint">Click to clear the fog</span>
-          </button>
-        )}
       </div>
     </main>
   )
