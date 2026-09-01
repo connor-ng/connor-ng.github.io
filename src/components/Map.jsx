@@ -626,6 +626,18 @@ function Map() {
         </div>
       )}
 
+      {!showingList && (
+        <p className="map-attribution">
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
+            OpenStreetMap
+          </a>
+          {' · '}
+          <a href="https://openfreemap.org/" target="_blank" rel="noreferrer">
+            OpenFreeMap
+          </a>
+        </p>
+      )}
+
       <div
         ref={mapContainerRef}
         className={`map-container${showingList ? ' hidden' : ''}`}
