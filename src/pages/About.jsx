@@ -79,11 +79,11 @@ function About() {
             height={160}
           />
           <h1 id="about-heading">About Connor</h1>
-          <p className="about-role">Designer &amp; developer</p>
+          <p className="about-role">Product &amp; business</p>
           <p className="about-bio">
-            I build thoughtful digital products at the intersection of craft and
-            clarity. This is placeholder copy — replace it with your real bio,
-            background, and what you are looking for next.
+            A showcase of work across product, strategy, and execution — the
+            kinds of problems I like to own end to end. Replace this with your
+            background, what you have shipped, and what you are looking for next.
           </p>
         </section>
       </div>

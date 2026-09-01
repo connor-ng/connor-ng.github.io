@@ -461,7 +461,7 @@ function Map() {
     >
       {!showingList && (
         <div className="map-hud">
-          <p className="map-hud-tagline">Designer &amp; developer</p>
+          <p className="map-hud-tagline">Product &amp; business</p>
         </div>
       )}
 
@@ -645,7 +645,7 @@ function Map() {
         <header className="map-list-header">
           <h2 className="map-list-title">Selected work</h2>
           <p className="map-list-intro">
-            Featured projects — open one or view it on the map.
+            Projects I have worked on — open one or view it on the map.
           </p>
         </header>
 
