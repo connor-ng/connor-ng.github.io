@@ -110,35 +110,44 @@ npm run build
 npm run preview
 ```
 
-## Deploy to GitHub Pages (`.io`)
+## Deploy (Netlify recommended)
 
-This site is ready for GitHub Pages. The repo currently lives in Cursor’s git host — you need a **GitHub** repo before Pages will work.
+This is a static Vite app — build output is `dist/`.
 
-### Option A — User site (recommended for a clean `.io` URL)
+### Netlify (easiest path)
 
-URL: `https://gitraccd.github.io`
+1. Push this repo to **GitHub** (Netlify connects to GitHub; Cursor’s git host won’t work as the source).
+2. Go to [app.netlify.com](https://app.netlify.com) → **Add new site** → **Import an existing project**.
+3. Pick the GitHub repo.
+4. Build settings are already in `netlify.toml`:
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+5. Deploy — you’ll get a free URL like `https://something.netlify.app`.
 
-1. On GitHub, create a **public** repo named exactly `gitraccd.github.io` (must match your GitHub username).
-2. Locally (or in Cursor Desktop), add GitHub as a remote and push:
+SPA routes (`/about`, `/contact`) are handled by `_redirects` / `netlify.toml`.
 
-```bash
-git remote add github https://github.com/gitraccd/gitraccd.github.io.git
-git push -u github main
-```
+### Want a URL that ends in `.io`?
 
-3. Repo → **Settings → Pages**
-   - Source: **GitHub Actions**
-4. The workflow in `.github/workflows/deploy-pages.yml` builds and publishes on every push to `main`.
+Free hosts don’t give you a bare `.io` domain. Options:
 
-### Option B — Project site
+| Approach | Example URL | Notes |
+|----------|-------------|--------|
+| **Buy a custom domain** | `connorng.io` | Best look. Buy on Namecheap / Google Domains / Cloudflare, then add it in Netlify → Domain settings. |
+| **GitHub Pages user site** | `gitraccd.github.io` | Free `.io`, but only if the site lives on GitHub Pages. |
+| **Keep Netlify subdomain** | `yoursite.netlify.app` | Free forever; fine while building. |
 
-URL: `https://gitraccd.github.io/my-folio`
+Most people: ship on **Netlify** first → later buy `something.io` and point DNS at Netlify (CNAME).
 
-1. Create any public repo (e.g. `my-folio`) and push.
-2. In `.github/workflows/deploy-pages.yml`, set `VITE_BASE: /my-folio/` (match the repo name).
-3. Enable Pages with **GitHub Actions** as above.
+### Other solid hosts (same idea)
 
-SPA routes (`/about`, `/contact`) are handled by copying `index.html` → `404.html` on build.
+- **Vercel** — free `*.vercel.app`, custom domain later
+- **Cloudflare Pages** — free `*.pages.dev`, custom domain later
+
+Same flow: GitHub repo → connect host → build `npm run build` → publish `dist`.
+
+### GitHub Pages (optional)
+
+A workflow still exists at `.github/workflows/deploy-pages.yml` if you ever want `username.github.io`. Prefer Netlify unless you specifically want GitHub’s free `.io`.
 
 ## Tips
 
