@@ -681,6 +681,33 @@
   max-width: 42ch;
 }
 
+.map-list-empty {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 22px;
+}
+
+.map-list-empty-title {
+  margin: 0 0 6px;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--theme-cream);
+}
+
+.map-list-empty-body {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--map-text-muted);
+}
+
+.map-list-empty-body code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--map-accent);
+}
+
 .map-list-section-label {
   max-width: 640px;
   margin: 28px auto 12px;

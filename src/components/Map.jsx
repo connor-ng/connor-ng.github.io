@@ -30,29 +30,53 @@ import './Map.css'
 
 function buildPopupHtml(project) {
   if (project.status === 'locked') {
-    return '<div class="popup-eyebrow">Sealed</div><div class="popup-title">???</div><p class="popup-blurb">Not revealed yet.</p>'
+    return '<div class="popup-eyebrow">Coming soon</div><div class="popup-title">???</div><p class="popup-blurb">Not revealed yet.</p>'
   }
 
-  const tags = (project.stack ?? [])
+  const tags = (project.tags ?? project.stack ?? [])
     .map((tag) => `<span>${tag}</span>`)
     .join('')
+
+  const screenshot = project.screenshot
+    ? `<img class="popup-screenshot" src="${project.screenshot}" alt="" />`
+    : ''
+
+  const eyebrow = project.roleAndTimeframe
+    ? `<div class="popup-eyebrow">${project.roleAndTimeframe}</div>`
+    : ''
+
+  const problem = project.oneLinerProblem
+    ? `<p class="popup-problem">${project.oneLinerProblem}</p>`
+    : ''
+
+  const blurb = project.description
+    ? `<p class="popup-blurb">${project.description}</p>`
+    : ''
+
+  const tagRow = tags ? `<div class="popup-tags">${tags}</div>` : ''
+
+  const liveLink = project.liveLink
+    ? `<a class="popup-link" href="${project.liveLink}" target="_blank" rel="noreferrer">Live site →</a>`
+    : ''
 
   const caseStudyLink = project.caseStudyLink
     ? `<a class="popup-link popup-link-secondary" href="${project.caseStudyLink}" target="_blank" rel="noreferrer">Case study →</a>`
     : ''
 
+  const links =
+    liveLink || caseStudyLink
+      ? `<div class="popup-links">${liveLink}${caseStudyLink}</div>`
+      : ''
+
   return `
     <div class="popup-card">
-      <img class="popup-screenshot" src="${project.screenshot}" alt="${project.title} screenshot" />
-      <div class="popup-eyebrow">${project.roleAndTimeframe}</div>
+      ${screenshot}
+      ${eyebrow}
       <div class="popup-title">${project.title}</div>
-      <p class="popup-problem">${project.oneLinerProblem}</p>
-      <p class="popup-blurb">${project.description}</p>
-      <div class="popup-tags">${tags}</div>
-      <div class="popup-links">
-        <a class="popup-link" href="${project.liveLink}" target="_blank" rel="noreferrer">Live product →</a>
-        ${caseStudyLink}
-      </div>
+      ${problem}
+      ${blurb}
+      ${tagRow}
+      ${links}
     </div>
   `
 }
@@ -79,7 +103,9 @@ function Map() {
   })
   const [searchQuery, setSearchQuery] = useState('')
   const [showingList, setShowingList] = useState(false)
-  const [showHint, setShowHint] = useState(() => !localStorage.getItem('map-visited'))
+  const [showHint, setShowHint] = useState(
+    () => !localStorage.getItem('map-visited') && projects.some((p) => p.status !== 'locked'),
+  )
   const [hintFaded, setHintFaded] = useState(false)
   const [coordPickerMode, setCoordPickerMode] = useState(false)
   const [pickedCoords, setPickedCoords] = useState(null)
@@ -138,6 +164,8 @@ function Map() {
     () => listProjects.filter((project) => !project.featured),
     [listProjects],
   )
+
+  const hasProjects = listProjects.length > 0
 
   const displayCoords = pickedCoords ?? coords
   const coordSnippet = isPixelMode
@@ -457,7 +485,7 @@ function Map() {
 
   return (
     <div
-      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showingList ? ' map-root--list' : ''}${showHint && !hintFaded ? ' map-root--onboarding' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
+      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showingList ? ' map-root--list' : ''}${showHint && !hintFaded && hasProjects ? ' map-root--onboarding' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
     >
       {!showingList && (
         <div className="map-hud">
@@ -618,7 +646,7 @@ function Map() {
         </div>
       )}
 
-      {showHint && !showingList && (
+      {showHint && !showingList && hasProjects && (
         <div className={`map-onboarding map-panel${hintFaded ? ' faded' : ''}`}>
           Click a pin to view work · drag to explore
         </div>
@@ -645,9 +673,21 @@ function Map() {
         <header className="map-list-header">
           <h2 className="map-list-title">Selected work</h2>
           <p className="map-list-intro">
-            Projects I have worked on — open one or view it on the map.
+            {hasProjects
+              ? 'Projects I have worked on — open one or view it on the map.'
+              : 'Projects will show up here once you add them to the map.'}
           </p>
         </header>
+
+        {!hasProjects && (
+          <div className="map-list-empty map-panel">
+            <p className="map-list-empty-title">No projects yet</p>
+            <p className="map-list-empty-body">
+              Add your first entry in <code>src/data/projects.js</code> and drop a
+              screenshot in <code>public/projects/</code>.
+            </p>
+          </div>
+        )}
 
         {featuredProjects.map((project) => {
           const district = getProjectDistrict(project)

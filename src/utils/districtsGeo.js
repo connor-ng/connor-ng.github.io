@@ -1,5 +1,5 @@
 import districts from '../data/districts'
-import { gridToLatLng, gridToLngLat } from './sfGeo'
+import { gridToLngLat } from './sfGeo'
 
 function ringCentroid(ring) {
   let sumLng = 0

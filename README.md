@@ -1,6 +1,6 @@
 # Personal Portfolio
 
-A Vite + React personal portfolio site with client-side routing.
+Connor Ng's personal portfolio — a San Francisco map of selected work, plus About and Contact.
 
 ## Setup
 
@@ -18,30 +18,89 @@ The dev server runs at [http://127.0.0.1:43123](http://127.0.0.1:43123).
 
 ## Routes
 
-- `/` — Home
+- `/` — Map of projects (Map / List toggle)
 - `/about` — About
-- `/contact` — Contact
+- `/contact` — Email, LinkedIn, GitHub, resume
+
+## Add your first project
+
+Everything lives in one file: `src/data/projects.js`.
+
+### 1. Gather content
+
+| Field | What to write | Required? |
+|-------|----------------|-----------|
+| `title` | Project name | Yes |
+| `roleAndTimeframe` | e.g. `Product lead · 2024–2025` | Recommended |
+| `oneLinerProblem` | One sentence on the problem or opportunity | Recommended |
+| `description` | What you owned + outcome (metrics if you have them) | Recommended |
+| `tags` | Themes or domains, e.g. `['Go-to-market', 'Research']` | Optional |
+| `screenshot` | Image path under `public/projects/` | Recommended |
+| `liveLink` | Live site / demo | Optional |
+| `caseStudyLink` | Write-up URL | Optional |
+| `status` | `'done'` or `'current'` | Yes |
+| `featured` | `true` to highlight in list view | Optional |
+| `lat` / `lng` | Map pin location in SF | Yes |
+| `districtId` | Neighborhood id (see below) | Recommended |
+
+### 2. Drop a screenshot
+
+Put an image in `public/projects/`, e.g. `public/projects/acme.png`.
+
+Use about **1200px wide** PNG or JPG. Then set:
+
+```js
+screenshot: '/projects/acme.png',
+```
+
+### 3. Pick a map location
+
+1. Open [/?tools=1](http://127.0.0.1:43123/?tools=1)
+2. Enable **Coord picker**
+3. Click a spot on the map
+4. Copy the coords into your project entry (`lat`, `lng`, and optionally `gx` / `gy`)
+
+Useful `districtId` values: `marina`, `northern-waterfront`, `richmond`, `western-addition`, `downtown`, `mission`, `sunset`, `bayview` (see `src/data/districts.js` for the full list).
+
+### 4. Paste into `projects.js`
+
+```js
+const projects = [
+  {
+    id: 'my-first-project',
+    title: 'Project name',
+    roleAndTimeframe: 'Product lead · 2024–2025',
+    oneLinerProblem: 'One sentence on the problem or opportunity.',
+    description:
+      'What you owned, who it was for, and the outcome.',
+    tags: ['Strategy', 'Research'],
+    screenshot: '/projects/my-first-project.png',
+    liveLink: 'https://…',
+    status: 'done',
+    featured: true,
+    districtId: 'mission',
+    lat: 37.7594,
+    lng: -122.4214,
+    gx: 128,
+    gy: 96,
+  },
+]
+```
+
+Save — the map and list view update immediately in the dev server.
 
 ## Project structure
 
 ```
 src/
-  components/
-    Nav.jsx          # Shared navigation
-    Map.jsx          # Pannable pixel-art project map (Leaflet)
-  pages/
-    Home.jsx         # Renders Map
-    About.jsx
-    Contact.jsx
+  components/        # Nav, Map
+  pages/             # Home, About, Contact
   data/
-    projects.js      # Project markers and list-view data
-    districts.js     # SF district zones (bounds, colors, art-direction notes)
-  utils/
-    districtUtils.js           # District lookup and project counts
-    mapCoords.js                 # Grid ↔ Leaflet coordinate helpers
-    generatePlaceholderMap.js  # Procedural map image (swap for real asset later)
+    projects.js      # ← your portfolio pins
+    districts.js     # SF neighborhood zones
 public/
-  map/               # world.png + optional reference.png overlay for painting
+  projects/          # screenshots
+  resume.pdf         # contact page download
 ```
 
 ## Build
@@ -51,34 +110,8 @@ npm run build
 npm run preview
 ```
 
-## Map
+## Tips
 
-The home page uses a **live San Francisco street map** (OpenStreetMap via OpenFreeMap) focused on the **city peninsula only** — you can't pan away to Oakland or Marin.
-
-### What's on the map
-
-| Zoom level | Detail |
-|------------|--------|
-| City view | Real streets, parks, waterfront |
-| District zones | Colored neighborhood overlays + labels (atlas tools) |
-
-### Add more detail yourself
-
-**1. Projects (your portfolio pins)**  
-Open `/?tools=1` → enable **Coord picker** → click a spot → copy coords into `src/data/projects.js`:
-
-```js
-lat: 37.7594,
-lng: -122.4214,
-districtId: 'mission',
-```
-
-**2. Districts**  
-Edit `src/data/districts.js` — adjust `bounds`, `color`, and `flavor` text for each neighborhood zone.
-
-**3. Even more street detail**  
-Zoom in — OpenStreetMap already has building-level data. For a custom illustrated look later, add `?pixel=1` and paint `public/map/world.png` in Pixelorama.
-
-### Atlas tools (`?tools=1`)
-
-Toggle district zones and coord picker.
+- **PM / business framing:** Lead with problem → your role → outcome. Tags can be domains or skills, not just tech stack.
+- **Optional fields:** Missing screenshot, live link, or case study are fine — the UI skips empty pieces.
+- **Atlas tools:** `/?tools=1` for coord picker. `/?pixel=1` for the legacy pixel map.
