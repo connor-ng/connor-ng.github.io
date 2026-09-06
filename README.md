@@ -110,6 +110,36 @@ npm run build
 npm run preview
 ```
 
+## Deploy to GitHub Pages (`.io`)
+
+This site is ready for GitHub Pages. The repo currently lives in Cursor’s git host — you need a **GitHub** repo before Pages will work.
+
+### Option A — User site (recommended for a clean `.io` URL)
+
+URL: `https://gitraccd.github.io`
+
+1. On GitHub, create a **public** repo named exactly `gitraccd.github.io` (must match your GitHub username).
+2. Locally (or in Cursor Desktop), add GitHub as a remote and push:
+
+```bash
+git remote add github https://github.com/gitraccd/gitraccd.github.io.git
+git push -u github main
+```
+
+3. Repo → **Settings → Pages**
+   - Source: **GitHub Actions**
+4. The workflow in `.github/workflows/deploy-pages.yml` builds and publishes on every push to `main`.
+
+### Option B — Project site
+
+URL: `https://gitraccd.github.io/my-folio`
+
+1. Create any public repo (e.g. `my-folio`) and push.
+2. In `.github/workflows/deploy-pages.yml`, set `VITE_BASE: /my-folio/` (match the repo name).
+3. Enable Pages with **GitHub Actions** as above.
+
+SPA routes (`/about`, `/contact`) are handled by copying `index.html` → `404.html` on build.
+
 ## Tips
 
 - **PM / business framing:** Lead with problem → your role → outcome. Tags can be domains or skills, not just tech stack.
