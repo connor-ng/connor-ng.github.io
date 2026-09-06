@@ -18,7 +18,8 @@ function Nav() {
       aria-label="Main"
     >
       <Link to="/" className="nav-brand">
-        Connor Ng
+        <span className="nav-brand-mark" aria-hidden="true" />
+        <span className="nav-brand-name">Connor Ng</span>
       </Link>
 
       <div className="nav-links">
