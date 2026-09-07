@@ -14,9 +14,11 @@ function About() {
         <h1 id="about-heading">About Connor</h1>
         <p className="about-role">Product &amp; business</p>
         <p className="about-bio">
-          A showcase of work across product, strategy, and execution — the
-          kinds of problems I like to own end to end. Replace this with your
-          background, what you have shipped, and what you are looking for next.
+          I work at the intersection of product and business — figuring out
+          what to build, why it matters, and how to ship it. This map is a
+          personal atlas of work I have owned end to end, starting with CFT,
+          a training app I built to keep progressive overload on track through
+          a busy internship.
         </p>
       </section>
     </main>

@@ -74,6 +74,10 @@
   border: none;
 }
 
+.district-label-wrap.is-hidden {
+  display: none;
+}
+
 .district-map-label {
   display: inline-block;
   transform: translate(-50%, -50%);

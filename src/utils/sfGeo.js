@@ -30,7 +30,8 @@ export const SF_TILE_MAX_ZOOM = 16
 
 /** Zoom thresholds for layered map detail. */
 export const ZOOM_DISTRICTS = 11
-export const ZOOM_DISTRICT_LABELS = 13.75
+/** Below this zoom, only popular district labels show. */
+export const ZOOM_DISTRICT_LABELS = 13.25
 
 /** @returns {[number, number]} Leaflet [lat, lng] */
 export function gridToLatLng(gx, gy) {

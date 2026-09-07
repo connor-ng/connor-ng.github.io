@@ -39,11 +39,12 @@ const projects = [
     featured: true,
     featuredLabel: 'Featured',
     districtId: 'mission',
-    // Placeholder pin — adjust later with /?tools=1
-    lat: 37.7599,
-    lng: -122.4148,
-    gx: 148,
-    gy: 108,
+    // Mission St corridor — interior of the Mission district box
+    lat: 37.7595,
+    lng: -122.4115,
+    gx: 152,
+    gy: 106,
+    screenshot: '/projects/cft.png',
   },
 ]
 

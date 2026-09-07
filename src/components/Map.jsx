@@ -24,6 +24,7 @@ import {
   SF_TILE_MAX_ZOOM,
   SF_TILE_URL,
   SF_VIEW_BOUNDS,
+  ZOOM_DISTRICT_LABELS,
 } from '../utils/sfGeo'
 import { districtsToGeoJSON, getDistrictLabels } from '../utils/districtsGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
@@ -263,6 +264,7 @@ function Map() {
       },
     }).addTo(map)
 
+    const districtLabelMarkers = []
     getDistrictLabels().forEach((label) => {
       const district = sortedDistricts.find((item) => item.id === label.id)
       const popular = district?.popular
@@ -272,23 +274,43 @@ function Map() {
         iconSize: [0, 0],
         iconAnchor: [0, 0],
       })
-      L.marker([label.lat, label.lng], {
+      const marker = L.marker([label.lat, label.lng], {
         icon,
         interactive: false,
         keyboard: false,
         zIndexOffset: popular ? 80 : 40,
       }).addTo(map)
+      marker._districtPopular = Boolean(popular)
+      districtLabelMarkers.push(marker)
     })
 
+    const syncDistrictLabels = () => {
+      const showSecondary = map.getZoom() >= ZOOM_DISTRICT_LABELS
+      districtLabelMarkers.forEach((marker) => {
+        const el = marker.getElement()
+        if (!el) return
+        const hide = !marker._districtPopular && !showSecondary
+        el.classList.toggle('is-hidden', hide)
+      })
+    }
+
+    map.on('zoomend', syncDistrictLabels)
     map.whenReady(() => {
-      window.setTimeout(() => map.invalidateSize(), 50)
-      window.setTimeout(() => map.invalidateSize(), 300)
+      window.setTimeout(() => {
+        map.invalidateSize()
+        syncDistrictLabels()
+      }, 50)
+      window.setTimeout(() => {
+        map.invalidateSize()
+        syncDistrictLabels()
+      }, 300)
     })
 
     // Frame San Francisco city specifically (not the wider Bay Area).
     map.fitBounds(SF_VIEW_BOUNDS, { padding: [20, 20], maxZoom: 13 })
     map.setMaxBounds(getSfMaxBounds())
     map.options.maxBoundsViscosity = 0.95
+    syncDistrictLabels()
 
     markerByIdRef.current = {}
     if (showProjectMarkers) {
