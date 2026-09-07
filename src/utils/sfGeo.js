@@ -15,8 +15,9 @@ export const SF_VIEW_BOUNDS = [
 ]
 
 export const SF_CENTER = { lat: 37.759, lng: -122.439 }
-export const SF_DEFAULT_ZOOM = 12.5
-export const SF_MIN_ZOOM = 12
+export const SF_DEFAULT_ZOOM = 12
+/** Allow phone viewports to fit the city without breaking maxBounds. */
+export const SF_MIN_ZOOM = 11
 export const SF_MAX_ZOOM = 18
 
 /** Dark raster tiles (no API key). Esri uses {z}/{y}/{x} order. */
@@ -74,8 +75,12 @@ export function formatGeoCoords(lat, lng, gx, gy) {
 }
 
 export function getSfMaxBounds() {
+  // Pad so small/tall phone viewports never make the world smaller than the screen
+  // (that state breaks Leaflet panning/zooming on iOS).
+  const padLat = 0.045
+  const padLng = 0.06
   return [
-    [SF_BOUNDS.south, SF_BOUNDS.west],
-    [SF_BOUNDS.north, SF_BOUNDS.east],
+    [SF_BOUNDS.south - padLat, SF_BOUNDS.west - padLng],
+    [SF_BOUNDS.north + padLat, SF_BOUNDS.east + padLng],
   ]
 }

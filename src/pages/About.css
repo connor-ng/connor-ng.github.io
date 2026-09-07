@@ -20,11 +20,9 @@
   border: 3px solid var(--page-light-border);
   box-shadow: 0 12px 32px var(--page-light-shadow);
   object-fit: cover;
-  object-position: center center;
-  margin-bottom: 1.35rem;
+  object-position: 50% 42%;
+  margin: 0 auto 1.35rem;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .about-content h1 {

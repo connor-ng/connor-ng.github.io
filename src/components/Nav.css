@@ -26,7 +26,13 @@
     rgba(var(--theme-bg-rgb), 0.65) 65%,
     rgba(var(--theme-bg-rgb), 0) 100%
   );
-  backdrop-filter: blur(10px);
+}
+
+/* backdrop-filter can steal touches on iOS even with pointer-events: none */
+@supports not (-webkit-touch-callout: none) {
+  .nav--map {
+    backdrop-filter: blur(10px);
+  }
 }
 
 .nav--map .nav-link {

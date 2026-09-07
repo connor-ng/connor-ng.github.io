@@ -11,17 +11,34 @@
 
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   background: var(--map-bg);
   overflow: hidden;
   font-family: var(--font-sans);
   color: var(--map-text);
+  /* Critical for Leaflet drag/pinch on iOS */
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .map-container {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   background: var(--map-bg);
   transition: filter 0.25s ease;
+  touch-action: none;
+  z-index: 0;
+}
+
+.map-root .leaflet-container {
+  background: var(--map-bg);
+  font-family: var(--font-sans);
+  width: 100%;
+  height: 100%;
+  touch-action: none;
 }
 
 .map-root--list .map-container {
@@ -42,11 +59,6 @@
 
 .map-root--focus.map-root--geo .leaflet-tile-pane {
   filter: none;
-}
-
-.map-root .leaflet-container {
-  background: var(--map-bg);
-  font-family: var(--font-sans);
 }
 
 .map-root .leaflet-control-zoom {
@@ -429,6 +441,13 @@
 /* Shared marker: circular icon + corner badge — hero layer (Palworld-style pins) */
 .map-root .project-marker-layer {
   z-index: 1200 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.map-root .leaflet-div-icon {
+  background: transparent;
+  border: none;
 }
 
 @keyframes map-marker-pulse {

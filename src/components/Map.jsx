@@ -203,20 +203,30 @@ function Map() {
       zoom: SF_DEFAULT_ZOOM,
       minZoom: SF_MIN_ZOOM,
       maxZoom: SF_MAX_ZOOM,
+      zoomSnap: 0.25,
+      zoomDelta: 0.5,
+      wheelPxPerZoomLevel: 80,
       zoomControl: false,
       attributionControl: false,
+      // Prefer touch/drag reliability on iOS Safari
+      preferCanvas: false,
+      bounceAtZoomLimits: false,
     })
 
     // Dark basemap via Esri (no API key / no MapLibre workers).
     L.tileLayer(SF_TILE_URL, {
       maxZoom: SF_TILE_MAX_ZOOM,
       maxNativeZoom: SF_TILE_MAX_ZOOM,
+      updateWhenIdle: true,
+      keepBuffer: 2,
     }).addTo(map)
 
     L.tileLayer(SF_LABEL_TILE_URL, {
       maxZoom: SF_TILE_MAX_ZOOM,
       maxNativeZoom: SF_TILE_MAX_ZOOM,
       pane: 'overlayPane',
+      updateWhenIdle: true,
+      keepBuffer: 2,
     }).addTo(map)
 
     // No district boxes — quiet place labels only (OSM-style names).
@@ -238,15 +248,41 @@ function Map() {
       }).addTo(map)
     })
 
+    const syncSize = () => {
+      map.invalidateSize({ animate: false })
+    }
+
     map.whenReady(() => {
-      window.setTimeout(() => map.invalidateSize(), 50)
-      window.setTimeout(() => map.invalidateSize(), 300)
+      syncSize()
+      window.setTimeout(syncSize, 50)
+      window.setTimeout(syncSize, 250)
+      window.setTimeout(syncSize, 600)
+      // Frame San Francisco city specifically (not the wider Bay Area).
+      map.fitBounds(SF_VIEW_BOUNDS, {
+        padding: [24, 24],
+        maxZoom: 13,
+        animate: false,
+      })
     })
 
-    // Frame San Francisco city specifically (not the wider Bay Area).
-    map.fitBounds(SF_VIEW_BOUNDS, { padding: [20, 20], maxZoom: 13 })
     map.setMaxBounds(getSfMaxBounds())
-    map.options.maxBoundsViscosity = 0.95
+    // Softer on phones so the map doesn't feel locked/broken
+    const isCoarsePointer =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(pointer: coarse)').matches
+    map.options.maxBoundsViscosity = isCoarsePointer ? 0.55 : 0.85
+
+    const resizeObserver =
+      typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(() => syncSize())
+        : null
+    resizeObserver?.observe(container)
+
+    const onViewportChange = () => syncSize()
+    window.addEventListener('orientationchange', onViewportChange)
+    window.addEventListener('resize', onViewportChange)
+    window.visualViewport?.addEventListener('resize', onViewportChange)
+    window.visualViewport?.addEventListener('scroll', onViewportChange)
 
     markerByIdRef.current = {}
     if (showProjectMarkers) {
@@ -254,17 +290,23 @@ function Map() {
         const icon = L.divIcon({
           html: buildMarkerHtml(project, 'map'),
           className: 'project-marker-layer',
-          iconSize: [40, 40],
-          iconAnchor: [20, 20],
+          iconSize: [44, 44],
+          iconAnchor: [22, 22],
         })
 
         const marker = L.marker(getPointLatLng(project), {
           icon,
           zIndexOffset: project.status === 'locked' ? 900 : 1200,
+          keyboard: true,
+          riseOnHover: true,
         }).addTo(map)
 
         markerByIdRef.current[project.id] = marker
-        marker.bindPopup(buildPopupHtml(project), { maxWidth: 320 })
+        marker.bindPopup(buildPopupHtml(project), {
+          maxWidth: 320,
+          autoPan: true,
+          autoPanPadding: [48, 48],
+        })
       })
     }
 
@@ -317,6 +359,11 @@ function Map() {
     mapRef.current = map
 
     return () => {
+      resizeObserver?.disconnect()
+      window.removeEventListener('orientationchange', onViewportChange)
+      window.removeEventListener('resize', onViewportChange)
+      window.visualViewport?.removeEventListener('resize', onViewportChange)
+      window.visualViewport?.removeEventListener('scroll', onViewportChange)
       map.remove()
       mapRef.current = null
       markerByIdRef.current = {}
