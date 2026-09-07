@@ -7,11 +7,11 @@ function About() {
       <section className="about-content" aria-labelledby="about-heading">
         <img
           className="about-photo"
-          src={publicUrl('/about/connor-portrait.jpg')}
-          srcSet={`${publicUrl('/about/connor-portrait.jpg')} 1x, ${publicUrl('/about/connor-portrait-2x.jpg')} 2x`}
+          src={publicUrl('/about/connor-gg-wide.jpg')}
+          srcSet={`${publicUrl('/about/connor-gg-wide.jpg')} 1x, ${publicUrl('/about/connor-gg-wide-2x.jpg')} 2x`}
           alt="Connor Ng at the Golden Gate Bridge"
-          width={180}
-          height={180}
+          width={200}
+          height={200}
         />
         <h1 id="about-heading">About Connor</h1>
         <p className="about-role">Product &amp; business</p>
