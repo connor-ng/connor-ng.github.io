@@ -33,8 +33,8 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # Project site: https://gitraccd.github.io/my-folio/
-          VITE_BASE: /my-folio/
+          # Org site: https://connor-ng.github.io/
+          VITE_BASE: /
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

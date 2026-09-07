@@ -112,17 +112,15 @@ npm run preview
 
 ## Deploy (GitHub Pages)
 
-Live site: **https://gitraccd.github.io/my-folio/**
+Live site: **https://connor-ng.github.io/**
+
+Repo: [`connor-ng/connor-ng.github.io`](https://github.com/connor-ng/connor-ng.github.io)
 
 Every push to `main` builds and publishes via `.github/workflows/deploy-pages.yml`.
 
-1. Push to `main` on GitHub (`gitraccd/my-folio`).
-2. GitHub Actions → **Deploy GitHub Pages** runs automatically.
-3. First time only: repo **Settings → Pages → Source** = **GitHub Actions** (this agent can enable it for you).
-
 SPA routes (`/about`, `/contact`) work via `dist/404.html` (copied from `index.html` on build).
 
-Local / Cursor preview stays on base `/`. Production Pages uses base `/my-folio/` via `VITE_BASE` in the workflow.
+Local / Cursor preview and production both use base `/`.
 
 ### Custom domain later
 
