@@ -1,8 +1,0 @@
-# Ensure MapLibre worker modules are served as JavaScript
-/assets/maplibre-gl-worker.mjs
-  Content-Type: text/javascript; charset=utf-8
-  X-Content-Type-Options: nosniff
-
-/assets/maplibre-gl-shared.mjs
-  Content-Type: text/javascript; charset=utf-8
-  X-Content-Type-Options: nosniff

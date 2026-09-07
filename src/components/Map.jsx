@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
-import '@maplibre/maplibre-gl-leaflet'
-import 'maplibre-gl/dist/maplibre-gl.css'
 import 'leaflet/dist/leaflet.css'
 import projects from '../data/projects'
 import { PROJECT_STATUS, STATUS_ORDER } from '../constants/projectStatus'
@@ -18,11 +16,11 @@ import {
   getPointLatLng,
   getSfMaxBounds,
   latLngToGrid,
-  MAP_STYLE_URL,
   SF_CENTER,
   SF_DEFAULT_ZOOM,
   SF_MAX_ZOOM,
   SF_MIN_ZOOM,
+  SF_TILE_URL,
   SF_VIEW_BOUNDS,
 } from '../utils/sfGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
@@ -213,26 +211,15 @@ function Map() {
       attributionControl: false,
     })
 
-    const glLayer = L.maplibreGL({
-      style: MAP_STYLE_URL,
-      attributionControl: false,
+    // Raster dark basemap (OSM data via CARTO) — no WebGL worker files needed.
+    L.tileLayer(SF_TILE_URL, {
+      maxZoom: SF_MAX_ZOOM,
+      subdomains: 'abcd',
     }).addTo(map)
 
-    function refreshMapSize() {
-      map.invalidateSize()
-      const glMap = glLayer.getMaplibreMap?.()
-      glMap?.resize?.()
-    }
-
     map.whenReady(() => {
-      window.setTimeout(refreshMapSize, 50)
-      window.setTimeout(refreshMapSize, 300)
-    })
-
-    const glMap = glLayer.getMaplibreMap?.()
-    glMap?.on?.('load', () => {
-      refreshMapSize()
-      window.setTimeout(refreshMapSize, 100)
+      window.setTimeout(() => map.invalidateSize(), 50)
+      window.setTimeout(() => map.invalidateSize(), 300)
     })
 
     map.fitBounds(SF_VIEW_BOUNDS, { padding: [32, 32] })
@@ -675,8 +662,8 @@ function Map() {
             OpenStreetMap
           </a>
           {' · '}
-          <a href="https://openfreemap.org/" target="_blank" rel="noreferrer">
-            OpenFreeMap
+          <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">
+            CARTO
           </a>
         </p>
       )}

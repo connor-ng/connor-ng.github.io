@@ -19,11 +19,13 @@ export const SF_DEFAULT_ZOOM = 13
 export const SF_MIN_ZOOM = 12
 export const SF_MAX_ZOOM = 18
 
+/** Dark raster tiles (OSM data) — reliable on static hosts without WebGL workers. */
+export const SF_TILE_URL =
+  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+
 /** Zoom thresholds for layered map detail. */
 export const ZOOM_DISTRICTS = 11
 export const ZOOM_DISTRICT_LABELS = 13.75
-
-export const MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/dark'
 
 /** @returns {[number, number]} Leaflet [lat, lng] */
 export function gridToLatLng(gx, gy) {

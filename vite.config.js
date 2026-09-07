@@ -8,9 +8,6 @@ const base = process.env.VITE_BASE || '/'
 export default defineConfig({
   base,
   plugins: [react()],
-  optimizeDeps: {
-    exclude: ['maplibre-gl'],
-  },
   server: {
     port: 43123,
     host: '0.0.0.0',
