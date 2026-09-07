@@ -10,8 +10,8 @@ function About() {
           src={publicUrl('/about/connor-gg-wide.jpg')}
           srcSet={`${publicUrl('/about/connor-gg-wide.jpg')} 1x, ${publicUrl('/about/connor-gg-wide-2x.jpg')} 2x`}
           alt="Connor Ng at the Golden Gate Bridge"
-          width={200}
-          height={200}
+          width={320}
+          height={320}
         />
         <h1 id="about-heading">About Connor</h1>
         <p className="about-role">Product &amp; business</p>
