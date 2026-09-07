@@ -13,7 +13,7 @@ function About() {
           width={240}
           height={300}
         />
-        <h1 id="about-heading">About Connor</h1>
+        <h1 id="about-heading">About me</h1>
         <p className="about-role">Product &amp; business</p>
         <p className="about-bio">
           I work at the intersection of product and business — figuring out
