@@ -1,9 +1,10 @@
 import { PROJECT_STATUS } from '../constants/projectStatus'
+import { publicUrl } from './publicUrl'
 
 function markerIconContent(project) {
   if (project.status === 'locked') return '🔒'
   if (project.mark) {
-    return `<img class="marker-mark" src="${project.mark}" alt="" />`
+    return `<img class="marker-mark" src="${publicUrl(project.mark)}" alt="" />`
   }
   return project.title.charAt(0)
 }

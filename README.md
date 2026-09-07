@@ -110,45 +110,27 @@ npm run build
 npm run preview
 ```
 
-## Deploy (Netlify recommended)
+## Deploy (GitHub Pages)
 
-This is a static Vite app — build output is `dist/`.
+Live site: **https://gitraccd.github.io/my-folio/**
 
-### Netlify (easiest path)
+Every push to `main` builds and publishes via `.github/workflows/deploy-pages.yml`.
 
-1. Push this repo to **GitHub** (Netlify connects to GitHub; Cursor’s git host won’t work as the source).
-2. Go to [app.netlify.com](https://app.netlify.com) → **Add new site** → **Import an existing project**.
-3. Pick the GitHub repo.
-4. Build settings are already in `netlify.toml`:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-5. Deploy — you’ll get a free URL like `https://something.netlify.app`.
+1. Push to `main` on GitHub (`gitraccd/my-folio`).
+2. GitHub Actions → **Deploy GitHub Pages** runs automatically.
+3. First time only: repo **Settings → Pages → Source** = **GitHub Actions** (this agent can enable it for you).
 
-SPA routes (`/about`, `/contact`) are handled by `_redirects` / `netlify.toml`.
+SPA routes (`/about`, `/contact`) work via `dist/404.html` (copied from `index.html` on build).
 
-### Want a URL that ends in `.io`?
+Local / Cursor preview stays on base `/`. Production Pages uses base `/my-folio/` via `VITE_BASE` in the workflow.
 
-Free hosts don’t give you a bare `.io` domain. Options:
+### Custom domain later
 
-| Approach | Example URL | Notes |
-|----------|-------------|--------|
-| **Buy a custom domain** | `connorng.io` | Best look. Buy on Namecheap / Google Domains / Cloudflare, then add it in Netlify → Domain settings. |
-| **GitHub Pages user site** | `gitraccd.github.io` | Free `.io`, but only if the site lives on GitHub Pages. |
-| **Keep Netlify subdomain** | `yoursite.netlify.app` | Free forever; fine while building. |
+Buy a domain (e.g. `connorng.io`), then in the repo: **Settings → Pages → Custom domain**.
 
-Most people: ship on **Netlify** first → later buy `something.io` and point DNS at Netlify (CNAME).
+### Other hosts (optional)
 
-### Other solid hosts (same idea)
-
-- **Vercel** — free `*.vercel.app`, custom domain later
-- **Cloudflare Pages** — free `*.pages.dev`, custom domain later
-
-Same flow: GitHub repo → connect host → build `npm run build` → publish `dist`.
-
-### GitHub Pages (optional)
-
-A workflow still exists at `.github/workflows/deploy-pages.yml` if you ever want `username.github.io`. Prefer Netlify unless you specifically want GitHub’s free `.io`.
-
+Netlify / Vercel / Cloudflare Pages still work with `npm run build` → publish `dist` if you want them again. GitHub Pages is the primary host now.
 ## Tips
 
 - **PM / business framing:** Lead with problem → your role → outcome. Tags can be domains or skills, not just tech stack.

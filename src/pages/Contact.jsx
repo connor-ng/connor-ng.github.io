@@ -1,3 +1,4 @@
+import { publicUrl } from '../utils/publicUrl'
 import './Contact.css'
 
 const contactLinks = [
@@ -38,7 +39,7 @@ const contactLinks = [
   {
     id: 'resume',
     label: 'Resume',
-    href: '/resume.pdf',
+    href: publicUrl('/resume.pdf'),
     download: 'Connor_Ng_Resume_2028_P.pdf',
     external: false,
     icon: (

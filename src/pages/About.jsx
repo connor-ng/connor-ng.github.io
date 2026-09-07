@@ -1,3 +1,4 @@
+import { publicUrl } from '../utils/publicUrl'
 import './About.css'
 
 function About() {
@@ -6,7 +7,7 @@ function About() {
       <section className="about-content" aria-labelledby="about-heading">
         <img
           className="about-photo"
-          src="/about/placeholder-portrait.svg"
+          src={publicUrl('/about/placeholder-portrait.svg')}
           alt="Portrait of Connor"
           width={160}
           height={160}

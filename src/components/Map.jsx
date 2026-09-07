@@ -27,6 +27,7 @@ import {
 } from '../utils/sfGeo'
 import { getDistrictLabels } from '../utils/districtsGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
+import { publicUrl } from '../utils/publicUrl'
 import './Map.css'
 
 function buildPopupHtml(project) {
@@ -39,7 +40,7 @@ function buildPopupHtml(project) {
     .join('')
 
   const screenshot = project.screenshot
-    ? `<img class="popup-screenshot" src="${project.screenshot}" alt="" />`
+    ? `<img class="popup-screenshot" src="${publicUrl(project.screenshot)}" alt="" />`
     : ''
 
   const eyebrow = project.roleAndTimeframe
@@ -187,7 +188,7 @@ function Map() {
 
   useEffect(() => {
     if (!isPixelMode) return undefined
-    fetch('/map/reference.png', { method: 'HEAD' })
+    fetch(publicUrl('/map/reference.png'), { method: 'HEAD' })
       .then((response) => setReferenceAvailable(response.ok))
       .catch(() => setReferenceAvailable(false))
     return undefined
@@ -353,7 +354,7 @@ function Map() {
       ),
     )
 
-    const referenceLayer = L.imageOverlay('/map/reference.png', bounds, {
+    const referenceLayer = L.imageOverlay(publicUrl('/map/reference.png'), bounds, {
       opacity: 0.42,
       interactive: false,
     })
@@ -759,7 +760,7 @@ function Map() {
                 >
                   <div className="mission-card-mark" aria-hidden="true">
                     {project.mark ? (
-                      <img src={project.mark} alt="" />
+                      <img src={publicUrl(project.mark)} alt="" />
                     ) : (
                       <span>{project.title.charAt(0)}</span>
                     )}
@@ -808,7 +809,7 @@ function Map() {
 
                   {project.screenshot && (
                     <div className="mission-card-preview" aria-hidden="true">
-                      <img src={project.screenshot} alt="" />
+                      <img src={publicUrl(project.screenshot)} alt="" />
                     </div>
                   )}
                 </article>

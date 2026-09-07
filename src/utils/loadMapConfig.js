@@ -4,6 +4,7 @@ import {
   TILE,
   generatePlaceholderMap,
 } from './generatePlaceholderMap'
+import { publicUrl } from './publicUrl'
 
 /**
  * @returns {Promise<{
@@ -26,11 +27,12 @@ export async function loadMapConfig() {
   }
 
   try {
-    const response = await fetch('/map/world.png', { method: 'HEAD' })
+    const worldUrl = publicUrl('/map/world.png')
+    const response = await fetch(worldUrl, { method: 'HEAD' })
     if (response.ok) {
       return {
         ...base,
-        mapImageUrl: '/map/world.png',
+        mapImageUrl: worldUrl,
         source: 'painted',
       }
     }
