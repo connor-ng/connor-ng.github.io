@@ -218,6 +218,11 @@ function Map() {
       attributionControl: false,
     }).addTo(map)
 
+    map.whenReady(() => {
+      window.setTimeout(() => map.invalidateSize(), 50)
+      window.setTimeout(() => map.invalidateSize(), 300)
+    })
+
     map.fitBounds(SF_VIEW_BOUNDS, { padding: [32, 32] })
     map.setMaxBounds(getSfMaxBounds())
 
