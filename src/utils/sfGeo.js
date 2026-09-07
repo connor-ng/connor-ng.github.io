@@ -1,21 +1,21 @@
 import { COLS, ROWS } from './generatePlaceholderMap'
 
-/** Geographic bounds for the San Francisco peninsula (city-focused). */
+/** Geographic bounds for the San Francisco city peninsula (not Bay Area). */
 export const SF_BOUNDS = {
-  north: 37.808,
-  south: 37.708,
-  west: -122.513,
-  east: -122.368,
+  north: 37.811,
+  south: 37.707,
+  west: -122.517,
+  east: -122.356,
 }
 
-/** Initial viewport — frames the city, not the whole bay area. */
+/** Initial viewport — frames the city proper (Golden Gate to Bayview). */
 export const SF_VIEW_BOUNDS = [
-  [37.708, -122.513],
-  [37.808, -122.368],
+  [37.707, -122.517],
+  [37.811, -122.356],
 ]
 
-export const SF_CENTER = { lat: 37.756, lng: -122.435 }
-export const SF_DEFAULT_ZOOM = 13
+export const SF_CENTER = { lat: 37.759, lng: -122.439 }
+export const SF_DEFAULT_ZOOM = 12.5
 export const SF_MIN_ZOOM = 12
 export const SF_MAX_ZOOM = 18
 

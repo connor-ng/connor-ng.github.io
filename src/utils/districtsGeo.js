@@ -37,6 +37,7 @@ export function districtsToGeoJSON() {
         name: district.name,
         color: district.color,
         order: district.order,
+        popular: Boolean(district.popular),
       },
       geometry: {
         type: 'Polygon',

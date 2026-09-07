@@ -25,6 +25,7 @@ import {
   SF_TILE_URL,
   SF_VIEW_BOUNDS,
 } from '../utils/sfGeo'
+import { districtsToGeoJSON, getDistrictLabels } from '../utils/districtsGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import './Map.css'
 
@@ -225,13 +226,65 @@ function Map() {
       pane: 'overlayPane',
     }).addTo(map)
 
+    // Soft district highlights — popular neighborhoods read stronger.
+    const districtLayer = L.geoJSON(districtsToGeoJSON(), {
+      style: (feature) => {
+        const [r, g, b] = feature?.properties?.color ?? [142, 196, 184]
+        const popular = feature?.properties?.popular
+        return {
+          color: `rgb(${r}, ${g}, ${b})`,
+          weight: popular ? 1.75 : 0.8,
+          opacity: popular ? 0.9 : 0.35,
+          fillColor: `rgb(${r}, ${g}, ${b})`,
+          fillOpacity: popular ? 0.28 : 0.08,
+          className: popular
+            ? 'district-poly district-poly--popular'
+            : 'district-poly',
+        }
+      },
+      onEachFeature: (feature, layer) => {
+        layer.on({
+          mouseover: () => {
+            layer.setStyle({
+              fillOpacity: feature.properties.popular ? 0.4 : 0.2,
+              weight: 2.25,
+              opacity: 1,
+            })
+            layer.bringToFront()
+          },
+          mouseout: () => {
+            districtLayer.resetStyle(layer)
+          },
+        })
+      },
+    }).addTo(map)
+
+    getDistrictLabels().forEach((label) => {
+      const district = sortedDistricts.find((item) => item.id === label.id)
+      const popular = district?.popular
+      const icon = L.divIcon({
+        className: 'district-label-wrap',
+        html: `<span class="district-map-label${popular ? ' district-map-label--popular' : ''}">${label.name}</span>`,
+        iconSize: [0, 0],
+        iconAnchor: [0, 0],
+      })
+      L.marker([label.lat, label.lng], {
+        icon,
+        interactive: false,
+        keyboard: false,
+        zIndexOffset: popular ? 80 : 40,
+      }).addTo(map)
+    })
+
     map.whenReady(() => {
       window.setTimeout(() => map.invalidateSize(), 50)
       window.setTimeout(() => map.invalidateSize(), 300)
     })
 
-    map.fitBounds(SF_VIEW_BOUNDS, { padding: [32, 32] })
+    // Frame San Francisco city specifically (not the wider Bay Area).
+    map.fitBounds(SF_VIEW_BOUNDS, { padding: [20, 20], maxZoom: 13 })
     map.setMaxBounds(getSfMaxBounds())
+    map.options.maxBoundsViscosity = 0.95
 
     markerByIdRef.current = {}
     if (showProjectMarkers) {

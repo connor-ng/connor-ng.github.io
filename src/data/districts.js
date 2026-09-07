@@ -16,6 +16,7 @@
  * @property {string} flavor
  * @property {string} pattern
  * @property {number} order
+ * @property {boolean} [popular] - stronger map highlight for well-known neighborhoods
  */
 
 /** @param {number} lngMin @param {number} lngMax @param {number} latMin @param {number} latMax */
@@ -40,6 +41,7 @@ const districts = [
     flavor: 'Cream row houses, yacht harbor, Golden Gate towers to the west.',
     pattern: 'wide-avenues',
     order: 1,
+    popular: true,
   },
   {
     id: 'northern-waterfront',
@@ -50,6 +52,7 @@ const districts = [
     flavor: 'Fisherman’s Wharf, North Beach — warm stone, curved shoreline.',
     pattern: 'curved-shore',
     order: 2,
+    popular: true,
   },
   {
     id: 'embarcadero',
@@ -80,32 +83,38 @@ const districts = [
     flavor: 'Victorian peaks, pastel highlights.',
     pattern: 'hilly-grid',
     order: 5,
+    popular: true,
   },
   {
     id: 'fidi',
     name: 'FiDi & Downtown',
     color: [108, 128, 168],
-    polygon: rect(-122.418, -122.385, 37.728, 37.775),
+    // Downtown / SOMA core — Mission sits just south
+    polygon: rect(-122.418, -122.385, 37.76, 37.775),
     bounds: { x: 148, y: 52, w: 72, h: 46 },
     flavor: 'Tight vertical grid, cool gray stone, window glow at dusk.',
     pattern: 'tight-grid',
     order: 6,
+    popular: true,
   },
   {
     id: 'mission',
     name: 'Mission District',
     color: [238, 118, 72],
-    polygon: rect(-122.418, -122.385, 37.708, 37.728),
+    // Mission / Bernal — east of Castro, south of FiDi (no overlap)
+    polygon: rect(-122.418, -122.385, 37.708, 37.76),
     bounds: { x: 108, y: 88, w: 68, h: 54 },
     flavor: 'Terracotta roofs, diagonal grid, mural color accents.',
     pattern: 'diagonal-grid',
     order: 7,
+    popular: true,
   },
   {
     id: 'sunset',
     name: 'Sunset & Ocean Beach',
     color: [128, 162, 228],
-    polygon: rect(-122.513, -122.435, 37.708, 37.728),
+    // Includes the band south of Castro so the peninsula stays partitioned
+    polygon: rect(-122.513, -122.418, 37.708, 37.728),
     bounds: { x: 14, y: 112, w: 76, h: 68 },
     flavor: 'Regular grid dissolving into fog; Ocean Beach sand strip.',
     pattern: 'fog-gradient',
