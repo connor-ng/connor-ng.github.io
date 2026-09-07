@@ -9,6 +9,7 @@
  * @property {string} [description] - short story: what you owned and the outcome
  * @property {string[]} [tags] - themes, skills, or domains (shown as chips)
  * @property {string} [screenshot] - path under /public, e.g. '/projects/acme.png'
+ * @property {string} [mark] - optional map-pin artwork, e.g. '/projects/marks/cycle.png'
  * @property {string} [liveLink] - live site or demo URL (optional)
  * @property {string} [caseStudyLink] - write-up URL (optional)
  * @property {ProjectStatus} status - 'done' | 'current' | 'locked'
@@ -33,6 +34,7 @@
  *     'What you owned, who it was for, and the outcome (metrics if you have them).',
  *   tags: ['Go-to-market', 'Research', 'Strategy'],
  *   screenshot: '/projects/my-first-project.png',
+ *   mark: '/projects/marks/cycle.png',
  *   liveLink: 'https://…',
  *   caseStudyLink: 'https://…',
  *   status: 'done',

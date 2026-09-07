@@ -1,29 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" role="img">
-  <circle
-    cx="50"
-    cy="50"
-    r="44"
-    stroke="#0b1520"
-    stroke-width="2.4"
-    stroke-dasharray="2.8 5.2"
-    stroke-linecap="round"
-  />
-  <circle cx="50" cy="50" r="6" fill="#0b1520" />
-  <path
-    d="M 50 20.5 A 29.5 29.5 0 0 1 79.5 50"
-    stroke="#0b1520"
-    stroke-width="8.5"
-    stroke-linecap="butt"
-    fill="none"
-  />
-  <path d="M 71.2 41.8 L 81.8 50.2 L 70.4 54.6 Z" fill="#0b1520" />
-  <path
-    d="M 50 79.5 A 29.5 29.5 0 0 1 20.5 50"
-    stroke="#0b1520"
-    stroke-width="8.5"
-    stroke-linecap="butt"
-    fill="none"
-  />
-  <path d="M 28.8 58.2 L 18.2 49.8 L 29.6 45.4 Z" fill="#0b1520" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Connor Ng">
+  <rect width="64" height="64" rx="14" fill="#0b1520"/>
+  <text
+    x="32"
+    y="40"
+    text-anchor="middle"
+    font-family="system-ui, -apple-system, Segoe UI, sans-serif"
+    font-size="22"
+    font-weight="700"
+    letter-spacing="-0.04em"
+    fill="#f2ebe0"
+  >CN</text>
 </svg>
