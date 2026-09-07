@@ -22,36 +22,29 @@
  * @property {string} [featuredLabel] - eyebrow on featured card (default: "Featured")
  */
 
-/**
- * Add projects here. Example (copy, then fill in):
- *
- * {
- *   id: 'my-first-project',
- *   title: 'Project name',
- *   roleAndTimeframe: 'Product manager · 2024–2025',
- *   oneLinerProblem: 'One sentence on the problem or opportunity.',
- *   description:
- *     'What you owned, who it was for, and the outcome (metrics if you have them).',
- *   tags: ['Go-to-market', 'Research', 'Strategy'],
- *   screenshot: '/projects/my-first-project.png',
- *   mark: '/projects/marks/cycle.png',
- *   liveLink: 'https://…',
- *   caseStudyLink: 'https://…',
- *   status: 'done',
- *   featured: true,
- *   featuredLabel: 'Featured',
- *   districtId: 'mission',
- *   lat: 37.7594,
- *   lng: -122.4214,
- *   gx: 128,
- *   gy: 96,
- * },
- *
- * Pick a pin location with /?tools=1 → Coord picker, then paste lat/lng here.
- * Drop a screenshot in public/projects/ (PNG or JPG, ~1200px wide works well).
- */
-
 /** @type {Project[]} */
-const projects = []
+const projects = [
+  {
+    id: 'cft',
+    title: 'CFT',
+    roleAndTimeframe: 'Personal product · Jun–Aug 2026',
+    oneLinerProblem:
+      'During a busy internship I kept falling off tracking lifts — and I still needed a clear path toward big strength goals.',
+    description:
+      'Consistency Fitness Tracker is a personal training app I built to turn powerlifting knowledge into structured blocks and progressive overload. Instead of guessing workouts when life got hectic, I can plan cycles, log lifts, and keep moving toward targets like a 405 deadlift and 315 bench.',
+    tags: ['Product', 'Fitness', 'Progressive overload'],
+    mark: '/projects/marks/cycle.png',
+    liveLink: 'https://consistency-azure.vercel.app',
+    status: 'done',
+    featured: true,
+    featuredLabel: 'Featured',
+    districtId: 'mission',
+    // Placeholder pin — adjust later with /?tools=1
+    lat: 37.7599,
+    lng: -122.4148,
+    gx: 148,
+    gy: 108,
+  },
+]
 
 export default projects
