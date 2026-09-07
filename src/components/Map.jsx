@@ -24,9 +24,8 @@ import {
   SF_TILE_MAX_ZOOM,
   SF_TILE_URL,
   SF_VIEW_BOUNDS,
-  ZOOM_DISTRICT_LABELS,
 } from '../utils/sfGeo'
-import { districtsToGeoJSON, getDistrictLabels } from '../utils/districtsGeo'
+import { getDistrictLabels } from '../utils/districtsGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import './Map.css'
 
@@ -227,90 +226,34 @@ function Map() {
       pane: 'overlayPane',
     }).addTo(map)
 
-    // Monochrome district boxes on top of the dark basemap — outline frames,
-    // not colorful fills that repaint the map.
-    const districtLayer = L.geoJSON(districtsToGeoJSON(), {
-      style: (feature) => {
-        const popular = feature?.properties?.popular
-        return {
-          color: popular ? 'rgba(240, 234, 216, 0.78)' : 'rgba(240, 234, 216, 0.32)',
-          weight: popular ? 1.75 : 1,
-          opacity: 1,
-          fillColor: '#f0ead8',
-          fillOpacity: popular ? 0.07 : 0.025,
-          dashArray: popular ? null : '4 5',
-          lineCap: 'square',
-          lineJoin: 'miter',
-          className: popular
-            ? 'district-poly district-poly--popular'
-            : 'district-poly',
-        }
-      },
-      onEachFeature: (feature, layer) => {
-        layer.on({
-          mouseover: () => {
-            layer.setStyle({
-              color: 'rgba(240, 234, 216, 0.95)',
-              weight: feature.properties.popular ? 2.25 : 1.5,
-              fillOpacity: feature.properties.popular ? 0.12 : 0.06,
-              dashArray: null,
-            })
-            layer.bringToFront()
-          },
-          mouseout: () => {
-            districtLayer.resetStyle(layer)
-          },
-        })
-      },
-    }).addTo(map)
-
-    const districtLabelMarkers = []
+    // No district boxes — quiet place labels only (OSM-style names).
     getDistrictLabels().forEach((label) => {
       const district = sortedDistricts.find((item) => item.id === label.id)
-      const popular = district?.popular
+      if (!district?.popular) return
+
       const icon = L.divIcon({
         className: 'district-label-wrap',
-        html: `<span class="district-map-label${popular ? ' district-map-label--popular' : ''}">${label.name}</span>`,
+        html: `<span class="district-map-label district-map-label--popular">${label.name}</span>`,
         iconSize: [0, 0],
         iconAnchor: [0, 0],
       })
-      const marker = L.marker([label.lat, label.lng], {
+      L.marker([label.lat, label.lng], {
         icon,
         interactive: false,
         keyboard: false,
-        zIndexOffset: popular ? 80 : 40,
+        zIndexOffset: 40,
       }).addTo(map)
-      marker._districtPopular = Boolean(popular)
-      districtLabelMarkers.push(marker)
     })
 
-    const syncDistrictLabels = () => {
-      const showSecondary = map.getZoom() >= ZOOM_DISTRICT_LABELS
-      districtLabelMarkers.forEach((marker) => {
-        const el = marker.getElement()
-        if (!el) return
-        const hide = !marker._districtPopular && !showSecondary
-        el.classList.toggle('is-hidden', hide)
-      })
-    }
-
-    map.on('zoomend', syncDistrictLabels)
     map.whenReady(() => {
-      window.setTimeout(() => {
-        map.invalidateSize()
-        syncDistrictLabels()
-      }, 50)
-      window.setTimeout(() => {
-        map.invalidateSize()
-        syncDistrictLabels()
-      }, 300)
+      window.setTimeout(() => map.invalidateSize(), 50)
+      window.setTimeout(() => map.invalidateSize(), 300)
     })
 
     // Frame San Francisco city specifically (not the wider Bay Area).
     map.fitBounds(SF_VIEW_BOUNDS, { padding: [20, 20], maxZoom: 13 })
     map.setMaxBounds(getSfMaxBounds())
     map.options.maxBoundsViscosity = 0.95
-    syncDistrictLabels()
 
     markerByIdRef.current = {}
     if (showProjectMarkers) {

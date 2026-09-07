@@ -74,41 +74,26 @@
   border: none;
 }
 
-.district-label-wrap.is-hidden {
-  display: none;
-}
-
 .district-map-label {
   display: inline-block;
   transform: translate(-50%, -50%);
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.9px;
-  text-transform: uppercase;
-  color: rgba(240, 234, 216, 0.42);
+  font-family: var(--font-sans, 'IBM Plex Sans', 'Segoe UI', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: rgba(210, 216, 224, 0.72);
   text-shadow:
     0 1px 2px rgba(11, 21, 32, 0.95),
-    0 0 10px rgba(11, 21, 32, 0.85);
+    0 0 6px rgba(11, 21, 32, 0.75);
   white-space: nowrap;
   pointer-events: none;
-  opacity: 0.7;
 }
 
 .district-map-label--popular {
-  font-size: 10px;
-  letter-spacing: 1.1px;
-  color: rgba(240, 234, 216, 0.88);
-  opacity: 1;
+  font-size: 12px;
   font-weight: 600;
-}
-
-.district-poly {
-  cursor: default;
-  fill-rule: evenodd;
-}
-
-.district-poly--popular {
-  /* Stroke weight/opacity set in Leaflet style; class for future tweaks */
+  color: rgba(228, 232, 238, 0.88);
 }
 
 .map-root--loading {

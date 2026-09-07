@@ -60,7 +60,7 @@ screenshot: '/projects/acme.png',
 3. Click a spot on the map
 4. Copy the coords into your project entry (`lat`, `lng`, and optionally `gx` / `gy`)
 
-Useful `districtId` values: `marina`, `northern-waterfront`, `richmond`, `western-addition`, `fidi`, `sunset`, `castro`, `mission`, `excelsior`, `bayview` (see `src/data/districts.js` for the full list).
+Useful `districtId` values: `marina`, `presidio`, `northern-waterfront`, `richmond`, `western-addition`, `fidi`, `sunset`, `castro`, `mission`, `bayview` (see `src/data/districts.js` for the full list).
 
 ### 4. Paste into `projects.js`
 

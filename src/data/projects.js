@@ -39,7 +39,7 @@ const projects = [
     featured: true,
     featuredLabel: 'Featured',
     districtId: 'mission',
-    // Mission St corridor — interior of the Mission district box
+    // Mission St corridor
     lat: 37.7595,
     lng: -122.4115,
     gx: 152,

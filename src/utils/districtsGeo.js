@@ -48,14 +48,25 @@ export function districtsToGeoJSON() {
 }
 
 export function getDistrictLabels() {
-  return districts.map((district) => {
-    const ring = polygonRing(district)
-    const [lng, lat] = ringCentroid(ring)
-    return {
-      id: district.id,
-      name: district.name,
-      lat,
-      lng,
-    }
-  })
+  return districts
+    .filter((district) => district.popular)
+    .map((district) => {
+      if (district.labelLat != null && district.labelLng != null) {
+        return {
+          id: district.id,
+          name: district.name,
+          lat: district.labelLat,
+          lng: district.labelLng,
+        }
+      }
+
+      const ring = polygonRing(district)
+      const [lng, lat] = ringCentroid(ring)
+      return {
+        id: district.id,
+        name: district.name,
+        lat,
+        lng,
+      }
+    })
 }
