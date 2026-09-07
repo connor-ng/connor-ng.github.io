@@ -18,8 +18,10 @@ import {
   latLngToGrid,
   SF_CENTER,
   SF_DEFAULT_ZOOM,
+  SF_LABEL_TILE_URL,
   SF_MAX_ZOOM,
   SF_MIN_ZOOM,
+  SF_TILE_MAX_ZOOM,
   SF_TILE_URL,
   SF_VIEW_BOUNDS,
 } from '../utils/sfGeo'
@@ -211,10 +213,16 @@ function Map() {
       attributionControl: false,
     })
 
-    // Raster dark basemap (OSM data via CARTO) — no WebGL worker files needed.
+    // Dark basemap via Esri (no API key / no MapLibre workers).
     L.tileLayer(SF_TILE_URL, {
-      maxZoom: SF_MAX_ZOOM,
-      subdomains: 'abcd',
+      maxZoom: SF_TILE_MAX_ZOOM,
+      maxNativeZoom: SF_TILE_MAX_ZOOM,
+    }).addTo(map)
+
+    L.tileLayer(SF_LABEL_TILE_URL, {
+      maxZoom: SF_TILE_MAX_ZOOM,
+      maxNativeZoom: SF_TILE_MAX_ZOOM,
+      pane: 'overlayPane',
     }).addTo(map)
 
     map.whenReady(() => {
@@ -662,8 +670,12 @@ function Map() {
             OpenStreetMap
           </a>
           {' · '}
-          <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">
-            CARTO
+          <a
+            href="https://www.esri.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Esri
           </a>
         </p>
       )}

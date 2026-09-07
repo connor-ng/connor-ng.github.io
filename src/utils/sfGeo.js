@@ -19,9 +19,14 @@ export const SF_DEFAULT_ZOOM = 13
 export const SF_MIN_ZOOM = 12
 export const SF_MAX_ZOOM = 18
 
-/** Dark raster tiles (OSM data) — reliable on static hosts without WebGL workers. */
+/** Dark raster tiles (no API key). Esri uses {z}/{y}/{x} order. */
 export const SF_TILE_URL =
-  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+
+export const SF_LABEL_TILE_URL =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}'
+
+export const SF_TILE_MAX_ZOOM = 16
 
 /** Zoom thresholds for layered map detail. */
 export const ZOOM_DISTRICTS = 11
