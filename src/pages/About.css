@@ -20,7 +20,7 @@
   border: 3px solid var(--page-light-border);
   box-shadow: 0 12px 32px var(--page-light-shadow);
   object-fit: cover;
-  object-position: 50% 42%;
+  object-position: 50% 38%;
   margin: 0 auto 1.35rem;
   display: block;
 }
