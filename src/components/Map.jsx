@@ -156,17 +156,9 @@ function Map() {
     [],
   )
 
-  const featuredProjects = useMemo(
-    () => listProjects.filter((project) => project.featured),
-    [listProjects],
-  )
-
-  const otherListProjects = useMemo(
-    () => listProjects.filter((project) => !project.featured),
-    [listProjects],
-  )
-
   const hasProjects = listProjects.length > 0
+
+  const [selectedLogId, setSelectedLogId] = useState(null)
 
   const displayCoords = pickedCoords ?? coords
   const coordSnippet = isPixelMode
@@ -486,8 +478,16 @@ function Map() {
   }
 
   function openOnMap(id) {
+    setSelectedLogId(id)
     setShowingList(false)
-    window.setTimeout(() => jumpTo(id), 50)
+    window.setTimeout(() => {
+      mapRef.current?.invalidateSize()
+      jumpTo(id)
+    }, 80)
+  }
+
+  function selectLogProject(id) {
+    setSelectedLogId(id)
   }
 
   async function copyCoords() {
@@ -704,132 +704,118 @@ function Map() {
 
       <div
         ref={mapContainerRef}
-        className={`map-container${showingList ? ' hidden' : ''}`}
+        className="map-container"
       />
 
-      <div className={`map-list-view${showingList ? ' visible' : ''}`}>
-        <header className="map-list-header">
-          <h2 className="map-list-title">Selected work</h2>
-          <p className="map-list-intro">
-            {hasProjects
-              ? 'Projects I have worked on — open one or view it on the map.'
-              : 'Projects will show up here once you add them to the map.'}
-          </p>
-        </header>
-
-        {!hasProjects && (
-          <div className="map-list-empty map-panel">
-            <p className="map-list-empty-title">No projects yet</p>
-            <p className="map-list-empty-body">
-              Add your first entry in <code>src/data/projects.js</code> and drop a
-              screenshot in <code>public/projects/</code>.
+      <div
+        className={`map-list-view${showingList ? ' visible' : ''}`}
+        aria-hidden={!showingList}
+      >
+        <aside className="mission-log" aria-label="Mission log">
+          <header className="mission-log-header">
+            <p className="mission-log-eyebrow">Mission log</p>
+            <h2 className="mission-log-title">Selected work</h2>
+            <p className="mission-log-intro">
+              {hasProjects
+                ? 'Select a project to open it on the map.'
+                : 'Projects will show up here once you add them to the map.'}
             </p>
-          </div>
-        )}
+          </header>
 
-        {featuredProjects.map((project) => {
-          const district = getProjectDistrict(project)
-          const status = PROJECT_STATUS[project.status]
-          return (
-            <article
-              key={project.id}
-              className="map-list-featured map-panel"
-              style={{ '--featured-ring': status.color }}
-            >
-              {project.screenshot && (
-                <img
-                  className="map-list-featured-shot"
-                  src={project.screenshot}
-                  alt=""
-                />
-              )}
-              <div className="map-list-featured-body">
-                <p className="map-list-featured-eyebrow">
-                  {project.featuredLabel ?? 'Featured'}
-                </p>
-                <h3 className="map-list-featured-title">{project.title}</h3>
-                {project.roleAndTimeframe && (
-                  <p className="map-list-featured-role">{project.roleAndTimeframe}</p>
-                )}
-                {district && (
-                  <p className="map-list-featured-district">{district.name}</p>
-                )}
-                {project.oneLinerProblem && (
-                  <p className="map-list-featured-problem">{project.oneLinerProblem}</p>
-                )}
-                <div className="map-list-actions">
-                  <button
-                    type="button"
-                    className="map-list-btn map-list-btn--primary"
-                    onClick={() => openOnMap(project.id)}
-                  >
-                    View on map
-                  </button>
-                  {project.liveLink && (
-                    <a
-                      className="map-list-btn map-list-btn--secondary"
-                      href={project.liveLink}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Live site →
-                    </a>
-                  )}
-                  {project.caseStudyLink && (
-                    <a
-                      className="map-list-btn map-list-btn--secondary"
-                      href={project.caseStudyLink}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Case study →
-                    </a>
-                  )}
-                </div>
-              </div>
-            </article>
-          )
-        })}
+          {!hasProjects && (
+            <div className="mission-log-empty">
+              <p className="mission-log-empty-title">No projects yet</p>
+              <p className="mission-log-empty-body">
+                Add your first entry in <code>src/data/projects.js</code> and drop a
+                mark in <code>public/projects/marks/</code>.
+              </p>
+            </div>
+          )}
 
-        {otherListProjects.length > 0 && (
-          <>
-            <h3 className="map-list-section-label">More projects</h3>
-            {otherListProjects.map((project) => (
-              <div key={project.id} className="map-list-row map-panel">
-                <div
-                  className="list-marker"
-                  dangerouslySetInnerHTML={{
-                    __html: buildMarkerHtml(project, 'list'),
+          <div className="mission-log-list" role="list">
+            {listProjects.map((project) => {
+              const district = getProjectDistrict(project)
+              const status = PROJECT_STATUS[project.status]
+              const tags = project.tags ?? project.stack ?? []
+              const isSelected = selectedLogId === project.id
+
+              return (
+                <article
+                  key={project.id}
+                  role="listitem"
+                  className={`mission-card${isSelected ? ' is-selected' : ''}${project.featured ? ' is-featured' : ''}`}
+                  style={{ '--mission-ring': status.color }}
+                  tabIndex={showingList ? 0 : -1}
+                  aria-label={`${project.title}. Open on map.`}
+                  onClick={() => openOnMap(project.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault()
+                      openOnMap(project.id)
+                    }
                   }}
-                />
-                <div className="meta">
-                  <div className="title">{project.title}</div>
-                  <div className="tag">{project.roleAndTimeframe}</div>
-                  <div className="problem">{project.oneLinerProblem}</div>
-                </div>
-                <div className="map-list-row-actions">
-                  <button
-                    type="button"
-                    className="map-list-btn map-list-btn--ghost"
-                    onClick={() => openOnMap(project.id)}
-                  >
-                    Map
-                  </button>
-                  {project.liveLink && (
-                    <a
-                      className="map-list-btn map-list-btn--ghost"
-                      href={project.liveLink}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Open
-                    </a>
+                  onFocus={() => selectLogProject(project.id)}
+                  onMouseEnter={() => selectLogProject(project.id)}
+                >
+                  <div className="mission-card-mark" aria-hidden="true">
+                    {project.mark ? (
+                      <img src={project.mark} alt="" />
+                    ) : (
+                      <span>{project.title.charAt(0)}</span>
+                    )}
+                  </div>
+
+                  <div className="mission-card-body">
+                    <div className="mission-card-topline">
+                      <h3 className="mission-card-title">{project.title}</h3>
+                      {district && (
+                        <span className="mission-card-district">{district.name}</span>
+                      )}
+                    </div>
+
+                    {project.roleAndTimeframe && (
+                      <p className="mission-card-role">{project.roleAndTimeframe}</p>
+                    )}
+
+                    {project.oneLinerProblem && (
+                      <p className="mission-card-blurb">{project.oneLinerProblem}</p>
+                    )}
+
+                    {tags.length > 0 && (
+                      <ul className="mission-card-tags">
+                        {tags.map((tag) => (
+                          <li key={tag}>{tag}</li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <div className="mission-card-footer">
+                      <span className="mission-card-hint">Open on map</span>
+                      {project.liveLink && (
+                        <a
+                          className="mission-card-live"
+                          href={project.liveLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(event) => event.stopPropagation()}
+                          onKeyDown={(event) => event.stopPropagation()}
+                        >
+                          Live site →
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                  {project.screenshot && (
+                    <div className="mission-card-preview" aria-hidden="true">
+                      <img src={project.screenshot} alt="" />
+                    </div>
                   )}
-                </div>
-              </div>
-            ))}
-          </>
-        )}
+                </article>
+              )
+            })}
+          </div>
+        </aside>
       </div>
     </div>
   )
