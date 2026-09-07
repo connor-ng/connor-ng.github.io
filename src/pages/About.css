@@ -45,11 +45,12 @@
 }
 
 .about-bio {
-  margin: 0;
+  margin: 0 auto;
   line-height: 1.65;
   font-size: 1.05rem;
   color: var(--page-light-text-body);
-  text-align: left;
+  text-align: center;
+  max-width: 36ch;
 }
 
 @media (max-width: 640px) {
