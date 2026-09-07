@@ -213,14 +213,26 @@ function Map() {
       attributionControl: false,
     })
 
-    L.maplibreGL({
+    const glLayer = L.maplibreGL({
       style: MAP_STYLE_URL,
       attributionControl: false,
     }).addTo(map)
 
+    function refreshMapSize() {
+      map.invalidateSize()
+      const glMap = glLayer.getMaplibreMap?.()
+      glMap?.resize?.()
+    }
+
     map.whenReady(() => {
-      window.setTimeout(() => map.invalidateSize(), 50)
-      window.setTimeout(() => map.invalidateSize(), 300)
+      window.setTimeout(refreshMapSize, 50)
+      window.setTimeout(refreshMapSize, 300)
+    })
+
+    const glMap = glLayer.getMaplibreMap?.()
+    glMap?.on?.('load', () => {
+      refreshMapSize()
+      window.setTimeout(refreshMapSize, 100)
     })
 
     map.fitBounds(SF_VIEW_BOUNDS, { padding: [32, 32] })
