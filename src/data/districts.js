@@ -1,6 +1,7 @@
 /**
- * San Francisco district zones — non-overlapping geographic polygons (lng, lat).
+ * San Francisco district zones — non-overlapping geographic boxes (lng, lat).
  * Rectilinear partition of the peninsula; shared edges only, no interior overlap.
+ * Colors are kept for legacy pixel/sidebar accents; the live map draws monochrome boxes.
  * Grid bounds kept for legacy pixel mode.
  */
 
@@ -16,7 +17,7 @@
  * @property {string} flavor
  * @property {string} pattern
  * @property {number} order
- * @property {boolean} [popular] - stronger map highlight for well-known neighborhoods
+ * @property {boolean} [popular] - stronger box outline for well-known neighborhoods
  */
 
 /** @param {number} lngMin @param {number} lngMax @param {number} latMin @param {number} latMax */
@@ -30,13 +31,16 @@ function rect(lngMin, lngMax, latMin, latMax) {
   ]
 }
 
+/** Shared monochrome accent for sidebar/pixel mode (map boxes ignore this). */
+const INK = [210, 204, 188]
+
 /** @type {District[]} */
 const districts = [
   {
     id: 'marina',
     name: 'Marina & Presidio',
-    color: [232, 198, 142],
-    polygon: rect(-122.513, -122.445, 37.775, 37.808),
+    color: INK,
+    polygon: rect(-122.513, -122.445, 37.788, 37.811),
     bounds: { x: 52, y: 14, w: 78, h: 50 },
     flavor: 'Cream row houses, yacht harbor, Golden Gate towers to the west.',
     pattern: 'wide-avenues',
@@ -46,8 +50,8 @@ const districts = [
   {
     id: 'northern-waterfront',
     name: 'Northern Waterfront',
-    color: [238, 148, 92],
-    polygon: rect(-122.445, -122.385, 37.775, 37.808),
+    color: INK,
+    polygon: rect(-122.445, -122.385, 37.788, 37.811),
     bounds: { x: 128, y: 12, w: 88, h: 42 },
     flavor: 'Fisherman’s Wharf, North Beach — warm stone, curved shoreline.',
     pattern: 'curved-shore',
@@ -55,80 +59,90 @@ const districts = [
     popular: true,
   },
   {
-    id: 'embarcadero',
-    name: 'Embarcadero',
-    color: [82, 178, 228],
-    polygon: rect(-122.385, -122.368, 37.718, 37.808),
-    bounds: { x: 198, y: 48, w: 58, h: 88 },
-    flavor: 'Piers into the bay, Ferry Building cupola.',
-    pattern: 'piers',
-    order: 3,
-  },
-  {
-    id: 'western',
-    name: 'Western Neighborhoods',
-    color: [98, 198, 118],
-    polygon: rect(-122.513, -122.435, 37.728, 37.775),
-    bounds: { x: 18, y: 42, w: 72, h: 78 },
-    flavor: 'Richmond & Inner Sunset — fog-muted row houses, Golden Gate Park.',
+    id: 'richmond',
+    name: 'Richmond District',
+    color: INK,
+    polygon: rect(-122.513, -122.445, 37.768, 37.788),
+    bounds: { x: 18, y: 42, w: 72, h: 40 },
+    flavor: 'Fog-muted avenues west of the park.',
     pattern: 'uniform-rows',
-    order: 4,
+    order: 3,
+    popular: true,
   },
   {
-    id: 'castro',
-    name: 'Castro & Haight',
-    color: [212, 138, 202],
-    polygon: rect(-122.435, -122.418, 37.728, 37.775),
-    bounds: { x: 72, y: 82, w: 48, h: 44 },
-    flavor: 'Victorian peaks, pastel highlights.',
+    id: 'western-addition',
+    name: 'Western Addition',
+    color: INK,
+    polygon: rect(-122.445, -122.418, 37.768, 37.788),
+    bounds: { x: 72, y: 52, w: 48, h: 40 },
+    flavor: 'Fillmore corridor between the park and downtown.',
     pattern: 'hilly-grid',
-    order: 5,
-    popular: true,
+    order: 4,
   },
   {
     id: 'fidi',
     name: 'FiDi & Downtown',
-    color: [108, 128, 168],
-    // Downtown / SOMA core — Mission sits just south
-    polygon: rect(-122.418, -122.385, 37.76, 37.775),
+    color: INK,
+    polygon: rect(-122.418, -122.385, 37.768, 37.788),
     bounds: { x: 148, y: 52, w: 72, h: 46 },
     flavor: 'Tight vertical grid, cool gray stone, window glow at dusk.',
     pattern: 'tight-grid',
+    order: 5,
+    popular: true,
+  },
+  {
+    id: 'sunset',
+    name: 'Sunset District',
+    color: INK,
+    polygon: rect(-122.513, -122.445, 37.735, 37.768),
+    bounds: { x: 14, y: 112, w: 76, h: 68 },
+    flavor: 'Regular grid dissolving into fog; Ocean Beach sand strip.',
+    pattern: 'fog-gradient',
     order: 6,
+    popular: true,
+  },
+  {
+    id: 'castro',
+    name: 'Castro & Haight',
+    color: INK,
+    polygon: rect(-122.445, -122.418, 37.752, 37.768),
+    bounds: { x: 72, y: 82, w: 48, h: 44 },
+    flavor: 'Victorian peaks, pastel highlights.',
+    pattern: 'hilly-grid',
+    order: 7,
     popular: true,
   },
   {
     id: 'mission',
     name: 'Mission District',
-    color: [238, 118, 72],
-    // Mission / Bernal — east of Castro, south of FiDi (no overlap)
-    polygon: rect(-122.418, -122.385, 37.708, 37.76),
+    color: INK,
+    polygon: rect(-122.418, -122.385, 37.735, 37.768),
     bounds: { x: 108, y: 88, w: 68, h: 54 },
     flavor: 'Terracotta roofs, diagonal grid, mural color accents.',
     pattern: 'diagonal-grid',
-    order: 7,
+    order: 8,
     popular: true,
   },
   {
-    id: 'sunset',
-    name: 'Sunset & Ocean Beach',
-    color: [128, 162, 228],
-    // Includes the band south of Castro so the peninsula stays partitioned
-    polygon: rect(-122.513, -122.418, 37.708, 37.728),
-    bounds: { x: 14, y: 112, w: 76, h: 68 },
-    flavor: 'Regular grid dissolving into fog; Ocean Beach sand strip.',
-    pattern: 'fog-gradient',
-    order: 8,
+    id: 'excelsior',
+    name: 'Excelsior & Outer Mission',
+    color: INK,
+    polygon: rect(-122.445, -122.405, 37.708, 37.735),
+    bounds: { x: 90, y: 130, w: 60, h: 40 },
+    flavor: 'Southern corridors toward the county line.',
+    pattern: 'uniform-rows',
+    order: 9,
   },
   {
     id: 'bayview',
-    name: 'Bayview & Dogpatch',
-    color: [192, 152, 98],
-    polygon: rect(-122.385, -122.368, 37.708, 37.718),
+    name: 'Bayview District',
+    color: INK,
+    polygon: rect(-122.405, -122.368, 37.708, 37.735),
     bounds: { x: 152, y: 128, w: 78, h: 50 },
     flavor: 'Industrial waterfront, cranes, wider blocks.',
     pattern: 'industrial',
-    order: 9,
+    order: 10,
+    popular: true,
   },
 ]
 

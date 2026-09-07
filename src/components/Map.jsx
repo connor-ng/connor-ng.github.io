@@ -226,17 +226,20 @@ function Map() {
       pane: 'overlayPane',
     }).addTo(map)
 
-    // Soft district highlights — popular neighborhoods read stronger.
+    // Monochrome district boxes on top of the dark basemap — outline frames,
+    // not colorful fills that repaint the map.
     const districtLayer = L.geoJSON(districtsToGeoJSON(), {
       style: (feature) => {
-        const [r, g, b] = feature?.properties?.color ?? [142, 196, 184]
         const popular = feature?.properties?.popular
         return {
-          color: `rgb(${r}, ${g}, ${b})`,
-          weight: popular ? 1.75 : 0.8,
-          opacity: popular ? 0.9 : 0.35,
-          fillColor: `rgb(${r}, ${g}, ${b})`,
-          fillOpacity: popular ? 0.28 : 0.08,
+          color: popular ? 'rgba(240, 234, 216, 0.78)' : 'rgba(240, 234, 216, 0.32)',
+          weight: popular ? 1.75 : 1,
+          opacity: 1,
+          fillColor: '#f0ead8',
+          fillOpacity: popular ? 0.07 : 0.025,
+          dashArray: popular ? null : '4 5',
+          lineCap: 'square',
+          lineJoin: 'miter',
           className: popular
             ? 'district-poly district-poly--popular'
             : 'district-poly',
@@ -246,9 +249,10 @@ function Map() {
         layer.on({
           mouseover: () => {
             layer.setStyle({
-              fillOpacity: feature.properties.popular ? 0.4 : 0.2,
-              weight: 2.25,
-              opacity: 1,
+              color: 'rgba(240, 234, 216, 0.95)',
+              weight: feature.properties.popular ? 2.25 : 1.5,
+              fillOpacity: feature.properties.popular ? 0.12 : 0.06,
+              dashArray: null,
             })
             layer.bringToFront()
           },

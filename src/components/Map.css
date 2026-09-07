@@ -79,31 +79,32 @@
   transform: translate(-50%, -50%);
   font-family: var(--font-mono);
   font-size: 9px;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.9px;
   text-transform: uppercase;
-  color: rgba(240, 234, 216, 0.55);
+  color: rgba(240, 234, 216, 0.42);
   text-shadow:
     0 1px 2px rgba(11, 21, 32, 0.95),
-    0 0 8px rgba(11, 21, 32, 0.8);
+    0 0 10px rgba(11, 21, 32, 0.85);
   white-space: nowrap;
   pointer-events: none;
-  opacity: 0.75;
+  opacity: 0.7;
 }
 
 .district-map-label--popular {
   font-size: 10px;
-  letter-spacing: 1px;
-  color: rgba(255, 246, 230, 0.92);
+  letter-spacing: 1.1px;
+  color: rgba(240, 234, 216, 0.88);
   opacity: 1;
   font-weight: 600;
 }
 
 .district-poly {
   cursor: default;
+  fill-rule: evenodd;
 }
 
 .district-poly--popular {
-  /* Leaflet paints fill via path style; class kept for future tweaks */
+  /* Stroke weight/opacity set in Leaflet style; class for future tweaks */
 }
 
 .map-root--loading {
