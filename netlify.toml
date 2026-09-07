@@ -2,8 +2,9 @@
   command = "npm run build"
   publish = "dist"
 
-# SPA fallback so /about and /contact work on refresh
+# SPA fallback for client routes — only when the path is not a real file
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false

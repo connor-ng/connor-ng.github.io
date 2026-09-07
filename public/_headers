@@ -1,0 +1,4 @@
+# Ensure MapLibre worker is served as JavaScript (not text/html via SPA fallback)
+/assets/maplibre-gl-worker.mjs
+  Content-Type: text/javascript; charset=utf-8
+  X-Content-Type-Options: nosniff

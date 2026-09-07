@@ -1,1 +1,2 @@
+# Serve real files first; only fall back to the SPA for missing paths
 /*    /index.html   200
