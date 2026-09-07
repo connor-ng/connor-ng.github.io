@@ -14,17 +14,15 @@
 }
 
 .about-photo {
-  width: min(320px, 72vw);
-  height: min(320px, 72vw);
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   border: 3px solid var(--page-light-border);
   box-shadow: 0 12px 32px var(--page-light-shadow);
-  /* Show the full Golden Gate photo — not a tight face crop */
-  object-fit: contain;
-  object-position: center center;
+  object-fit: cover;
+  object-position: center 35%;
   margin: 0 auto 1.35rem;
   display: block;
-  background: #d5dde3;
 }
 
 .about-content h1 {
