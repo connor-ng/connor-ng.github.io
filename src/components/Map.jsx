@@ -804,12 +804,7 @@ function Map() {
             </h1>
             <p className="map-intro-role">Product &amp; business</p>
             <p className="map-intro-copy">
-              An atlas of {listProjects.length}{' '}
-              {listProjects.length === 1 ? 'project' : 'projects'} I&apos;ve owned
-              end to end
-              {sealedCount > 0
-                ? ` — ${pinCount} pins across San Francisco, with more still sealed.`
-                : ' — pinned across San Francisco.'}
+              Selected work I&apos;ve owned end to end, pinned across San Francisco.
             </p>
             <div className="map-intro-actions">
               <button
