@@ -7,7 +7,7 @@ export const PROJECT_STATUS = {
   },
   current: {
     label: 'building',
-    color: '#f0bc3d',
+    color: '#ffb020',
     badge: '·',
   },
   locked: {

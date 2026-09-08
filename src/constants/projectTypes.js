@@ -1,16 +1,17 @@
-/** Project type — used for pin ring / list accent when color-coding is on. */
+/** Project type — pin/list accent. Site chrome uses warm amber; blue is optional. */
 export const PROJECT_TYPES = {
   personal: {
     label: 'Personal',
+    // Optional cool accent so open pins don’t all match the amber chrome
     color: '#3db0ff',
   },
   school: {
     label: 'School',
-    color: '#f0bc3d',
+    color: '#2dd4bf',
   },
   work: {
     label: 'Work',
-    color: '#6a9ad4',
+    color: '#ffb020',
   },
 }
 

@@ -13,8 +13,8 @@
   --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', monospace;
 
   /*
-    Cartographic ink — near-black, paper, brighter signal accents.
-    Blue + amber carry more chroma so pins/CTAs pop on dark tiles.
+    Cartographic ink — near-black, paper, warm amber signal.
+    Amber pops against the cool basemap; blue stays optional on pins.
   */
   --theme-bg-rgb: 14, 14, 14;
   --theme-bg: #0e0e0e;
@@ -25,27 +25,27 @@
   --theme-text: #f4f4f1;
   --theme-text-body: #c8c8c2;
   --theme-text-muted: #8a8a84;
-  --theme-accent: #3db0ff;
-  --theme-accent-strong: #62c2ff;
+  --theme-accent: #ffb020;
+  --theme-accent-strong: #ffc857;
   --theme-cream: #f4f4f1;
   --theme-paper: #f7f6f3;
   --theme-input-bg: rgba(255, 255, 255, 0.04);
   --theme-shadow: rgba(0, 0, 0, 0.28);
 
-  /* Light pages: deeper saturated blue for contrast on paper */
+  /* Light pages: deep bronze-amber for contrast on paper */
   --page-light-bg: #f7f6f3;
   --page-light-surface: #ffffff;
   --page-light-border: #e2e0da;
   --page-light-text: #141414;
   --page-light-text-body: #3d3d3a;
   --page-light-text-muted: #6f6f6a;
-  --page-light-accent: #1680d0;
-  --page-light-accent-hover: #126db3;
+  --page-light-accent: #a66a00;
+  --page-light-accent-hover: #8a5700;
   --page-light-shadow: rgba(20, 20, 20, 0.06);
 
-  /* Status — amber reads as “live/building” against ink */
+  /* Status — current shares warm signal; locked stays quiet */
   --color-status-done: #7a9f74;
-  --color-status-current: #f0bc3d;
+  --color-status-current: #ffb020;
   --color-status-locked: #7a7a74;
 }
 
