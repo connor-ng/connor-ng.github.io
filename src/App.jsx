@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Nav from './components/Nav'
 import Home from './pages/Home'
@@ -6,6 +7,13 @@ import About from './pages/About'
 function App() {
   const { pathname } = useLocation()
   const isLightPage = pathname === '/about' || pathname === '/contact'
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('light-page', isLightPage)
+    return () => {
+      document.documentElement.classList.remove('light-page')
+    }
+  }, [isLightPage])
 
   return (
     <div className={`app${isLightPage ? ' app--light' : ''}`}>
