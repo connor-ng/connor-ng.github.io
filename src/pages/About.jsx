@@ -72,17 +72,17 @@ function About() {
           <div className="about-copy">
             <h1 id="about-heading">About me</h1>
             <p className="about-bio">
-              I&apos;m an incoming third-year Informatics student at UC Irvine,
-              from San Francisco. I like figuring out what to build, why it
-              matters, and how to get it shipped: finding the efficient path
-              between users, business, and engineering, and building with AI
-              as part of how I work.
+              I&apos;m a junior Informatics student at UC Irvine, from San
+              Francisco. I&apos;m interested in product management and tech
+              consulting. Figuring out what to build, why it matters, and how
+              to get it shipped feels natural to me, and I value efficiency:
+              building with AI and using different technology to optimize how
+              things get done.
             </p>
             <p className="about-bio">
-              I&apos;ve worked in technology risk and I&apos;m building toward
-              product management and tech consulting: roles where I can sit
-              with the problem, the people, and the product, then help move
-              work from idea to something real.
+              I&apos;ve worked in technology risk, and I&apos;m looking for
+              roles where I can sit with the problem, the people, and the
+              product, then help move work from idea to something real.
             </p>
             <p className="about-bio">
               Outside of class and work I&apos;m a big Warriors and 49ers fan.
