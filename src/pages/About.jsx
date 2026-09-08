@@ -46,12 +46,13 @@ const connectLinks = [
     href: 'https://beliapp.com/',
     external: true,
     icon: (
-      <svg className="connect-icon-svg connect-icon-svg--stroke" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 21V10a2 2 0 0 1 2-2h1v13" />
-        <path d="M7 8V4a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1v4" />
-        <path d="M12 21V3h1.2A2.8 2.8 0 0 1 16 5.8V21" />
-        <path d="M19 21v-8h1a2 2 0 0 1 2 2v6" />
-      </svg>
+      <img
+        className="connect-icon-img"
+        src={publicUrl('/connect/beli-icon.png')}
+        alt=""
+        width={22}
+        height={22}
+      />
     ),
   },
   {
