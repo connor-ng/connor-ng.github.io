@@ -34,7 +34,7 @@ Everything lives in one file: `src/data/projects.js`.
 | `roleAndTimeframe` | e.g. `Product lead · 2024–2025` | Recommended |
 | `oneLinerProblem` | One sentence on the problem or opportunity | Recommended |
 | `description` | What you owned + outcome (metrics if you have them) | Recommended |
-| `tags` | Themes or domains, e.g. `['Go-to-market', 'Research']` | Optional |
+| `tags` | Up to 3 chips, **in order**: domain → use case → format. Example: `['Fitness', 'Habit tracking', 'Mobile / web app']`. See convention below. | Recommended |
 | `screenshot` | Image path under `public/projects/` | Recommended |
 | `liveLink` | Live site / demo | Optional |
 | `caseStudyLink` | Write-up URL | Optional |
@@ -44,6 +44,18 @@ Everything lives in one file: `src/data/projects.js`.
 | `featured` | `true` to highlight in list view | Optional |
 | `lat` / `lng` | Map pin location in SF | Yes |
 | `districtId` | Neighborhood id (see below) | Recommended |
+
+### Tag convention (locked)
+
+Use **at most 3 tags**, always in this order:
+
+1. **Domain** — industry/subject (`Fitness`, `Education`, `Marketplace`)
+2. **Use case** — what people do (`Habit tracking`, `Scheduling`, `Operations`)
+3. **Format** — delivery medium from the controlled list in `src/constants/projectTags.js` (`Mobile / web app`, `Web app`, `Mobile app`, `Desktop app`, `API`, `Prototype`, `Research`)
+
+Do **not** tag: `Product`, `Personal`, `School`, `Work`, roles, dates, or methodology jargon — those belong in `type`, `roleAndTimeframe`, or the description.
+
+Consistency example: `['Fitness', 'Habit tracking', 'Mobile / web app']`
 
 ### 2. Drop a screenshot
 
@@ -75,7 +87,7 @@ const projects = [
     oneLinerProblem: 'One sentence on the problem or opportunity.',
     description:
       'What you owned, who it was for, and the outcome.',
-    tags: ['Strategy', 'Research'],
+    tags: ['Education', 'Scheduling', 'Web app'],
     screenshot: '/projects/my-first-project.png',
     liveLink: 'https://…',
     status: 'done',
@@ -100,6 +112,10 @@ src/
   data/
     projects.js      # ← your portfolio pins
     districts.js     # SF neighborhood zones
+  constants/
+    projectTags.js   # tag convention + format list
+    projectTypes.js
+    projectStatus.js
 public/
   projects/          # screenshots
   resume.pdf         # About / Connect download

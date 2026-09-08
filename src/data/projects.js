@@ -10,7 +10,10 @@
  * @property {string} [oneLinerProblem] - one sentence: the problem or opportunity
  * @property {string} [description] - short story: what you owned and the outcome
  * @property {string} [popupBlurb] - optional shorter popup body (falls back to trimmed description)
- * @property {string[]} [tags] - themes, skills, or domains (shown as chips)
+ * @property {string[]} [tags] - up to 3 chips, in order: domain, use case, format
+ *   (see `src/constants/projectTags.js`). Example:
+ *   ['Fitness', 'Habit tracking', 'Mobile / web app']
+ *   Do not repeat type/role (“Product”, “Personal”) here.
  * @property {string} [screenshot] - path under /public, e.g. '/projects/acme.png'
  * @property {string} [mark] - optional map-pin artwork, e.g. '/projects/marks/cycle.png'
  * @property {string} [liveLink] - live site or demo URL (optional)
