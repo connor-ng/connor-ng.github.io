@@ -37,7 +37,7 @@ function buildPopupHtml(project) {
       <div class="popup-card popup-card--locked">
         <div class="popup-eyebrow" style="color:#8a8a84">Coming soon</div>
         <div class="popup-title">Still in the works</div>
-        <p class="popup-blurb">This pin marks a project that isn’t public yet. Check back as the atlas grows.</p>
+        <p class="popup-blurb">This pin marks a project that isn’t public yet. Check back as the map grows.</p>
       </div>
     `
   }
@@ -610,7 +610,7 @@ function Map() {
   if (isPixelMode && !mapConfig) {
     return (
       <div className="map-root map-root--loading">
-        <div className="map-loading map-panel">Loading atlas…</div>
+        <div className="map-loading map-panel">Loading map…</div>
       </div>
     )
   }
@@ -621,7 +621,7 @@ function Map() {
     >
       {!showingList && !showIntro && (
         <div className="map-hud">
-          <p className="map-hud-tagline">Atlas of selected work</p>
+          <p className="map-hud-tagline">Portfolio map</p>
           <p className="map-hud-count">
             {listProjects.length}{' '}
             {listProjects.length === 1 ? 'project' : 'projects'}
@@ -723,7 +723,7 @@ function Map() {
 
       {showAtlasTools && (
         <div className="map-atlas-tools map-panel">
-          <h2>Atlas tools</h2>
+          <h2>Map tools</h2>
           <label className="map-tool-toggle">
             <input
               type="checkbox"
@@ -798,7 +798,7 @@ function Map() {
           aria-labelledby="map-intro-heading"
         >
           <div className="map-intro-card">
-            <p className="map-intro-eyebrow">Personal atlas</p>
+            <p className="map-intro-eyebrow">Portfolio map</p>
             <h1 id="map-intro-heading" className="map-intro-brand">
               Connor Ng
             </h1>
@@ -879,7 +879,7 @@ function Map() {
             <h2 className="mission-log-title">Selected work</h2>
             <p className="mission-log-intro">
               {hasProjects
-                ? 'Each entry is pinned on the atlas — open one to jump to it.'
+                ? 'Each entry is pinned on the map — open one to jump to it.'
                 : 'Projects will show up here once you add them to the map.'}
             </p>
           </header>

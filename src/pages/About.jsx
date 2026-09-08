@@ -74,9 +74,9 @@ function About() {
             <p className="about-role">Product &amp; business</p>
             <p className="about-bio">
               I work at the intersection of product and business — figuring
-              out what to build, why it matters, and how to ship it. This map
-              is a personal atlas of work I have owned end to end, starting
-              with Consistency, a training app I built to keep progressive
+              out what to build, why it matters, and how to ship it. This is a
+              portfolio map of work I have owned end to end, starting with
+              Consistency, a training app I built to keep progressive
               overload on track through a busy internship.
             </p>
           </div>

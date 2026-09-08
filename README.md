@@ -135,4 +135,4 @@ Netlify / Vercel / Cloudflare Pages still work with `npm run build` → publish 
 
 - **PM / business framing:** Lead with problem → your role → outcome. Tags can be domains or skills, not just tech stack.
 - **Optional fields:** Missing screenshot, live link, or case study are fine — the UI skips empty pieces.
-- **Atlas tools:** `/?tools=1` for coord picker. `/?pixel=1` for the legacy pixel map.
+- **Map tools:** `/?tools=1` for coord picker. `/?pixel=1` for the legacy pixel map.
