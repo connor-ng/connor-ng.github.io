@@ -30,6 +30,7 @@ import { getDistrictLabels } from '../utils/districtsGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import { publicUrl } from '../utils/publicUrl'
 import { getProjectTypeColor } from '../constants/projectTypes'
+import ProjectDetailPanel from './ProjectDetailPanel'
 import './Map.css'
 
 function buildPopupHtml(project) {
@@ -72,13 +73,23 @@ function buildPopupHtml(project) {
     ? `<a class="popup-link" href="${project.liveLink}" target="_blank" rel="noreferrer">Live site →</a>`
     : ''
 
+  const hasDetail =
+    Boolean(project.motivation) ||
+    Boolean(project.built) ||
+    Boolean(project.outcome) ||
+    Boolean(project.description)
+
+  const readMore = hasDetail
+    ? `<button type="button" class="popup-link popup-link-secondary popup-read-more" data-open-detail="${project.id}">Read more</button>`
+    : ''
+
   const caseStudyLink = project.caseStudyLink
     ? `<a class="popup-link popup-link-secondary" href="${project.caseStudyLink}" target="_blank" rel="noreferrer">Case study →</a>`
     : ''
 
   const links =
-    liveLink || caseStudyLink
-      ? `<div class="popup-links">${liveLink}${caseStudyLink}</div>`
+    liveLink || readMore || caseStudyLink
+      ? `<div class="popup-links">${liveLink}${readMore}${caseStudyLink}</div>`
       : ''
 
   return `
@@ -181,6 +192,22 @@ function Map() {
   )
 
   const [selectedLogId, setSelectedLogId] = useState(null)
+  const [detailProjectId, setDetailProjectId] = useState(null)
+  const openProjectDetailRef = useRef(() => {})
+
+  const detailProject = useMemo(
+    () => projects.find((project) => project.id === detailProjectId) ?? null,
+    [detailProjectId],
+  )
+
+  useEffect(() => {
+    openProjectDetailRef.current = (id) => {
+      setDetailProjectId(id)
+      mapRef.current?.closePopup()
+      setShowIdleHint(false)
+      setIdleHintFaded(false)
+    }
+  }, [])
 
   const displayCoords = pickedCoords ?? coords
   const coordSnippet = isPixelMode
@@ -333,6 +360,17 @@ function Map() {
       })
     }
 
+    const onPopupAction = (event) => {
+      const target = event.target
+      if (!(target instanceof Element)) return
+      const btn = target.closest('[data-open-detail]')
+      if (!btn) return
+      event.preventDefault()
+      event.stopPropagation()
+      openProjectDetailRef.current(btn.getAttribute('data-open-detail'))
+    }
+    container.addEventListener('click', onPopupAction)
+
     const updateCoords = (lat, lng) => {
       const grid = latLngToGrid(lat, lng)
       setCoords({ gx: grid.gx, gy: grid.gy, lat, lng })
@@ -368,6 +406,7 @@ function Map() {
     mapRef.current = map
 
     return () => {
+      container.removeEventListener('click', onPopupAction)
       resizeObserver?.disconnect()
       window.removeEventListener('orientationchange', onViewportChange)
       window.removeEventListener('resize', onViewportChange)
@@ -434,6 +473,17 @@ function Map() {
       marker.bindPopup(buildPopupHtml(project), { maxWidth: 320 })
     })
 
+    const onPopupAction = (event) => {
+      const target = event.target
+      if (!(target instanceof Element)) return
+      const btn = target.closest('[data-open-detail]')
+      if (!btn) return
+      event.preventDefault()
+      event.stopPropagation()
+      openProjectDetailRef.current(btn.getAttribute('data-open-detail'))
+    }
+    container.addEventListener('click', onPopupAction)
+
     map.on('mousemove', (event) => {
       const grid = toGrid(event.latlng.lat, event.latlng.lng, height, tileSize)
       setCoords({
@@ -474,6 +524,7 @@ function Map() {
     mapRef.current = map
 
     return () => {
+      container.removeEventListener('click', onPopupAction)
       map.remove()
       mapRef.current = null
       markerByIdRef.current = {}
@@ -594,6 +645,15 @@ function Map() {
       map.off('popupclose', onDismiss)
     }
   }, [showIdleHint, showingList])
+
+  useEffect(() => {
+    if (!detailProjectId) return undefined
+    const onKey = (event) => {
+      if (event.key === 'Escape') setDetailProjectId(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [detailProjectId])
 
   async function copyCoords() {
     try {
@@ -990,6 +1050,13 @@ function Map() {
           </div>
         </aside>
       </div>
+
+      {detailProject && (
+        <ProjectDetailPanel
+          project={detailProject}
+          onClose={() => setDetailProjectId(null)}
+        />
+      )}
     </div>
   )
 }

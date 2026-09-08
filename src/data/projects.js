@@ -10,6 +10,9 @@
  * @property {string} [oneLinerProblem] - one sentence: the problem or opportunity
  * @property {string} [description] - short story: what you owned and the outcome
  * @property {string} [popupBlurb] - optional shorter popup body (falls back to trimmed description)
+ * @property {string} [motivation] - detail panel: why you built it
+ * @property {string} [built] - detail panel: what you shipped (falls back to description)
+ * @property {string} [outcome] - detail panel: result / where it stands
  * @property {string[]} [tags] - up to 3 chips, in order: domain, use case, format
  *   (see `src/constants/projectTags.js`). Example:
  *   ['Fitness', 'Habit tracking', 'Mobile / web app']
@@ -41,6 +44,12 @@ const projects = [
       'Consistency Fitness Tracker turns powerlifting knowledge into structured blocks and progressive overload, so I can plan cycles, log lifts, and keep moving toward targets like a 405 deadlift.',
     popupBlurb:
       'A training app I built to keep progressive overload on track through a busy internship.',
+    motivation:
+      'During a busy internship I kept falling off tracking lifts — and I still needed a clear path toward big strength goals. Spreadsheets and generic apps weren’t enough to keep me honest week to week.',
+    built:
+      'Consistency turns powerlifting knowledge into structured blocks and progressive overload. I can plan cycles, log lifts, and keep moving toward targets like a 405 deadlift — end to end as a personal product.',
+    outcome:
+      'It’s live and I still use it as my training system. The build taught me how to ship a focused habit product under real time pressure.',
     tags: ['Fitness', 'Habit tracking', 'Mobile / web app'],
     mark: '/projects/marks/cycle.png',
     liveLink: 'https://consistency-azure.vercel.app',
