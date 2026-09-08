@@ -862,13 +862,13 @@
   display: block;
   width: 100%;
   height: auto;
-  max-height: 160px;
-  object-fit: cover;
+  max-height: 220px;
+  object-fit: contain;
   object-position: center top;
   border-radius: 2px;
   border: 1px solid var(--theme-panel-border);
   margin-bottom: 10px;
-  background: var(--theme-bg);
+  background: #0a0a0a;
 }
 
 .map-root .leaflet-popup-tip {
