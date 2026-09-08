@@ -23,6 +23,7 @@ import {
   SF_MIN_ZOOM,
   SF_TILE_MAX_ZOOM,
   SF_TILE_URL,
+  SF_TONE_GEOJSON_URL,
   SF_USE_LABEL_TILES,
   SF_VIEW_BOUNDS,
 } from '../utils/sfGeo'
@@ -261,7 +262,7 @@ function Map() {
       bounceAtZoomLimits: false,
     })
 
-    // Esri topo basemap (darkened in CSS for a bit of color). No API key.
+    // Dark mono Esri basemap + optional label tiles. No API key.
     L.tileLayer(SF_TILE_URL, {
       className: 'map-basemap-tiles',
       maxZoom: SF_MAX_ZOOM,
@@ -280,6 +281,40 @@ function Map() {
         keepBuffer: 2,
       }).addTo(map)
     }
+
+    // Quiet tonal accents: dark blue water, dark green parks/hills.
+    let toneLayer = null
+    let toneCancelled = false
+    fetch(publicUrl(SF_TONE_GEOJSON_URL))
+      .then((res) => (res.ok ? res.json() : null))
+      .then((geojson) => {
+        if (toneCancelled || !geojson) return
+        toneLayer = L.geoJSON(geojson, {
+          interactive: false,
+          style: (feature) => {
+            const kind = feature?.properties?.kind
+            if (kind === 'water') {
+              return {
+                className: 'map-tone-water',
+                color: '#1a2e3a',
+                weight: 0,
+                fillColor: '#152832',
+                fillOpacity: 0.55,
+              }
+            }
+            return {
+              className: 'map-tone-green',
+              color: '#1c2a1e',
+              weight: 0,
+              fillColor: '#18241a',
+              fillOpacity: 0.42,
+            }
+          },
+        }).addTo(map)
+      })
+      .catch(() => {
+        /* tonal layer is optional */
+      })
 
     // No district boxes — quiet place labels only (OSM-style names).
     getDistrictLabels().forEach((label) => {
@@ -937,6 +972,10 @@ function Map() {
         <p className="map-attribution">
           <a href="https://www.esri.com/" target="_blank" rel="noreferrer">
             Esri
+          </a>
+          {' · '}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
+            OSM
           </a>
         </p>
       )}

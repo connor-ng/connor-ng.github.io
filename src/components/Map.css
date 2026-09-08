@@ -67,14 +67,19 @@
   image-rendering: auto;
 }
 
-/* Mild dark grade on Esri topo so parks/water keep a little color. */
+/* Keep basemap monochrome; tonal color comes from GeoJSON overlays. */
 .map-root--geo .map-basemap-tiles {
-  filter: brightness(0.7) saturate(1.35) contrast(1.08);
+  filter: none;
 }
 
 .map-root--geo .map-label-tiles {
   filter: none;
-  opacity: 0.9;
+  opacity: 0.88;
+}
+
+.map-root--geo .map-tone-water,
+.map-root--geo .map-tone-green {
+  pointer-events: none;
 }
 
 .map-root--focus.map-root--geo .leaflet-tile-pane {

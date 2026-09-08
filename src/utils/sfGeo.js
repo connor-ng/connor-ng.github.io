@@ -20,18 +20,16 @@ export const SF_DEFAULT_ZOOM = 12
 export const SF_MIN_ZOOM = 11
 export const SF_MAX_ZOOM = 18
 
-/**
- * Esri topo basemap (no API key). Mild CSS dark grade keeps some
- * water/park color without relying on OpenStreetMap tile servers.
- */
+/** Dark monochrome basemap via Esri (no API key). Tonal accents come from overlays. */
 export const SF_TILE_URL =
-  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
 
 export const SF_LABEL_TILE_URL =
   'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}'
 
 export const SF_TILE_MAX_ZOOM = 16
-export const SF_USE_LABEL_TILES = false
+export const SF_USE_LABEL_TILES = true
+export const SF_TONE_GEOJSON_URL = '/map/sf-tone.geojson'
 
 /** Zoom thresholds for layered map detail. */
 export const ZOOM_DISTRICTS = 11
