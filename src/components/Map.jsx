@@ -30,6 +30,7 @@ import {
 import { getDistrictLabels } from '../utils/districtsGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import { publicUrl } from '../utils/publicUrl'
+import { escapeHtml, safeUrl } from '../utils/safeHtml'
 import { getProjectTypeColor } from '../constants/projectTypes'
 import ProjectDetailPanel from './ProjectDetailPanel'
 import './Map.css'
@@ -47,31 +48,33 @@ function buildPopupHtml(project) {
 
   const tags = (project.tags ?? project.stack ?? [])
     .slice(0, 3)
-    .map((tag) => `<span>${tag}</span>`)
+    .map((tag) => `<span>${escapeHtml(tag)}</span>`)
     .join('')
 
-  const screenshot = project.screenshot
-    ? `<img class="popup-screenshot" src="${publicUrl(project.screenshot)}" alt="" />`
+  const shotSrc = project.screenshot ? safeUrl(publicUrl(project.screenshot)) : ''
+  const screenshot = shotSrc
+    ? `<img class="popup-screenshot" src="${escapeHtml(shotSrc)}" alt="" />`
     : ''
 
   const eyebrow = project.roleAndTimeframe
-    ? `<div class="popup-eyebrow">${project.roleAndTimeframe}</div>`
+    ? `<div class="popup-eyebrow">${escapeHtml(project.roleAndTimeframe)}</div>`
     : ''
 
   const problem =
     !project.popupBlurb && project.oneLinerProblem
-      ? `<p class="popup-problem">${project.oneLinerProblem}</p>`
+      ? `<p class="popup-problem">${escapeHtml(project.oneLinerProblem)}</p>`
       : ''
 
   const blurbText = project.popupBlurb || project.description
   const blurb = blurbText
-    ? `<p class="popup-blurb">${blurbText}</p>`
+    ? `<p class="popup-blurb">${escapeHtml(blurbText)}</p>`
     : ''
 
   const tagRow = tags ? `<div class="popup-tags">${tags}</div>` : ''
 
-  const liveLink = project.liveLink
-    ? `<a class="popup-link" href="${project.liveLink}" target="_blank" rel="noreferrer">Live site →</a>`
+  const liveHref = safeUrl(project.liveLink)
+  const liveLink = liveHref
+    ? `<a class="popup-link" href="${escapeHtml(liveHref)}" target="_blank" rel="noreferrer">Live site →</a>`
     : ''
 
   const hasDetail =
@@ -81,11 +84,12 @@ function buildPopupHtml(project) {
     Boolean(project.description)
 
   const readMore = hasDetail
-    ? `<button type="button" class="popup-link popup-link-secondary popup-read-more" data-open-detail="${project.id}">Read more</button>`
+    ? `<button type="button" class="popup-link popup-link-secondary popup-read-more" data-open-detail="${escapeHtml(project.id)}">Read more</button>`
     : ''
 
-  const caseStudyLink = project.caseStudyLink
-    ? `<a class="popup-link popup-link-secondary" href="${project.caseStudyLink}" target="_blank" rel="noreferrer">Case study →</a>`
+  const caseHref = safeUrl(project.caseStudyLink)
+  const caseStudyLink = caseHref
+    ? `<a class="popup-link popup-link-secondary" href="${escapeHtml(caseHref)}" target="_blank" rel="noreferrer">Case study →</a>`
     : ''
 
   const links =
@@ -97,7 +101,7 @@ function buildPopupHtml(project) {
     <div class="popup-card">
       ${screenshot}
       ${eyebrow}
-      <div class="popup-title">${project.title}</div>
+      <div class="popup-title">${escapeHtml(project.title)}</div>
       ${problem}
       ${blurb}
       ${tagRow}
