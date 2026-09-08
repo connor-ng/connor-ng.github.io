@@ -819,7 +819,7 @@ function Map() {
                 className="map-intro-btn map-intro-btn--ghost"
                 onClick={() => dismissIntro('list')}
               >
-                View mission log
+                View projects
               </button>
             </div>
           </div>
@@ -857,9 +857,9 @@ function Map() {
         className={`map-list-view${showingList ? ' visible' : ''}`}
         aria-hidden={!showingList}
       >
-        <aside className="mission-log" aria-label="Mission log">
+        <aside className="mission-log" aria-label="Projects">
           <header className="mission-log-header">
-            <p className="mission-log-eyebrow">Mission log</p>
+            <p className="mission-log-eyebrow">Projects</p>
             <h2 className="mission-log-title">Selected work</h2>
             <p className="mission-log-intro">
               {hasProjects
