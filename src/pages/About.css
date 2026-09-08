@@ -1,5 +1,8 @@
 .about {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+  min-height: 100dvh;
   max-width: 720px;
   margin: 0 auto;
   padding: calc(var(--nav-height) + 2.75rem) 1.5rem 3.5rem;
@@ -9,6 +12,13 @@
     radial-gradient(ellipse 70% 40% at 50% 0%, rgba(199, 90, 58, 0.05), transparent 55%),
     var(--page-light-bg);
   color: var(--page-light-text-body);
+}
+
+/* Auto margins center the block on tall screens without clipping it on short ones. */
+.about-inner {
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .about-intro {
