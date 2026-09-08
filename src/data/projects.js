@@ -41,13 +41,13 @@ const projects = [
     oneLinerProblem:
       'During a busy internship I kept falling off tracking lifts — and I still needed a clear path toward big strength goals.',
     description:
-      'Consistency Fitness Tracker turns powerlifting knowledge into structured blocks and progressive overload, so I can plan cycles, log lifts, and keep moving toward targets like a 405 deadlift.',
+      'Consistency Fitness Tracker turns powerlifting knowledge into structured blocks and progressive overload, so I can plan cycles, log lifts, and keep moving toward targets like a 315 bench.',
     popupBlurb:
       'A training app I built to keep progressive overload on track through a busy internship.',
     motivation:
       'During a busy internship I kept falling off tracking lifts, and I still needed a clear path toward big strength goals. Spreadsheets and generic apps weren’t enough to keep me honest week to week.',
     built:
-      'Consistency turns powerlifting knowledge into structured blocks and progressive overload. I can plan cycles, log lifts, and keep moving toward targets like a 405 deadlift, end to end as a personal product.',
+      'Consistency turns powerlifting knowledge into structured blocks and progressive overload. I can plan cycles, log lifts, and keep moving toward targets like a 315 bench, end to end as a personal product.',
     outcome:
       'It’s live and I’m still using it as my training system, and continuing to iterate on it as I use it. The build taught me how to ship my first product, and that apps take a lot of time and iteration.',
     tags: ['Fitness', 'Habit tracking', 'Mobile / web app'],
