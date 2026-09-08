@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { publicUrl } from '../utils/publicUrl'
+import { safeUrl } from '../utils/safeHtml'
 import { getProjectDistrict } from '../utils/districtUtils'
 import './ProjectDetailPanel.css'
 
@@ -173,10 +174,10 @@ function ProjectDetailPanel({ project, onClose, onViewOnMap }) {
         </div>
 
         <footer className="project-detail-footer">
-          {project.liveLink && (
+          {safeUrl(project.liveLink) && (
             <a
               className="project-detail-live"
-              href={project.liveLink}
+              href={safeUrl(project.liveLink)}
               target="_blank"
               rel="noreferrer"
             >
