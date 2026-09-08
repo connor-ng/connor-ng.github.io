@@ -357,6 +357,9 @@ function Map() {
           autoPan: true,
           autoPanPadding: [48, 48],
         })
+        marker.on('popupopen', () => {
+          marker.setPopupContent(buildPopupHtml(project))
+        })
       })
     }
 
