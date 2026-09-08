@@ -3,7 +3,7 @@
 ## Open
 
 ### Beli profile link
-Connect row exists. Waiting on Connor’s personal Beli URL (last message said “here is the beli link” but no URL was attached).
+Logo is on Connect. Still waiting on Connor’s personal Beli profile/invite URL (currently links to beliapp.com).
 
 ### Site analytics (GitHub Pages)
 Track visits/clicks on https://connor-ng.github.io/
