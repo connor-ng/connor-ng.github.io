@@ -73,16 +73,11 @@ function About() {
             <h1 id="about-heading">About me</h1>
             <p className="about-bio">
               I&apos;m a junior Informatics student at UC Irvine, from San
-              Francisco. I&apos;m interested in product management and tech
-              consulting. Figuring out what to build, why it matters, and how
-              to get it shipped feels natural to me, and I value efficiency:
-              building with AI and using different technology to optimize how
-              things get done.
-            </p>
-            <p className="about-bio">
-              I&apos;ve worked in technology risk, and I&apos;m looking for
-              roles where I can sit with the problem, the people, and the
-              product, then help move work from idea to something real.
+              Francisco. I&apos;ve worked in technology risk, and I&apos;m
+              interested in product management and tech consulting. Figuring
+              out what to build, why it matters, and how to ship it feels
+              natural to me. I care a lot about efficiency, and about using AI
+              and other technology to optimize how things get done.
             </p>
             <p className="about-bio">
               Outside of class and work I&apos;m a big Warriors and 49ers fan.
