@@ -559,16 +559,27 @@ function Map() {
     const map = mapRef.current
     if (!project || !marker || !map) return
 
+    const duration = 0.35
+    const openPopup = () => {
+      marker.openPopup()
+    }
+
+    map.once('moveend', openPopup)
+
     if (isPixelMode && mapConfig) {
       const { height, tileSize } = mapConfig
       map.flyTo(toLatLng(project.gx, project.gy, height, tileSize), 2, {
-        duration: 0.6,
+        duration,
       })
     } else {
-      map.flyTo(getPointLatLng(project), 15, { duration: 0.6 })
+      // 14 keeps pin context without pulling as many high-zoom tiles as 15
+      map.flyTo(getPointLatLng(project), 14, { duration })
     }
 
-    window.setTimeout(() => marker.openPopup(), 400)
+    // Fallback if flyTo is a no-op (already centered) or moveend is skipped
+    window.setTimeout(() => {
+      if (!marker.isPopupOpen()) openPopup()
+    }, duration * 1000 + 60)
   }
 
   function openOnMap(id) {
@@ -577,7 +588,7 @@ function Map() {
     window.setTimeout(() => {
       mapRef.current?.invalidateSize()
       jumpTo(id)
-    }, 80)
+    }, 40)
   }
 
   function selectLogProject(id) {
@@ -606,22 +617,22 @@ function Map() {
       }
 
       setPinPulse(true)
-      window.setTimeout(() => setPinPulse(false), 4200)
+      window.setTimeout(() => setPinPulse(false), 2400)
       setShowIdleHint(true)
       setIdleHintFaded(false)
 
       const featured =
         listProjects.find((project) => project.featured) ?? listProjects[0]
       if (featured) {
-        window.setTimeout(() => jumpTo(featured.id), 180)
+        jumpTo(featured.id)
       }
-    }, 320)
+    }, 180)
   }
 
   function dismissIdleHint() {
     if (!showIdleHint || idleHintFaded) return
     setIdleHintFaded(true)
-    window.setTimeout(() => setShowIdleHint(false), 500)
+    window.setTimeout(() => setShowIdleHint(false), 280)
   }
 
   useEffect(() => {
@@ -632,7 +643,7 @@ function Map() {
     const onDismiss = () => {
       setIdleHintFaded((faded) => {
         if (faded) return faded
-        window.setTimeout(() => setShowIdleHint(false), 500)
+        window.setTimeout(() => setShowIdleHint(false), 280)
         return true
       })
     }
