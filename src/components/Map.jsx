@@ -296,18 +296,18 @@ function Map() {
             if (kind === 'water') {
               return {
                 className: 'map-tone-water',
-                color: '#1a2e3a',
+                color: '#243f52',
                 weight: 0,
-                fillColor: '#152832',
-                fillOpacity: 0.55,
+                fillColor: '#1c3648',
+                fillOpacity: 0.72,
               }
             }
             return {
               className: 'map-tone-green',
-              color: '#1c2a1e',
+              color: '#2a3d2c',
               weight: 0,
-              fillColor: '#18241a',
-              fillOpacity: 0.42,
+              fillColor: '#223528',
+              fillOpacity: 0.58,
             }
           },
         }).addTo(map)
@@ -448,6 +448,10 @@ function Map() {
     mapRef.current = map
 
     return () => {
+      toneCancelled = true
+      if (toneLayer) {
+        map.removeLayer(toneLayer)
+      }
       container.removeEventListener('click', onPopupAction)
       resizeObserver?.disconnect()
       window.removeEventListener('orientationchange', onViewportChange)
