@@ -1094,10 +1094,10 @@ function Map() {
 
                     <div className="mission-card-footer">
                       <div className="mission-card-actions">
-                        {project.liveLink && (
+                        {safeUrl(project.liveLink) && (
                           <a
                             className="mission-card-live"
-                            href={project.liveLink}
+                            href={safeUrl(project.liveLink)}
                             target="_blank"
                             rel="noreferrer"
                             onClick={(event) => event.stopPropagation()}
