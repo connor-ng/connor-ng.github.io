@@ -1064,6 +1064,7 @@ function Map() {
 
       {detailProject && (
         <ProjectDetailPanel
+          key={detailProject.id}
           project={detailProject}
           onClose={() => setDetailProjectId(null)}
         />

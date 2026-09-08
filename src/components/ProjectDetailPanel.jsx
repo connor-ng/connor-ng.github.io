@@ -16,10 +16,6 @@ function ProjectDetailPanel({ project, onClose }) {
   const [slide, setSlide] = useState(0)
 
   useEffect(() => {
-    setSlide(0)
-  }, [project?.id])
-
-  useEffect(() => {
     if (gallery.length < 2) return undefined
     const onKey = (event) => {
       if (event.key === 'ArrowRight') {
