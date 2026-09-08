@@ -1032,12 +1032,7 @@ function Map() {
                   </div>
 
                   <div className="mission-card-body">
-                    <div className="mission-card-topline">
-                      <h3 className="mission-card-title">{project.title}</h3>
-                      {district && (
-                        <span className="mission-card-district">{district.name}</span>
-                      )}
-                    </div>
+                    <h3 className="mission-card-title">{project.title}</h3>
 
                     {project.roleAndTimeframe && (
                       <p className="mission-card-role">{project.roleAndTimeframe}</p>

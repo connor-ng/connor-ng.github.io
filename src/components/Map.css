@@ -1129,13 +1129,6 @@
   gap: 5px;
 }
 
-.mission-card-topline {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-}
-
 .mission-card-title {
   margin: 0;
   font-family: var(--font-sans);
@@ -1144,14 +1137,6 @@
   letter-spacing: -0.02em;
   color: var(--theme-text);
   line-height: 1.25;
-}
-
-.mission-card-district {
-  flex-shrink: 0;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  color: var(--map-text-muted);
 }
 
 .mission-card-role {
