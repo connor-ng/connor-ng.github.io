@@ -1,13 +1,15 @@
-/** Project type — pin/list accent. Site chrome uses warm amber; blue is optional. */
+/**
+ * Pin/list accents. Open work shares the warm site signal;
+ * coming-soon pins always use muted gray (not amber).
+ */
 export const PROJECT_TYPES = {
   personal: {
     label: 'Personal',
-    // Optional cool accent so open pins don’t all match the amber chrome
-    color: '#3db0ff',
+    color: '#ffb020',
   },
   school: {
     label: 'School',
-    color: '#2dd4bf',
+    color: '#ffb020',
   },
   work: {
     label: 'Work',
@@ -17,7 +19,10 @@ export const PROJECT_TYPES = {
 
 export const TYPE_ORDER = ['personal', 'school', 'work']
 
+const COMING_SOON_RING = '#8a8a84'
+
 export function getProjectTypeColor(project) {
+  if (project.status === 'locked') return COMING_SOON_RING
   return PROJECT_TYPES[project.type]?.color ?? PROJECT_TYPES.personal.color
 }
 
