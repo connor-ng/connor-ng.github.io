@@ -930,7 +930,7 @@ function Map() {
               <li>
                 <span className="map-intro-legend-mark map-intro-legend-mark--open" aria-hidden="true" />
                 <span>
-                  <strong>Open pins</strong> — projects you can explore now
+                  <strong>Live pins</strong> are projects you can open now
                 </span>
               </li>
               <li>
@@ -938,7 +938,7 @@ function Map() {
                   ?
                 </span>
                 <span>
-                  <strong>Coming soon</strong> — placeholders for work still in progress
+                  <strong>?</strong> pins are coming soon
                 </span>
               </li>
             </ul>
@@ -964,7 +964,7 @@ function Map() {
 
       {showIdleHint && !showingList && !showIntro && (
         <div className={`map-idle-hint map-panel${idleHintFaded ? ' is-faded' : ''}`}>
-          Click an open pin · ? means coming soon
+          Click a live pin to explore · ? pins are coming soon
         </div>
       )}
 
