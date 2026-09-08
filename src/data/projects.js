@@ -38,7 +38,7 @@ const projects = [
       'Consistency Fitness Tracker turns powerlifting knowledge into structured blocks and progressive overload, so I can plan cycles, log lifts, and keep moving toward targets like a 405 deadlift.',
     popupBlurb:
       'A training app I built to keep progressive overload on track through a busy internship.',
-    tags: ['Product', 'Fitness', 'Progressive overload'],
+    tags: ['Fitness', 'Habit tracking', 'Mobile / web app'],
     mark: '/projects/marks/cycle.png',
     liveLink: 'https://consistency-azure.vercel.app',
     status: 'done',
