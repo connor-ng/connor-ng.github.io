@@ -670,12 +670,7 @@ function Map() {
       window.setTimeout(() => setPinPulse(false), 2400)
       setShowIdleHint(true)
       setIdleHintFaded(false)
-
-      const featured =
-        listProjects.find((project) => project.featured) ?? listProjects[0]
-      if (featured) {
-        jumpTo(featured.id)
-      }
+      // Stay on the city overview — let the visitor choose a pin.
     }, 180)
   }
 

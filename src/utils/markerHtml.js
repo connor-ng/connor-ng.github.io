@@ -18,8 +18,9 @@ export function buildMarkerHtml(project, size = 'map') {
   const ring = escapeHtml(getProjectTypeColor(project))
   const icon = markerIconContent(project)
   const hasMark = Boolean(project.mark) && project.status !== 'locked'
-  // Keep shipped pins clean; only current/sealed get a quiet status chip
-  const showBadge = project.status === 'current' || project.status === 'locked'
+  // Keep shipped pins clean; only "building" gets a quiet status chip.
+  // Locked pins already show "?" in the icon — no second badge.
+  const showBadge = project.status === 'current'
   const badge = showBadge
     ? `<div class="marker-badge" aria-hidden="true">${escapeHtml(statusMeta.badge)}</div>`
     : ''
