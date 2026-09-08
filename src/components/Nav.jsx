@@ -1,4 +1,5 @@
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import { normalizePath } from '../utils/path'
 import './Nav.css'
 
 const navLinks = [
@@ -8,8 +9,9 @@ const navLinks = [
 
 function Nav() {
   const { pathname } = useLocation()
-  const isMapHome = pathname === '/'
-  const isLightPage = pathname === '/about' || pathname === '/contact'
+  const path = normalizePath(pathname)
+  const isMapHome = path === '/'
+  const isLightPage = path === '/about' || path === '/contact'
 
   return (
     <nav

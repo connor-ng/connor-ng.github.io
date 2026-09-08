@@ -34,33 +34,38 @@
   color: var(--theme-text);
 }
 
-.nav--light {
+/* Also keyed off .app--light so a path mismatch cannot leave white text on paper. */
+.nav--light,
+.app--light .nav {
   background: var(--page-light-bg);
   border-bottom: 1px solid var(--page-light-border);
   pointer-events: auto;
 }
 
-.nav--light .nav-brand {
+.nav--light .nav-brand,
+.app--light .nav-brand {
   color: var(--page-light-text);
 }
 
-.nav--light .nav-brand:hover {
+.nav--light .nav-brand:hover,
+.app--light .nav-brand:hover {
   color: var(--page-light-accent);
 }
 
-.nav--light .nav-link {
+.nav--light .nav-link,
+.app--light .nav-link {
   color: var(--page-light-text-muted);
 }
 
-.nav--light .nav-link:hover {
+.nav--light .nav-link:hover,
+.app--light .nav-link:hover {
   color: var(--page-light-accent);
 }
 
-.nav--light .nav-link--active {
-  color: var(--page-light-text);
-}
-
-.nav--light .nav-link--active:hover {
+.nav--light .nav-link--active,
+.nav--light .nav-link--active:hover,
+.app--light .nav-link--active,
+.app--light .nav-link--active:hover {
   color: var(--page-light-text);
 }
 

@@ -3,10 +3,12 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Nav from './components/Nav'
 import Home from './pages/Home'
 import About from './pages/About'
+import { normalizePath } from './utils/path'
 
 function App() {
   const { pathname } = useLocation()
-  const isLightPage = pathname === '/about' || pathname === '/contact'
+  const path = normalizePath(pathname)
+  const isLightPage = path === '/about' || path === '/contact'
 
   useEffect(() => {
     document.documentElement.classList.toggle('light-page', isLightPage)
