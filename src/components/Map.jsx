@@ -133,10 +133,8 @@ function Map() {
   })
   const [searchQuery, setSearchQuery] = useState('')
   const [showingList, setShowingList] = useState(false)
-  const [showIntro, setShowIntro] = useState(
-    () =>
-      !localStorage.getItem('atlas-intro-seen') &&
-      projects.some((project) => project.status !== 'locked'),
+  const [showIntro, setShowIntro] = useState(() =>
+    projects.some((project) => project.status !== 'locked'),
   )
   const [introLeaving, setIntroLeaving] = useState(false)
   const [pinPulse, setPinPulse] = useState(false)
@@ -649,7 +647,6 @@ function Map() {
     if (introLeaving || !showIntro) return
 
     setIntroLeaving(true)
-    localStorage.setItem('atlas-intro-seen', '1')
     localStorage.setItem('map-visited', '1')
 
     window.setTimeout(() => {
