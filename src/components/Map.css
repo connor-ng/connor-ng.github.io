@@ -661,12 +661,12 @@
 }
 
 .map-root .project-marker--has-mark .marker-icon {
-  background: var(--theme-paper);
+  background: #141414;
   border-width: 3px;
 }
 
 .map-root .project-marker--has-mark .marker-mark {
-  filter: none;
+  filter: invert(1) brightness(1.15);
   width: 62%;
   height: 62%;
 }
@@ -872,6 +872,8 @@
 }
 
 .mission-log {
+  --mission-accent: #6fa3d0;
+  --mission-accent-strong: #8bb8dc;
   pointer-events: auto;
   width: min(440px, 100%);
   max-height: calc(100vh - var(--nav-height, 52px) - 40px);
@@ -892,7 +894,7 @@
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--map-accent);
+  color: var(--mission-accent);
 }
 
 .mission-log-title {
@@ -909,7 +911,7 @@
   font-size: 0.9rem;
   line-height: 1.45;
   color: var(--theme-text-muted);
-  max-width: 36ch;
+  max-width: 38ch;
 }
 
 .mission-log-empty {
@@ -937,7 +939,7 @@
 .mission-log-empty-body code {
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  color: var(--map-accent);
+  color: var(--mission-accent);
 }
 
 .mission-log-list {
@@ -966,7 +968,7 @@
 .mission-card:hover,
 .mission-card:focus-visible,
 .mission-card.is-selected {
-  border-color: color-mix(in srgb, var(--mission-ring, var(--map-accent)) 55%, #555);
+  border-color: color-mix(in srgb, var(--mission-accent) 45%, #555);
   background: rgba(31, 31, 31, 0.98);
   box-shadow: none;
   transform: none;
@@ -984,8 +986,8 @@
   width: 52px;
   height: 52px;
   border-radius: 4px;
-  border: 1px solid color-mix(in srgb, var(--mission-ring, var(--map-accent)) 70%, #666);
-  background: var(--theme-paper);
+  border: 1px solid var(--theme-panel-border);
+  background: #121212;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -995,16 +997,18 @@
 }
 
 .mission-card-mark img {
-  width: 68%;
-  height: 68%;
+  width: 64%;
+  height: 64%;
   object-fit: contain;
+  /* Marks are dark artwork — invert to white on the black tile */
+  filter: invert(1) brightness(1.18);
 }
 
 .mission-card-mark span {
   font-family: var(--font-sans);
   font-size: 1.1rem;
   font-weight: 700;
-  color: #1a222c;
+  color: var(--theme-text);
 }
 
 .mission-card-body {
@@ -1044,7 +1048,7 @@
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.04em;
-  color: var(--map-accent);
+  color: var(--mission-accent);
 }
 
 .mission-card-blurb {
@@ -1093,20 +1097,20 @@
 .mission-card:hover .mission-card-hint,
 .mission-card:focus-visible .mission-card-hint,
 .mission-card.is-selected .mission-card-hint {
-  color: var(--map-accent);
+  color: var(--mission-accent);
 }
 
 .mission-card-live {
   font-family: var(--font-sans);
   font-size: 0.78rem;
   font-weight: 500;
-  color: var(--map-accent);
+  color: var(--mission-accent);
   text-decoration: none;
   padding: 4px 0;
 }
 
 .mission-card-live:hover {
-  color: var(--theme-text);
+  color: var(--mission-accent-strong);
   text-decoration: underline;
 }
 

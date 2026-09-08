@@ -803,7 +803,7 @@ function Map() {
             <h2 className="mission-log-title">Selected work</h2>
             <p className="mission-log-intro">
               {hasProjects
-                ? 'Select a project to open it on the map.'
+                ? 'Each entry is pinned on the atlas — open one to jump to it.'
                 : 'Projects will show up here once you add them to the map.'}
             </p>
           </header>
