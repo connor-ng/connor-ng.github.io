@@ -87,7 +87,8 @@ function About() {
             <p className="about-bio">
               Outside of class and work I&apos;m a big Warriors and 49ers fan.
               I also love working out, trying different restaurants and cafes,
-              and playing games.
+              and playing games. If any of that resonates — or you just want
+              to talk — reach out below. I&apos;d love to chat.
             </p>
           </div>
         </section>
