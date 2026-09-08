@@ -75,8 +75,9 @@ function About() {
             <p className="about-bio">
               I&apos;m an incoming third-year Informatics student at UC Irvine,
               from San Francisco. I like figuring out what to build, why it
-              matters, and how to get it shipped — the space between users,
-              business, and engineering.
+              matters, and how to get it shipped — finding the efficient path
+              between users, business, and engineering, and building with AI
+              as part of how I work.
             </p>
             <p className="about-bio">
               I&apos;ve worked in technology risk and I&apos;m building toward
