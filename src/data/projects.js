@@ -38,7 +38,7 @@ const projects = [
     id: 'cft',
     title: 'Consistency',
     type: 'personal',
-    roleAndTimeframe: 'CFT · Personal product · Jun–Aug 2026',
+    roleAndTimeframe: 'Personal product · Jun–Aug 2026',
     oneLinerProblem:
       'During a busy internship I kept falling off tracking lifts, and I still needed a clear path toward big strength goals.',
     description:
