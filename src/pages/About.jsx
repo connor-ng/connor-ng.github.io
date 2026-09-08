@@ -89,9 +89,6 @@ function About() {
               I also love working out, trying different restaurants and cafes,
               and playing games.
             </p>
-            <p className="about-bio">
-              Feel free to reach out below.
-            </p>
           </div>
         </section>
 
