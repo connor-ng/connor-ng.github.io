@@ -40,22 +40,6 @@ const connectLinks = [
     ),
   },
   {
-    id: 'beli',
-    label: 'Beli',
-    detail: 'Restaurants & cafes',
-    href: 'https://beliapp.com/',
-    external: true,
-    icon: (
-      <img
-        className="connect-icon-img"
-        src={publicUrl('/connect/beli-icon.png')}
-        alt=""
-        width={22}
-        height={22}
-      />
-    ),
-  },
-  {
     id: 'resume',
     label: 'Resume',
     detail: 'PDF',

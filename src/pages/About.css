@@ -149,18 +149,6 @@
   stroke-linejoin: round;
 }
 
-.connect-icon-img {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  border-radius: 5px;
-  display: block;
-}
-
-.connect-row:hover .connect-icon:has(.connect-icon-img) {
-  border-color: #0e4b57;
-}
-
 .connect-meta {
   flex: 1;
   min-width: 0;

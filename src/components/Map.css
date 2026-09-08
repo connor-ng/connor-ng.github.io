@@ -67,9 +67,9 @@
   image-rendering: auto;
 }
 
-/* Dark grade over colorful OSM: blue water + green parks stay visible. */
+/* Mild dark grade on Esri topo so parks/water keep a little color. */
 .map-root--geo .map-basemap-tiles {
-  filter: brightness(0.65) saturate(1.85) contrast(1.12);
+  filter: brightness(0.7) saturate(1.35) contrast(1.08);
 }
 
 .map-root--geo .map-label-tiles {

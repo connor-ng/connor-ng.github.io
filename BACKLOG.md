@@ -2,9 +2,6 @@
 
 ## Open
 
-### Beli profile link
-Logo is on Connect. Still waiting on Connor’s personal Beli profile/invite URL (currently links to beliapp.com).
-
 ### Site analytics (GitHub Pages)
 Track visits/clicks on https://connor-ng.github.io/
 
@@ -13,6 +10,7 @@ Track visits/clicks on https://connor-ng.github.io/
 - Best path: add a lightweight analytics tool (Plausible, Cloudflare Web Analytics, or Umami).
 
 ## Shipped recently
-- Map color: switched from flat Esri dark-gray to darkened OpenStreetMap tiles (blue water / green parks), no API key
-- Connect: Beli row + Resume detail set to `PDF` (Beli still needs personal URL)
+- Map: Esri World Topo (no API key) with a mild dark color grade; removed OSM tiles
+- Removed Beli from Connect
 - About: summer EY technology risk line tied to PM / consulting interests
+- Resume Connect detail set to `PDF`

@@ -21,18 +21,16 @@ export const SF_MIN_ZOOM = 11
 export const SF_MAX_ZOOM = 18
 
 /**
- * Colored basemap (no API key). OSM has real water/park chroma;
- * CSS darkens it to fit the portfolio chrome.
+ * Esri topo basemap (no API key). Mild CSS dark grade keeps some
+ * water/park color without relying on OpenStreetMap tile servers.
  */
 export const SF_TILE_URL =
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
 
-/** Unused while OSM tiles include their own labels. */
 export const SF_LABEL_TILE_URL =
   'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}'
 
-export const SF_TILE_SUBDOMAINS = 'abc'
-export const SF_TILE_MAX_ZOOM = 19
+export const SF_TILE_MAX_ZOOM = 16
 export const SF_USE_LABEL_TILES = false
 
 /** Zoom thresholds for layered map detail. */

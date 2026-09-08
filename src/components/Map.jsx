@@ -22,7 +22,6 @@ import {
   SF_MAX_ZOOM,
   SF_MIN_ZOOM,
   SF_TILE_MAX_ZOOM,
-  SF_TILE_SUBDOMAINS,
   SF_TILE_URL,
   SF_USE_LABEL_TILES,
   SF_VIEW_BOUNDS,
@@ -262,15 +261,13 @@ function Map() {
       bounceAtZoomLimits: false,
     })
 
-    // Colored OSM basemap (darkened in CSS). No API key.
+    // Esri topo basemap (darkened in CSS for a bit of color). No API key.
     L.tileLayer(SF_TILE_URL, {
       className: 'map-basemap-tiles',
-      subdomains: SF_TILE_SUBDOMAINS,
       maxZoom: SF_MAX_ZOOM,
       maxNativeZoom: SF_TILE_MAX_ZOOM,
       updateWhenIdle: true,
       keepBuffer: 2,
-      attribution: '&copy; OpenStreetMap',
     }).addTo(map)
 
     if (SF_USE_LABEL_TILES) {
@@ -938,8 +935,8 @@ function Map() {
 
       {!showingList && !showIntro && (
         <p className="map-attribution">
-          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
-            © OpenStreetMap
+          <a href="https://www.esri.com/" target="_blank" rel="noreferrer">
+            Esri
           </a>
         </p>
       )}
