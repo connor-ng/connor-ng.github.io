@@ -1193,7 +1193,15 @@
   margin-top: 8px;
 }
 
-.mission-card-open {
+.mission-card-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.mission-card-open,
+.mission-card-map {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.06em;
@@ -1205,11 +1213,29 @@
   padding: 5px 8px;
 }
 
+.mission-card-map {
+  cursor: pointer;
+  appearance: none;
+}
+
+.mission-card-map:not(.mission-card-open) {
+  border-color: var(--theme-panel-border);
+  background: transparent;
+  color: var(--theme-text-muted);
+}
+
 .mission-card:hover .mission-card-open,
 .mission-card:focus-visible .mission-card-open,
 .mission-card.is-selected .mission-card-open {
   border-color: var(--map-accent);
   background: color-mix(in srgb, var(--map-accent) 24%, transparent);
+}
+
+.mission-card:hover .mission-card-map:not(.mission-card-open),
+.mission-card:focus-visible .mission-card-map:not(.mission-card-open),
+.mission-card.is-selected .mission-card-map:not(.mission-card-open) {
+  border-color: color-mix(in srgb, var(--map-accent) 40%, var(--theme-panel-border));
+  color: var(--theme-text);
 }
 
 .mission-card-live {

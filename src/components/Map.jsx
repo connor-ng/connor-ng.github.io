@@ -957,7 +957,7 @@ function Map() {
             <h2 className="mission-log-title">Selected work</h2>
             <p className="mission-log-intro">
               {hasProjects
-                ? 'Each entry is pinned on the map — open one to jump to it.'
+                ? 'Each entry is pinned on the map — read more or jump to it.'
                 : 'Projects will show up here once you add them to the map.'}
             </p>
           </header>
@@ -978,6 +978,13 @@ function Map() {
               const tags = project.tags ?? project.stack ?? []
               const isSelected = selectedLogId === project.id
               const typeColor = getProjectTypeColor(project)
+              const canReadMore = Boolean(
+                project.motivation ||
+                  project.built ||
+                  project.outcome ||
+                  project.description ||
+                  project.screenshots?.length,
+              )
 
               return (
                 <article
@@ -986,16 +993,28 @@ function Map() {
                   className={`mission-card${isSelected ? ' is-selected' : ''}${project.featured ? ' is-featured' : ''}`}
                   style={{ '--mission-ring': typeColor }}
                   tabIndex={showingList ? 0 : -1}
-                  aria-label={`${project.title}. Open on map.`}
+                  aria-label={
+                    canReadMore
+                      ? `${project.title}. Read more.`
+                      : `${project.title}. Open on map.`
+                  }
                   onClick={() => {
                     dismissIdleHint()
-                    openOnMap(project.id)
+                    if (canReadMore) {
+                      openProjectDetailRef.current(project.id)
+                    } else {
+                      openOnMap(project.id)
+                    }
                   }}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
                       event.preventDefault()
                       dismissIdleHint()
-                      openOnMap(project.id)
+                      if (canReadMore) {
+                        openProjectDetailRef.current(project.id)
+                      } else {
+                        openOnMap(project.id)
+                      }
                     }
                   }}
                   onFocus={() => selectLogProject(project.id)}
@@ -1034,7 +1053,22 @@ function Map() {
                     )}
 
                     <div className="mission-card-footer">
-                      <span className="mission-card-open">Open on map</span>
+                      <div className="mission-card-actions">
+                        {canReadMore && (
+                          <span className="mission-card-open">Read more</span>
+                        )}
+                        <button
+                          type="button"
+                          className={`mission-card-map${canReadMore ? '' : ' mission-card-open'}`}
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            dismissIdleHint()
+                            openOnMap(project.id)
+                          }}
+                        >
+                          Open on map
+                        </button>
+                      </div>
                       {project.liveLink && (
                         <a
                           className="mission-card-live"
@@ -1049,12 +1083,6 @@ function Map() {
                       )}
                     </div>
                   </div>
-
-                  {project.screenshot && (
-                    <div className="mission-card-preview" aria-hidden="true">
-                      <img src={publicUrl(project.screenshot)} alt="" />
-                    </div>
-                  )}
                 </article>
               )
             })}
