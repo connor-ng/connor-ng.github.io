@@ -90,8 +90,7 @@ function About() {
               and playing games.
             </p>
             <p className="about-bio">
-              If any of that resonates, or you just want to talk, reach out
-              below. I&apos;d love to chat.
+              Want to talk about any of this? Reach out below.
             </p>
           </div>
         </section>
