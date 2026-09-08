@@ -12,8 +12,8 @@ export const PROJECT_STATUS = {
   },
   locked: {
     label: 'sealed',
-    color: '#7a7a74',
-    badge: '–',
+    color: '#5a5a56',
+    badge: '?',
   },
 }
 

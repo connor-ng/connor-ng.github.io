@@ -1,6 +1,6 @@
 # Personal Portfolio
 
-Connor Ng's personal portfolio — a San Francisco map of selected work, plus About and Contact.
+Connor Ng's personal portfolio — a San Francisco map of selected work, plus About (with Connect).
 
 ## Setup
 
@@ -19,8 +19,8 @@ The dev server runs at [http://127.0.0.1:43123](http://127.0.0.1:43123).
 ## Routes
 
 - `/` — Map of projects (Map / List toggle)
-- `/about` — About
-- `/contact` — Email, LinkedIn, GitHub, resume
+- `/about` — About + Connect (email, LinkedIn, GitHub, resume)
+- `/contact` — Redirects to `/about`
 
 ## Add your first project
 
@@ -38,7 +38,9 @@ Everything lives in one file: `src/data/projects.js`.
 | `screenshot` | Image path under `public/projects/` | Recommended |
 | `liveLink` | Live site / demo | Optional |
 | `caseStudyLink` | Write-up URL | Optional |
-| `status` | `'done'` or `'current'` | Yes |
+| `status` | `'done'`, `'current'`, or `'locked'` | Yes |
+| `type` | `'personal'`, `'school'`, or `'work'` (pin ring color) | Recommended |
+| `popupBlurb` | Short map-popup body (falls back to description) | Optional |
 | `featured` | `true` to highlight in list view | Optional |
 | `lat` / `lng` | Map pin location in SF | Yes |
 | `districtId` | Neighborhood id (see below) | Recommended |
@@ -94,13 +96,13 @@ Save — the map and list view update immediately in the dev server.
 ```
 src/
   components/        # Nav, Map
-  pages/             # Home, About, Contact
+  pages/             # Home, About
   data/
     projects.js      # ← your portfolio pins
     districts.js     # SF neighborhood zones
 public/
   projects/          # screenshots
-  resume.pdf         # contact page download
+  resume.pdf         # About / Connect download
 ```
 
 ## Build

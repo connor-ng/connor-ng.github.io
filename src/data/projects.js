@@ -1,12 +1,15 @@
 /** @typedef {'done' | 'current' | 'locked'} ProjectStatus */
+/** @typedef {'personal' | 'school' | 'work'} ProjectType */
 
 /**
  * @typedef {Object} Project
  * @property {string} id - unique slug, e.g. 'acme-launch'
  * @property {string} title
+ * @property {ProjectType} [type] - personal | school | work (pin/list accent)
  * @property {string} [roleAndTimeframe] - e.g. 'Product lead · 2024'
  * @property {string} [oneLinerProblem] - one sentence: the problem or opportunity
  * @property {string} [description] - short story: what you owned and the outcome
+ * @property {string} [popupBlurb] - optional shorter popup body (falls back to trimmed description)
  * @property {string[]} [tags] - themes, skills, or domains (shown as chips)
  * @property {string} [screenshot] - path under /public, e.g. '/projects/acme.png'
  * @property {string} [mark] - optional map-pin artwork, e.g. '/projects/marks/cycle.png'
@@ -26,12 +29,15 @@
 const projects = [
   {
     id: 'cft',
-    title: 'CFT',
-    roleAndTimeframe: 'Personal product · Jun–Aug 2026',
+    title: 'Consistency',
+    type: 'personal',
+    roleAndTimeframe: 'CFT · Personal product · Jun–Aug 2026',
     oneLinerProblem:
       'During a busy internship I kept falling off tracking lifts — and I still needed a clear path toward big strength goals.',
     description:
-      'Consistency Fitness Tracker is a personal training app I built to turn powerlifting knowledge into structured blocks and progressive overload. Instead of guessing workouts when life got hectic, I can plan cycles, log lifts, and keep moving toward targets like a 405 deadlift and 315 bench.',
+      'Consistency Fitness Tracker turns powerlifting knowledge into structured blocks and progressive overload, so I can plan cycles, log lifts, and keep moving toward targets like a 405 deadlift.',
+    popupBlurb:
+      'A training app I built to keep progressive overload on track through a busy internship.',
     tags: ['Product', 'Fitness', 'Progressive overload'],
     mark: '/projects/marks/cycle.png',
     liveLink: 'https://consistency-azure.vercel.app',
@@ -39,12 +45,35 @@ const projects = [
     featured: true,
     featuredLabel: 'Featured',
     districtId: 'mission',
-    // Mission St corridor
     lat: 37.7595,
     lng: -122.4115,
     gx: 152,
     gy: 106,
     screenshot: '/projects/cft.png',
+  },
+  {
+    id: 'sealed-marina',
+    title: '???',
+    type: 'work',
+    roleAndTimeframe: 'Work · sealed',
+    status: 'locked',
+    districtId: 'marina',
+    lat: 37.8025,
+    lng: -122.4365,
+    gx: 90,
+    gy: 30,
+  },
+  {
+    id: 'sealed-fidi',
+    title: '???',
+    type: 'school',
+    roleAndTimeframe: 'School · sealed',
+    status: 'locked',
+    districtId: 'fidi',
+    lat: 37.7895,
+    lng: -122.401,
+    gx: 170,
+    gy: 55,
   },
 ]
 

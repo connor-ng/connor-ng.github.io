@@ -28,14 +28,22 @@ import {
 import { getDistrictLabels } from '../utils/districtsGeo'
 import { buildMarkerHtml } from '../utils/markerHtml'
 import { publicUrl } from '../utils/publicUrl'
+import { getProjectTypeColor } from '../constants/projectTypes'
 import './Map.css'
 
 function buildPopupHtml(project) {
   if (project.status === 'locked') {
-    return '<div class="popup-eyebrow">Coming soon</div><div class="popup-title">???</div><p class="popup-blurb">Not revealed yet.</p>'
+    return `
+      <div class="popup-card popup-card--locked">
+        <div class="popup-eyebrow" style="color:#8a8a84">Coming soon</div>
+        <div class="popup-title">Sealed pin</div>
+        <p class="popup-blurb">Another piece of work will land here. Check back as the atlas grows.</p>
+      </div>
+    `
   }
 
   const tags = (project.tags ?? project.stack ?? [])
+    .slice(0, 3)
     .map((tag) => `<span>${tag}</span>`)
     .join('')
 
@@ -51,8 +59,9 @@ function buildPopupHtml(project) {
     ? `<p class="popup-problem">${project.oneLinerProblem}</p>`
     : ''
 
-  const blurb = project.description
-    ? `<p class="popup-blurb">${project.description}</p>`
+  const blurbText = project.popupBlurb || project.description
+  const blurb = blurbText
+    ? `<p class="popup-blurb">${blurbText}</p>`
     : ''
 
   const tagRow = tags ? `<div class="popup-tags">${tags}</div>` : ''
@@ -112,6 +121,8 @@ function Map() {
   )
   const [introLeaving, setIntroLeaving] = useState(false)
   const [pinPulse, setPinPulse] = useState(false)
+  const [showIdleHint, setShowIdleHint] = useState(false)
+  const [idleHintFaded, setIdleHintFaded] = useState(false)
   const [coordPickerMode, setCoordPickerMode] = useState(false)
   const [pickedCoords, setPickedCoords] = useState(null)
   const [copyFeedback, setCopyFeedback] = useState('')
@@ -161,6 +172,11 @@ function Map() {
   )
 
   const hasProjects = listProjects.length > 0
+  const sealedCount = useMemo(
+    () => projects.filter((project) => project.status === 'locked').length,
+    [],
+  )
+  const pinCount = projects.length
 
   const [selectedLogId, setSelectedLogId] = useState(null)
 
@@ -307,6 +323,8 @@ function Map() {
         markerByIdRef.current[project.id] = marker
         marker.bindPopup(buildPopupHtml(project), {
           maxWidth: 320,
+          className: 'project-popup',
+          closeButton: true,
           autoPan: true,
           autoPanPadding: [48, 48],
         })
@@ -518,7 +536,6 @@ function Map() {
 
     setIntroLeaving(true)
     localStorage.setItem('atlas-intro-seen', '1')
-    // Clean up legacy first-visit key from the old bottom hint.
     localStorage.setItem('map-visited', '1')
 
     window.setTimeout(() => {
@@ -532,6 +549,8 @@ function Map() {
 
       setPinPulse(true)
       window.setTimeout(() => setPinPulse(false), 4200)
+      setShowIdleHint(true)
+      setIdleHintFaded(false)
 
       const featured =
         listProjects.find((project) => project.featured) ?? listProjects[0]
@@ -540,6 +559,34 @@ function Map() {
       }
     }, 320)
   }
+
+  function dismissIdleHint() {
+    if (!showIdleHint || idleHintFaded) return
+    setIdleHintFaded(true)
+    window.setTimeout(() => setShowIdleHint(false), 500)
+  }
+
+  useEffect(() => {
+    if (!showIdleHint || showingList) return undefined
+    const map = mapRef.current
+    if (!map) return undefined
+
+    const onDismiss = () => {
+      setIdleHintFaded((faded) => {
+        if (faded) return faded
+        window.setTimeout(() => setShowIdleHint(false), 500)
+        return true
+      })
+    }
+    map.on('movestart', onDismiss)
+    map.on('zoomstart', onDismiss)
+    map.on('popupclose', onDismiss)
+    return () => {
+      map.off('movestart', onDismiss)
+      map.off('zoomstart', onDismiss)
+      map.off('popupclose', onDismiss)
+    }
+  }, [showIdleHint, showingList])
 
   async function copyCoords() {
     try {
@@ -576,7 +623,10 @@ function Map() {
         <div className="map-hud">
           <p className="map-hud-tagline">Atlas of selected work</p>
           <p className="map-hud-count">
-            {listProjects.length} {listProjects.length === 1 ? 'project' : 'projects'} on the map
+            {listProjects.length} open
+            {sealedCount > 0 ? ` · ${sealedCount} sealed` : ''}
+            {' · '}
+            {pinCount} {pinCount === 1 ? 'pin' : 'pins'}
           </p>
         </div>
       )}
@@ -648,11 +698,14 @@ function Map() {
             <button
               type="button"
               className={`map-view-switcher-btn${showingList ? ' is-active' : ''}`}
-              onClick={() => setShowingList(true)}
-              aria-pressed={showingList}
-            >
-              List
-            </button>
+            onClick={() => {
+              dismissIdleHint()
+              setShowingList(true)
+            }}
+            aria-pressed={showingList}
+          >
+            List
+          </button>
           </div>
         )}
         {!showingList && !showIntro && (
@@ -750,7 +803,12 @@ function Map() {
             </h1>
             <p className="map-intro-role">Product &amp; business</p>
             <p className="map-intro-copy">
-              An atlas of work I&apos;ve owned end to end — pinned across San Francisco.
+              An atlas of {listProjects.length}{' '}
+              {listProjects.length === 1 ? 'project' : 'projects'} I&apos;ve owned
+              end to end
+              {sealedCount > 0
+                ? ` — ${pinCount} pins across San Francisco, with more still sealed.`
+                : ' — pinned across San Francisco.'}
             </p>
             <div className="map-intro-actions">
               <button
@@ -765,10 +823,16 @@ function Map() {
                 className="map-intro-btn map-intro-btn--ghost"
                 onClick={() => dismissIntro('list')}
               >
-                View as list
+                View mission log
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {showIdleHint && !showingList && !showIntro && (
+        <div className={`map-idle-hint map-panel${idleHintFaded ? ' is-faded' : ''}`}>
+          Click a pin · or open List
         </div>
       )}
 
@@ -821,22 +885,26 @@ function Map() {
           <div className="mission-log-list" role="list">
             {listProjects.map((project) => {
               const district = getProjectDistrict(project)
-              const status = PROJECT_STATUS[project.status]
               const tags = project.tags ?? project.stack ?? []
               const isSelected = selectedLogId === project.id
+              const typeColor = getProjectTypeColor(project)
 
               return (
                 <article
                   key={project.id}
                   role="listitem"
                   className={`mission-card${isSelected ? ' is-selected' : ''}${project.featured ? ' is-featured' : ''}`}
-                  style={{ '--mission-ring': status.color }}
+                  style={{ '--mission-ring': typeColor }}
                   tabIndex={showingList ? 0 : -1}
                   aria-label={`${project.title}. Open on map.`}
-                  onClick={() => openOnMap(project.id)}
+                  onClick={() => {
+                    dismissIdleHint()
+                    openOnMap(project.id)
+                  }}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
                       event.preventDefault()
+                      dismissIdleHint()
                       openOnMap(project.id)
                     }
                   }}
@@ -876,7 +944,7 @@ function Map() {
                     )}
 
                     <div className="mission-card-footer">
-                      <span className="mission-card-hint">Open on map</span>
+                      <span className="mission-card-open">Open on map</span>
                       {project.liveLink && (
                         <a
                           className="mission-card-live"

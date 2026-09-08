@@ -483,6 +483,29 @@
   opacity: 0;
 }
 
+.map-idle-hint {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid var(--theme-panel-border);
+  padding: 10px 14px;
+  border-radius: 4px;
+  background: rgba(var(--theme-bg-rgb), 0.92);
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+  color: var(--theme-text);
+  white-space: nowrap;
+}
+
+.map-idle-hint.is-faded {
+  opacity: 0;
+}
+
 .map-attribution {
   position: absolute;
   bottom: 10px;
@@ -675,6 +698,17 @@
   width: 34px;
   height: 34px;
   font-size: 12px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.map-root .leaflet-marker-icon:hover .project-marker--map .marker-icon {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 0 1px rgba(244, 244, 241, 0.7),
+    0 0 0 5px color-mix(in srgb, var(--ring) 28%, transparent),
+    0 3px 8px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes map-marker-onboarding-pulse {
@@ -703,36 +737,52 @@
 .map-root .project-marker--map[data-status='locked'] .marker-icon,
 .map-root .project-marker--map:has(.marker-icon:empty) .marker-icon {
   animation: none;
-  opacity: 0.88;
-}
-
-.map-root .project-marker--search .marker-icon {
-  width: 26px;
-  height: 26px;
-  font-size: 11px;
-}
-
-.map-root .project-marker--list .marker-icon {
-  width: 28px;
-  height: 28px;
-  font-size: 12px;
+  opacity: 0.82;
+  background: #1a1a1a;
+  color: var(--theme-text-muted);
 }
 
 .map-root .marker-badge {
   position: absolute;
   bottom: -1px;
   right: -1px;
-  width: 14px;
-  height: 14px;
-  background: var(--theme-bg);
-  border: 2px solid var(--ring);
+  width: 12px;
+  height: 12px;
+  background: rgba(14, 14, 14, 0.88);
+  border: 1px solid rgba(244, 244, 241, 0.35);
   border-radius: 50%;
-  font-size: 8px;
+  font-size: 7px;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  color: var(--theme-text-muted);
+  box-shadow: none;
+  opacity: 0.9;
+}
+
+.map-root .project-marker[data-status='locked'] .marker-badge {
+  color: var(--theme-text-muted);
+  border-color: rgba(244, 244, 241, 0.28);
+}
+
+.map-root .leaflet-popup-close-button {
+  top: 8px !important;
+  right: 8px !important;
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  font-size: 18px !important;
+  line-height: 22px !important;
+  color: var(--theme-text-muted) !important;
+  background: rgba(14, 14, 14, 0.72) !important;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.map-root .leaflet-popup-close-button:hover {
+  color: var(--theme-text) !important;
+  background: rgba(31, 31, 31, 0.95) !important;
 }
 
 .map-root .leaflet-popup-content-wrapper {
@@ -1088,18 +1138,23 @@
   margin-top: 8px;
 }
 
-.mission-card-hint {
+.mission-card-open {
   font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(244, 244, 241, 0.4);
+  color: var(--theme-text);
+  border: 1px solid color-mix(in srgb, var(--map-accent) 55%, #555);
+  background: color-mix(in srgb, var(--map-accent) 16%, transparent);
+  border-radius: 3px;
+  padding: 5px 8px;
 }
 
-.mission-card:hover .mission-card-hint,
-.mission-card:focus-visible .mission-card-hint,
-.mission-card.is-selected .mission-card-hint {
-  color: var(--map-accent);
+.mission-card:hover .mission-card-open,
+.mission-card:focus-visible .mission-card-open,
+.mission-card.is-selected .mission-card-open {
+  border-color: var(--map-accent);
+  background: color-mix(in srgb, var(--map-accent) 24%, transparent);
 }
 
 .mission-card-live {
