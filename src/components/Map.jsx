@@ -52,7 +52,7 @@ function buildPopupHtml(project) {
     : ''
 
   const eyebrow = project.roleAndTimeframe
-    ? `<div class="popup-eyebrow" style="color:#6fa3d0">${project.roleAndTimeframe}</div>`
+    ? `<div class="popup-eyebrow">${project.roleAndTimeframe}</div>`
     : ''
 
   const problem =
@@ -68,11 +68,11 @@ function buildPopupHtml(project) {
   const tagRow = tags ? `<div class="popup-tags">${tags}</div>` : ''
 
   const liveLink = project.liveLink
-    ? `<a class="popup-link" href="${project.liveLink}" target="_blank" rel="noreferrer" style="background:#6fa3d0;color:#0e0e0e">Live site →</a>`
+    ? `<a class="popup-link" href="${project.liveLink}" target="_blank" rel="noreferrer">Live site →</a>`
     : ''
 
   const caseStudyLink = project.caseStudyLink
-    ? `<a class="popup-link popup-link-secondary" href="${project.caseStudyLink}" target="_blank" rel="noreferrer" style="color:#6fa3d0">Case study →</a>`
+    ? `<a class="popup-link popup-link-secondary" href="${project.caseStudyLink}" target="_blank" rel="noreferrer">Case study →</a>`
     : ''
 
   const links =

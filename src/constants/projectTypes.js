@@ -2,15 +2,15 @@
 export const PROJECT_TYPES = {
   personal: {
     label: 'Personal',
-    color: '#6fa3d0',
+    color: '#3db0ff',
   },
   school: {
     label: 'School',
-    color: '#c4a15a',
+    color: '#f0bc3d',
   },
   work: {
     label: 'Work',
-    color: '#8a9bb0',
+    color: '#6a9ad4',
   },
 }
 
