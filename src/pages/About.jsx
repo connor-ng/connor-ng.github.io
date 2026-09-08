@@ -71,13 +71,23 @@ function About() {
 
           <div className="about-copy">
             <h1 id="about-heading">About me</h1>
-            <p className="about-role">Product &amp; business</p>
+            <p className="about-role">Informatics · UC Irvine</p>
             <p className="about-bio">
-              I work at the intersection of product and business — figuring
-              out what to build, why it matters, and how to ship it. This is a
-              portfolio map of work I have owned end to end, starting with
-              Consistency, a training app I built to keep progressive
-              overload on track through a busy internship.
+              I&apos;m an incoming third-year Informatics student at UC Irvine,
+              from San Francisco. I like figuring out what to build, why it
+              matters, and how to get it shipped — the space between users,
+              business, and engineering.
+            </p>
+            <p className="about-bio">
+              I&apos;ve worked in technology risk and I&apos;m building toward
+              product management and tech consulting. Consistency, the
+              training app on this map, is one example of owning that loop end
+              to end: spotting a real problem, designing the product, and
+              shipping it.
+            </p>
+            <p className="about-bio">
+              Outside of class and work you&apos;ll usually find me on a
+              basketball court, in a game, or watching the 49ers.
             </p>
           </div>
         </section>
