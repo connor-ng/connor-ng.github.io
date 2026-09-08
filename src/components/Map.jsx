@@ -36,8 +36,8 @@ function buildPopupHtml(project) {
     return `
       <div class="popup-card popup-card--locked">
         <div class="popup-eyebrow" style="color:#8a8a84">Coming soon</div>
-        <div class="popup-title">Sealed pin</div>
-        <p class="popup-blurb">Another piece of work will land here. Check back as the atlas grows.</p>
+        <div class="popup-title">Still in the works</div>
+        <p class="popup-blurb">This pin marks a project that isn’t public yet. Check back as the atlas grows.</p>
       </div>
     `
   }
@@ -177,7 +177,6 @@ function Map() {
     () => projects.filter((project) => project.status === 'locked').length,
     [],
   )
-  const pinCount = projects.length
 
   const [selectedLogId, setSelectedLogId] = useState(null)
 
@@ -624,10 +623,11 @@ function Map() {
         <div className="map-hud">
           <p className="map-hud-tagline">Atlas of selected work</p>
           <p className="map-hud-count">
-            {listProjects.length} open
-            {sealedCount > 0 ? ` · ${sealedCount} sealed` : ''}
-            {' · '}
-            {pinCount} {pinCount === 1 ? 'pin' : 'pins'}
+            {listProjects.length}{' '}
+            {listProjects.length === 1 ? 'project' : 'projects'}
+            {sealedCount > 0
+              ? ` · ${sealedCount} coming soon`
+              : ''}
           </p>
         </div>
       )}
@@ -806,6 +806,22 @@ function Map() {
             <p className="map-intro-copy">
               Selected work I&apos;ve owned end to end, pinned across San Francisco.
             </p>
+            <ul className="map-intro-legend" aria-label="How to read the map">
+              <li>
+                <span className="map-intro-legend-mark map-intro-legend-mark--open" aria-hidden="true" />
+                <span>
+                  <strong>Open pins</strong> — projects you can explore now
+                </span>
+              </li>
+              <li>
+                <span className="map-intro-legend-mark map-intro-legend-mark--sealed" aria-hidden="true">
+                  ?
+                </span>
+                <span>
+                  <strong>Coming soon</strong> — placeholders for work still in progress
+                </span>
+              </li>
+            </ul>
             <div className="map-intro-actions">
               <button
                 type="button"
@@ -828,7 +844,7 @@ function Map() {
 
       {showIdleHint && !showingList && !showIntro && (
         <div className={`map-idle-hint map-panel${idleHintFaded ? ' is-faded' : ''}`}>
-          Click a pin · or open List
+          Click an open pin · ? means coming soon
         </div>
       )}
 

@@ -164,6 +164,58 @@
   color: rgba(244, 244, 241, 0.86);
 }
 
+.map-intro-legend {
+  list-style: none;
+  margin: 1.15rem auto 0;
+  padding: 0;
+  max-width: 34ch;
+  display: grid;
+  gap: 0.55rem;
+  text-align: left;
+}
+
+.map-intro-legend li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: rgba(220, 220, 214, 0.88);
+}
+
+.map-intro-legend strong {
+  color: var(--theme-text);
+  font-weight: 600;
+}
+
+.map-intro-legend-mark {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.map-intro-legend-mark--open {
+  border: 2.5px solid var(--theme-accent);
+  background: #121212;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-accent) 22%, transparent);
+}
+
+.map-intro-legend-mark--sealed {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #f0bc3d;
+  background: #1a1a1a;
+  color: var(--theme-text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+}
+
 .map-intro-actions {
   display: flex;
   flex-wrap: wrap;
