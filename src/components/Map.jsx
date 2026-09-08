@@ -7,7 +7,6 @@ import { PROJECT_STATUS, STATUS_ORDER } from '../constants/projectStatus'
 import {
   countProjectsByDistrict,
   getDistrictAt,
-  getProjectDistrict,
   getSortedDistricts,
 } from '../utils/districtUtils'
 import { loadMapConfig } from '../utils/loadMapConfig'
@@ -977,7 +976,6 @@ function Map() {
 
           <div className="mission-log-list" role="list">
             {listProjects.map((project) => {
-              const district = getProjectDistrict(project)
               const tags = project.tags ?? project.stack ?? []
               const isSelected = selectedLogId === project.id
               const typeColor = getProjectTypeColor(project)
