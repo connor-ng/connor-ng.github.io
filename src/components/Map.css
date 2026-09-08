@@ -46,6 +46,16 @@
   pointer-events: none;
 }
 
+.map-root--intro .map-container {
+  filter: brightness(0.38) saturate(0.7);
+  pointer-events: none;
+}
+
+.map-root--intro-leaving .map-container {
+  filter: none;
+  transition: filter 0.45s ease;
+}
+
 .map-root .leaflet-image-layer,
 .map-root .leaflet-tile {
   image-rendering: pixelated;
@@ -81,6 +91,153 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--map-text-muted);
+}
+
+.map-hud-count {
+  margin: 4px 0 0;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(242, 235, 224, 0.78);
+  text-shadow: 0 1px 2px rgba(11, 21, 32, 0.85);
+}
+
+.map-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--nav-height, 52px) + 1.5rem) 1.25rem 1.5rem;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 42%, rgba(11, 21, 32, 0.28), transparent 70%),
+    linear-gradient(180deg, rgba(11, 21, 32, 0.35) 0%, rgba(11, 21, 32, 0.18) 45%, rgba(11, 21, 32, 0.45) 100%);
+  animation: map-intro-enter 0.55s ease both;
+}
+
+.map-intro.is-leaving {
+  animation: map-intro-leave 0.32s ease both;
+  pointer-events: none;
+}
+
+.map-intro-card {
+  width: min(420px, 100%);
+  text-align: center;
+  color: var(--theme-cream);
+}
+
+.map-intro-eyebrow {
+  margin: 0 0 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--theme-accent);
+}
+
+.map-intro-brand {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(2.4rem, 8vw, 3.4rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--theme-cream);
+  text-shadow: 0 2px 24px rgba(11, 21, 32, 0.55);
+}
+
+.map-intro-role {
+  margin: 0.55rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(197, 205, 214, 0.9);
+}
+
+.map-intro-copy {
+  margin: 1.1rem auto 0;
+  max-width: 32ch;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: rgba(235, 230, 220, 0.88);
+}
+
+.map-intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  justify-content: center;
+  margin-top: 1.55rem;
+}
+
+.map-intro-btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 550;
+  padding: 0.72rem 1.15rem;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.map-intro-btn--primary {
+  background: var(--theme-cream);
+  color: var(--theme-bg);
+}
+
+.map-intro-btn--primary:hover {
+  background: #fff8ef;
+  transform: translateY(-1px);
+}
+
+.map-intro-btn--ghost {
+  background: rgba(11, 21, 32, 0.45);
+  border-color: rgba(235, 230, 220, 0.28);
+  color: var(--theme-cream);
+  backdrop-filter: blur(8px);
+}
+
+.map-intro-btn--ghost:hover {
+  border-color: rgba(235, 230, 220, 0.5);
+  background: rgba(11, 21, 32, 0.62);
+}
+
+@keyframes map-intro-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes map-intro-leave {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-intro,
+  .map-intro.is-leaving {
+    animation: none;
+  }
+
+  .map-intro-btn--primary:hover {
+    transform: none;
+  }
 }
 
 .district-label-wrap {

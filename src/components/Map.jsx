@@ -105,10 +105,13 @@ function Map() {
   })
   const [searchQuery, setSearchQuery] = useState('')
   const [showingList, setShowingList] = useState(false)
-  const [showHint, setShowHint] = useState(
-    () => !localStorage.getItem('map-visited') && projects.some((p) => p.status !== 'locked'),
+  const [showIntro, setShowIntro] = useState(
+    () =>
+      !localStorage.getItem('atlas-intro-seen') &&
+      projects.some((project) => project.status !== 'locked'),
   )
-  const [hintFaded, setHintFaded] = useState(false)
+  const [introLeaving, setIntroLeaving] = useState(false)
+  const [pinPulse, setPinPulse] = useState(false)
   const [coordPickerMode, setCoordPickerMode] = useState(false)
   const [pickedCoords, setPickedCoords] = useState(null)
   const [copyFeedback, setCopyFeedback] = useState('')
@@ -342,20 +345,6 @@ function Map() {
       }
     })
 
-    if (!localStorage.getItem('map-visited')) {
-      const dismissHint = () => {
-        setHintFaded(true)
-        localStorage.setItem('map-visited', '1')
-        map.off('movestart', dismissHint)
-        map.off('zoomstart', dismissHint)
-        map.off('popupopen', dismissHint)
-        window.setTimeout(() => setShowHint(false), 600)
-      }
-      map.on('movestart', dismissHint)
-      map.on('zoomstart', dismissHint)
-      map.on('popupopen', dismissHint)
-    }
-
     mapRef.current = map
 
     return () => {
@@ -462,20 +451,6 @@ function Map() {
       }
     })
 
-    if (!localStorage.getItem('map-visited')) {
-      const dismissHint = () => {
-        setHintFaded(true)
-        localStorage.setItem('map-visited', '1')
-        map.off('movestart', dismissHint)
-        map.off('zoomstart', dismissHint)
-        map.off('popupopen', dismissHint)
-        window.setTimeout(() => setShowHint(false), 600)
-      }
-      map.on('movestart', dismissHint)
-      map.on('zoomstart', dismissHint)
-      map.on('popupopen', dismissHint)
-    }
-
     mapRef.current = map
 
     return () => {
@@ -538,6 +513,34 @@ function Map() {
     setSelectedLogId(id)
   }
 
+  function dismissIntro(next = 'explore') {
+    if (introLeaving || !showIntro) return
+
+    setIntroLeaving(true)
+    localStorage.setItem('atlas-intro-seen', '1')
+    // Clean up legacy first-visit key from the old bottom hint.
+    localStorage.setItem('map-visited', '1')
+
+    window.setTimeout(() => {
+      setShowIntro(false)
+      setIntroLeaving(false)
+
+      if (next === 'list') {
+        setShowingList(true)
+        return
+      }
+
+      setPinPulse(true)
+      window.setTimeout(() => setPinPulse(false), 4200)
+
+      const featured =
+        listProjects.find((project) => project.featured) ?? listProjects[0]
+      if (featured) {
+        window.setTimeout(() => jumpTo(featured.id), 180)
+      }
+    }, 320)
+  }
+
   async function copyCoords() {
     try {
       await navigator.clipboard.writeText(coordSnippet)
@@ -567,11 +570,14 @@ function Map() {
 
   return (
     <div
-      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showingList ? ' map-root--list' : ''}${showHint && !hintFaded && hasProjects ? ' map-root--onboarding' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
+      className={`map-root map-root--geo${mapFocusMode ? ' map-root--focus' : ''}${showingList ? ' map-root--list' : ''}${showIntro ? ' map-root--intro' : ''}${introLeaving ? ' map-root--intro-leaving' : ''}${pinPulse ? ' map-root--onboarding' : ''}${coordPickerMode ? ' map-root--coord-picker' : ''}`}
     >
-      {!showingList && (
+      {!showingList && !showIntro && (
         <div className="map-hud">
-          <p className="map-hud-tagline">Personal portfolio</p>
+          <p className="map-hud-tagline">Atlas of selected work</p>
+          <p className="map-hud-count">
+            {listProjects.length} {listProjects.length === 1 ? 'project' : 'projects'} on the map
+          </p>
         </div>
       )}
 
@@ -629,25 +635,27 @@ function Map() {
             ))}
           </div>
         )}
-        <div className="map-view-switcher map-panel" role="group" aria-label="View mode">
-          <button
-            type="button"
-            className={`map-view-switcher-btn${!showingList ? ' is-active' : ''}`}
-            onClick={() => setShowingList(false)}
-            aria-pressed={!showingList}
-          >
-            Map
-          </button>
-          <button
-            type="button"
-            className={`map-view-switcher-btn${showingList ? ' is-active' : ''}`}
-            onClick={() => setShowingList(true)}
-            aria-pressed={showingList}
-          >
-            List
-          </button>
-        </div>
-        {!showingList && (
+        {!showIntro && (
+          <div className="map-view-switcher map-panel" role="group" aria-label="View mode">
+            <button
+              type="button"
+              className={`map-view-switcher-btn${!showingList ? ' is-active' : ''}`}
+              onClick={() => setShowingList(false)}
+              aria-pressed={!showingList}
+            >
+              Map
+            </button>
+            <button
+              type="button"
+              className={`map-view-switcher-btn${showingList ? ' is-active' : ''}`}
+              onClick={() => setShowingList(true)}
+              aria-pressed={showingList}
+            >
+              List
+            </button>
+          </div>
+        )}
+        {!showingList && !showIntro && (
           <div className="map-zoom-controls">
             <button type="button" className="map-panel" onClick={handleZoomIn} aria-label="Zoom in">
               +
@@ -728,13 +736,43 @@ function Map() {
         </div>
       )}
 
-      {showHint && !showingList && hasProjects && (
-        <div className={`map-onboarding map-panel${hintFaded ? ' faded' : ''}`}>
-          Click a pin to view work · drag to explore
+      {showIntro && hasProjects && (
+        <div
+          className={`map-intro${introLeaving ? ' is-leaving' : ''}`}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="map-intro-heading"
+        >
+          <div className="map-intro-card">
+            <p className="map-intro-eyebrow">Personal atlas</p>
+            <h1 id="map-intro-heading" className="map-intro-brand">
+              Connor Ng
+            </h1>
+            <p className="map-intro-role">Product &amp; business</p>
+            <p className="map-intro-copy">
+              An atlas of work I&apos;ve owned end to end — pinned across San Francisco.
+            </p>
+            <div className="map-intro-actions">
+              <button
+                type="button"
+                className="map-intro-btn map-intro-btn--primary"
+                onClick={() => dismissIntro('explore')}
+              >
+                Explore projects
+              </button>
+              <button
+                type="button"
+                className="map-intro-btn map-intro-btn--ghost"
+                onClick={() => dismissIntro('list')}
+              >
+                View as list
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
-      {!showingList && (
+      {!showingList && !showIntro && (
         <p className="map-attribution">
           <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
             OpenStreetMap
