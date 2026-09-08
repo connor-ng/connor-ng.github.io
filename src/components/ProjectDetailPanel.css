@@ -276,6 +276,7 @@
   font-weight: 600;
   padding: 0.65rem 0.95rem;
   cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .project-detail-dismiss {
@@ -285,8 +286,16 @@
 }
 
 .project-detail-map:hover,
-.project-detail-dismiss:hover {
-  background: rgba(255, 255, 255, 0.06);
+.project-detail-map:focus-visible {
+  background: color-mix(in srgb, var(--theme-accent) 22%, transparent);
+  border-color: var(--theme-accent);
+  color: var(--theme-accent-strong);
+}
+
+.project-detail-dismiss:hover,
+.project-detail-dismiss:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: color-mix(in srgb, var(--theme-text) 35%, var(--theme-panel-border));
 }
 
 @media (max-width: 560px) {
