@@ -15,6 +15,8 @@ Refine bay/ocean polygons and park coverage if accents feel too strong or incomp
 Longer-term option: MapLibre + OpenFreeMap dark style with layer color overrides.
 
 ## Shipped recently
+- Security: HTML escaping + URL allowlisting for map popups/markers before LinkedIn share
+
 - Map direction: monochromatic Esri dark gray with quiet dark-blue water and dark-green park accents (no colorful OSM/topo, no API key)
 - Removed Beli from Connect
 - About: summer EY technology risk line tied to PM / consulting interests
