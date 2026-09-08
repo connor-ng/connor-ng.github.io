@@ -71,7 +71,6 @@ function About() {
 
           <div className="about-copy">
             <h1 id="about-heading">About me</h1>
-            <p className="about-role">Informatics · UC Irvine</p>
             <p className="about-bio">
               I&apos;m an incoming third-year Informatics student at UC Irvine,
               from San Francisco. I like figuring out what to build, why it

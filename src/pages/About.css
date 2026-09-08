@@ -47,22 +47,13 @@
 }
 
 .about-copy h1 {
-  margin: 0 0 0.4rem;
+  margin: 0 0 1rem;
   font-family: var(--font-sans);
   font-size: clamp(1.85rem, 4vw, 2.35rem);
   font-weight: 600;
   letter-spacing: -0.035em;
   line-height: 1.12;
   color: var(--page-light-text);
-}
-
-.about-role {
-  margin: 0 0 1rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--page-light-accent);
 }
 
 .about-bio {
