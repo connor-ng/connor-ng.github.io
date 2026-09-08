@@ -67,6 +67,16 @@
   image-rendering: auto;
 }
 
+/* Dark grade over colorful OSM: blue water + green parks stay visible. */
+.map-root--geo .map-basemap-tiles {
+  filter: brightness(0.65) saturate(1.85) contrast(1.12);
+}
+
+.map-root--geo .map-label-tiles {
+  filter: none;
+  opacity: 0.9;
+}
+
 .map-root--focus.map-root--geo .leaflet-tile-pane {
   filter: none;
 }

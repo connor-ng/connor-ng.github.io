@@ -22,7 +22,9 @@ import {
   SF_MAX_ZOOM,
   SF_MIN_ZOOM,
   SF_TILE_MAX_ZOOM,
+  SF_TILE_SUBDOMAINS,
   SF_TILE_URL,
+  SF_USE_LABEL_TILES,
   SF_VIEW_BOUNDS,
 } from '../utils/sfGeo'
 import { getDistrictLabels } from '../utils/districtsGeo'
@@ -260,21 +262,27 @@ function Map() {
       bounceAtZoomLimits: false,
     })
 
-    // Dark basemap via Esri (no API key / no MapLibre workers).
+    // Colored OSM basemap (darkened in CSS). No API key.
     L.tileLayer(SF_TILE_URL, {
-      maxZoom: SF_TILE_MAX_ZOOM,
+      className: 'map-basemap-tiles',
+      subdomains: SF_TILE_SUBDOMAINS,
+      maxZoom: SF_MAX_ZOOM,
       maxNativeZoom: SF_TILE_MAX_ZOOM,
       updateWhenIdle: true,
       keepBuffer: 2,
+      attribution: '&copy; OpenStreetMap',
     }).addTo(map)
 
-    L.tileLayer(SF_LABEL_TILE_URL, {
-      maxZoom: SF_TILE_MAX_ZOOM,
-      maxNativeZoom: SF_TILE_MAX_ZOOM,
-      pane: 'overlayPane',
-      updateWhenIdle: true,
-      keepBuffer: 2,
-    }).addTo(map)
+    if (SF_USE_LABEL_TILES) {
+      L.tileLayer(SF_LABEL_TILE_URL, {
+        className: 'map-label-tiles',
+        maxZoom: SF_MAX_ZOOM,
+        maxNativeZoom: SF_TILE_MAX_ZOOM,
+        pane: 'overlayPane',
+        updateWhenIdle: true,
+        keepBuffer: 2,
+      }).addTo(map)
+    }
 
     // No district boxes — quiet place labels only (OSM-style names).
     getDistrictLabels().forEach((label) => {
@@ -931,15 +939,7 @@ function Map() {
       {!showingList && !showIntro && (
         <p className="map-attribution">
           <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
-            OpenStreetMap
-          </a>
-          {' · '}
-          <a
-            href="https://www.esri.com/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Esri
+            © OpenStreetMap
           </a>
         </p>
       )}
