@@ -80,10 +80,12 @@ function About() {
               get done.
             </p>
             <p className="about-bio">
-              This past summer I worked in technology risk at EY. That
-              experience connected directly to those interests: working through
-              real problems with teams, and finding more efficient ways to get
-              work done with AI and process.
+              This past summer I worked in Technology Risk at EY, where I
+              assessed how well clients&apos; systems and controls actually
+              held up to their intended design. It was my first real exposure
+              to consulting work: scoping ambiguous problems, interviewing
+              people who owned the systems, and turning findings into
+              recommendations someone had to act on.
             </p>
             <p className="about-bio">
               Outside of class and work I&apos;m a big Warriors and 49ers fan.
