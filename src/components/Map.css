@@ -775,7 +775,8 @@
 .map-root .popup-eyebrow {
   font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--map-accent);
+  color: #6fa3d0;
+  color: var(--theme-accent);
   letter-spacing: 1.5px;
   text-transform: uppercase;
 }
@@ -822,14 +823,16 @@
   margin-top: 4px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--theme-bg);
-  background: var(--map-accent);
+  color: #0e0e0e;
+  background: #6fa3d0;
+  background: var(--theme-accent);
   padding: 5px 10px;
   border-radius: 3px;
   text-decoration: none;
 }
 
 .map-root .popup-link:hover {
+  background: #8bb8dc;
   background: var(--theme-accent-strong);
 }
 
@@ -842,7 +845,8 @@
 
 .map-root .popup-link-secondary {
   background: transparent;
-  color: var(--map-accent);
+  color: #6fa3d0;
+  color: var(--theme-accent);
   border: 1px solid var(--theme-panel-border);
 }
 
