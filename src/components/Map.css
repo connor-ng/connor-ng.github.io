@@ -638,10 +638,10 @@
 
 .map-root .marker-icon {
   border-radius: 50%;
-  background: var(--theme-surface-raised);
+  background: #121212;
   border: 3px solid var(--ring);
   box-shadow:
-    0 0 0 1px rgba(244, 244, 241, 0.88),
+    0 0 0 1px rgba(244, 244, 241, 0.55),
     0 2px 6px rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
@@ -652,21 +652,21 @@
 }
 
 .map-root .marker-mark {
-  width: 70%;
-  height: 70%;
+  width: 62%;
+  height: 62%;
   object-fit: contain;
   display: block;
-  /* Project marks are dark artwork — invert so they read on the dark pin */
-  filter: invert(1) brightness(1.05);
+  /* Dark mark artwork → white on black pin */
+  filter: invert(1) brightness(1.18);
 }
 
 .map-root .project-marker--has-mark .marker-icon {
-  background: #141414;
+  background: #121212;
   border-width: 3px;
 }
 
 .map-root .project-marker--has-mark .marker-mark {
-  filter: invert(1) brightness(1.15);
+  filter: invert(1) brightness(1.18);
   width: 62%;
   height: 62%;
 }
@@ -872,8 +872,6 @@
 }
 
 .mission-log {
-  --mission-accent: #6fa3d0;
-  --mission-accent-strong: #8bb8dc;
   pointer-events: auto;
   width: min(440px, 100%);
   max-height: calc(100vh - var(--nav-height, 52px) - 40px);
@@ -894,7 +892,7 @@
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--mission-accent);
+  color: var(--map-accent);
 }
 
 .mission-log-title {
@@ -939,7 +937,7 @@
 .mission-log-empty-body code {
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  color: var(--mission-accent);
+  color: var(--map-accent);
 }
 
 .mission-log-list {
@@ -968,7 +966,7 @@
 .mission-card:hover,
 .mission-card:focus-visible,
 .mission-card.is-selected {
-  border-color: color-mix(in srgb, var(--mission-accent) 45%, #555);
+  border-color: color-mix(in srgb, var(--map-accent) 45%, #555);
   background: rgba(31, 31, 31, 0.98);
   box-shadow: none;
   transform: none;
@@ -1048,7 +1046,7 @@
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.04em;
-  color: var(--mission-accent);
+  color: var(--map-accent);
 }
 
 .mission-card-blurb {
@@ -1097,20 +1095,20 @@
 .mission-card:hover .mission-card-hint,
 .mission-card:focus-visible .mission-card-hint,
 .mission-card.is-selected .mission-card-hint {
-  color: var(--mission-accent);
+  color: var(--map-accent);
 }
 
 .mission-card-live {
   font-family: var(--font-sans);
   font-size: 0.78rem;
   font-weight: 500;
-  color: var(--mission-accent);
+  color: var(--map-accent);
   text-decoration: none;
   padding: 4px 0;
 }
 
 .mission-card-live:hover {
-  color: var(--mission-accent-strong);
+  color: var(--theme-accent-strong);
   text-decoration: underline;
 }
 
@@ -1153,7 +1151,7 @@
   border-radius: 50%;
   background: var(--theme-accent);
   border: 2px solid var(--theme-bg);
-  box-shadow: 0 0 0 2px rgba(199, 90, 58, 0.28);
+  box-shadow: 0 0 0 2px rgba(111, 163, 208, 0.3);
 }
 
 /* —— Atlas tools —— */

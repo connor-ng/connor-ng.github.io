@@ -9,7 +9,7 @@
   width: 100%;
   box-sizing: border-box;
   background:
-    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(199, 90, 58, 0.05), transparent 55%),
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(111, 163, 208, 0.08), transparent 55%),
     var(--page-light-bg);
   color: var(--page-light-text-body);
 }
