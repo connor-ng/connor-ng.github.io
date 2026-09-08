@@ -55,9 +55,10 @@ function buildPopupHtml(project) {
     ? `<div class="popup-eyebrow" style="color:#6fa3d0">${project.roleAndTimeframe}</div>`
     : ''
 
-  const problem = project.oneLinerProblem
-    ? `<p class="popup-problem">${project.oneLinerProblem}</p>`
-    : ''
+  const problem =
+    !project.popupBlurb && project.oneLinerProblem
+      ? `<p class="popup-problem">${project.oneLinerProblem}</p>`
+      : ''
 
   const blurbText = project.popupBlurb || project.description
   const blurb = blurbText
