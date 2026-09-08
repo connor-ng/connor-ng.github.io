@@ -81,14 +81,14 @@ function About() {
             </p>
             <p className="about-bio">
               I&apos;ve worked in technology risk and I&apos;m building toward
-              product management and tech consulting. Consistency, the
-              training app on this map, is one example of owning that loop end
-              to end: spotting a real problem, designing the product, and
-              shipping it.
+              product management and tech consulting: roles where I can sit
+              with the problem, the people, and the product, then help move
+              work from idea to something real.
             </p>
             <p className="about-bio">
-              Outside of class and work you&apos;ll usually find me on a
-              basketball court, in a game, or watching the 49ers.
+              Outside of class and work I&apos;m a big Warriors and 49ers fan.
+              I also love working out, trying different restaurants and cafes,
+              and playing games.
             </p>
           </div>
         </section>
