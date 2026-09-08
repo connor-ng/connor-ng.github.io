@@ -74,7 +74,7 @@ function About() {
             <p className="about-bio">
               I&apos;m an incoming third-year Informatics student at UC Irvine,
               from San Francisco. I like figuring out what to build, why it
-              matters, and how to get it shipped — finding the efficient path
+              matters, and how to get it shipped: finding the efficient path
               between users, business, and engineering, and building with AI
               as part of how I work.
             </p>
@@ -87,8 +87,11 @@ function About() {
             <p className="about-bio">
               Outside of class and work I&apos;m a big Warriors and 49ers fan.
               I also love working out, trying different restaurants and cafes,
-              and playing games. If any of that resonates — or you just want
-              to talk — reach out below. I&apos;d love to chat.
+              and playing games.
+            </p>
+            <p className="about-bio">
+              If any of that resonates, or you just want to talk, reach out
+              below. I&apos;d love to chat.
             </p>
           </div>
         </section>
