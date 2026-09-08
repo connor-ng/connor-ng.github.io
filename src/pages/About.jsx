@@ -58,58 +58,60 @@ const connectLinks = [
 function About() {
   return (
     <main className="about">
-      <section className="about-intro" aria-labelledby="about-heading">
-        <img
-          className="about-photo"
-          src={publicUrl('/about/connor-about.jpg')}
-          srcSet={`${publicUrl('/about/connor-about.jpg')} 1x, ${publicUrl('/about/connor-about-2x.jpg')} 2x`}
-          alt="Connor Ng at the Golden Gate Bridge"
-          width={240}
-          height={300}
-        />
+      <div className="about-inner">
+        <section className="about-intro" aria-labelledby="about-heading">
+          <img
+            className="about-photo"
+            src={publicUrl('/about/connor-about.jpg')}
+            srcSet={`${publicUrl('/about/connor-about.jpg')} 1x, ${publicUrl('/about/connor-about-2x.jpg')} 2x`}
+            alt="Connor Ng at the Golden Gate Bridge"
+            width={240}
+            height={300}
+          />
 
-        <div className="about-copy">
-          <h1 id="about-heading">About me</h1>
-          <p className="about-role">Product &amp; business</p>
-          <p className="about-bio">
-            I work at the intersection of product and business — figuring out
-            what to build, why it matters, and how to ship it. This map is a
-            personal atlas of work I have owned end to end, starting with CFT,
-            a training app I built to keep progressive overload on track
-            through a busy internship.
-          </p>
-        </div>
-      </section>
+          <div className="about-copy">
+            <h1 id="about-heading">About me</h1>
+            <p className="about-role">Product &amp; business</p>
+            <p className="about-bio">
+              I work at the intersection of product and business — figuring
+              out what to build, why it matters, and how to ship it. This map
+              is a personal atlas of work I have owned end to end, starting
+              with CFT, a training app I built to keep progressive overload on
+              track through a busy internship.
+            </p>
+          </div>
+        </section>
 
-      <section className="connect" aria-labelledby="connect-heading">
-        <h2 className="connect-heading" id="connect-heading">
-          Connect
-        </h2>
+        <section className="connect" aria-labelledby="connect-heading">
+          <h2 className="connect-heading" id="connect-heading">
+            Connect
+          </h2>
 
-        <ul className="connect-grid">
-          {connectLinks.map((item) => (
-            <li key={item.id}>
-              <a
-                className="connect-row"
-                href={item.href}
-                {...(item.download ? { download: item.download } : {})}
-                {...(item.external
-                  ? { target: '_blank', rel: 'noreferrer' }
-                  : {})}
-              >
-                <span className="connect-icon">{item.icon}</span>
-                <span className="connect-meta">
-                  <span className="connect-label">{item.label}</span>
-                  <span className="connect-detail">{item.detail}</span>
-                </span>
-                <span className="connect-arrow" aria-hidden="true">
-                  →
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
+          <ul className="connect-grid">
+            {connectLinks.map((item) => (
+              <li key={item.id}>
+                <a
+                  className="connect-row"
+                  href={item.href}
+                  {...(item.download ? { download: item.download } : {})}
+                  {...(item.external
+                    ? { target: '_blank', rel: 'noreferrer' }
+                    : {})}
+                >
+                  <span className="connect-icon">{item.icon}</span>
+                  <span className="connect-meta">
+                    <span className="connect-label">{item.label}</span>
+                    <span className="connect-detail">{item.detail}</span>
+                  </span>
+                  <span className="connect-arrow" aria-hidden="true">
+                    →
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
     </main>
   )
 }
