@@ -112,6 +112,37 @@
   margin-bottom: 14px;
 }
 
+.project-detail-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.project-detail-gallery-item {
+  margin: 0;
+}
+
+.project-detail-gallery-item img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 4px;
+  border: 1px solid var(--theme-panel-border);
+  background: #0a0a0a;
+}
+
+.project-detail-gallery-item figcaption {
+  margin-top: 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--theme-text-muted);
+}
+
 .project-detail-tags {
   list-style: none;
   margin: 0 0 18px;

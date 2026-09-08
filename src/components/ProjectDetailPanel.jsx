@@ -51,13 +51,24 @@ function ProjectDetailPanel({ project, onClose }) {
         </header>
 
         <div className="project-detail-body">
-          {project.screenshot && (
-            <img
-              className="project-detail-shot"
-              src={publicUrl(project.screenshot)}
-              alt=""
-            />
-          )}
+          {(() => {
+            const gallery = project.screenshots?.length
+              ? project.screenshots
+              : project.screenshot
+                ? [{ src: project.screenshot }]
+                : []
+            if (!gallery.length) return null
+            return (
+              <div className="project-detail-gallery">
+                {gallery.map((shot) => (
+                  <figure key={shot.src} className="project-detail-gallery-item">
+                    <img src={publicUrl(shot.src)} alt="" />
+                    {shot.label && <figcaption>{shot.label}</figcaption>}
+                  </figure>
+                ))}
+              </div>
+            )
+          })()}
 
           {tags.length > 0 && (
             <ul className="project-detail-tags">

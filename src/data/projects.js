@@ -18,6 +18,7 @@
  *   ['Fitness', 'Habit tracking', 'Mobile / web app']
  *   Do not repeat type/role (“Product”, “Personal”) here.
  * @property {string} [screenshot] - path under /public, e.g. '/projects/acme.png'
+ * @property {{ src: string, label?: string }[]} [screenshots] - optional gallery for the detail panel
  * @property {string} [mark] - optional map-pin artwork, e.g. '/projects/marks/cycle.png'
  * @property {string} [liveLink] - live site or demo URL (optional)
  * @property {string} [caseStudyLink] - write-up URL (optional)
@@ -39,7 +40,7 @@ const projects = [
     type: 'personal',
     roleAndTimeframe: 'CFT · Personal product · Jun–Aug 2026',
     oneLinerProblem:
-      'During a busy internship I kept falling off tracking lifts — and I still needed a clear path toward big strength goals.',
+      'During a busy internship I kept falling off tracking lifts, and I still needed a clear path toward big strength goals.',
     description:
       'Consistency Fitness Tracker turns powerlifting knowledge into structured blocks and progressive overload, so I can plan cycles, log lifts, and keep moving toward targets like a 315 bench.',
     popupBlurb:
@@ -61,7 +62,13 @@ const projects = [
     lng: -122.4115,
     gx: 152,
     gy: 106,
-    screenshot: '/projects/cft.png',
+    screenshot: '/projects/cft/home.jpg',
+    screenshots: [
+      { src: '/projects/cft/home.jpg', label: 'Home' },
+      { src: '/projects/cft/program.jpg', label: 'Program' },
+      { src: '/projects/cft/history.jpg', label: 'History' },
+      { src: '/projects/cft/nutrition.jpg', label: 'Nutrition' },
+    ],
   },
   {
     id: 'sealed-marina',
