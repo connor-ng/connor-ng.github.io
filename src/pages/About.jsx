@@ -40,9 +40,24 @@ const connectLinks = [
     ),
   },
   {
+    id: 'beli',
+    label: 'Beli',
+    detail: 'Restaurants & cafes',
+    href: 'https://beliapp.com/',
+    external: true,
+    icon: (
+      <svg className="connect-icon-svg connect-icon-svg--stroke" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 21V10a2 2 0 0 1 2-2h1v13" />
+        <path d="M7 8V4a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1v4" />
+        <path d="M12 21V3h1.2A2.8 2.8 0 0 1 16 5.8V21" />
+        <path d="M19 21v-8h1a2 2 0 0 1 2 2v6" />
+      </svg>
+    ),
+  },
+  {
     id: 'resume',
     label: 'Resume',
-    detail: 'PDF, one page',
+    detail: 'PDF',
     href: publicUrl('/resume.pdf'),
     download: 'Connor_Ng_Resume_2028_P.pdf',
     external: false,
@@ -73,11 +88,17 @@ function About() {
             <h1 id="about-heading">About me</h1>
             <p className="about-bio">
               I&apos;m a junior Informatics student at UC Irvine, from San
-              Francisco. I&apos;ve worked in technology risk, and I&apos;m
-              interested in product management and tech consulting. Figuring
-              out what to build, why it matters, and how to ship it feels
-              natural to me. I care a lot about efficiency, and about using AI
-              and other technology to optimize how things get done.
+              Francisco. I&apos;m interested in product management and tech
+              consulting. Figuring out what to build, why it matters, and how
+              to ship it feels natural to me. I care a lot about efficiency,
+              and about using AI and other technology to optimize how things
+              get done.
+            </p>
+            <p className="about-bio">
+              This past summer I worked in technology risk at EY. That
+              experience connected directly to those interests: working through
+              real problems with teams, and finding more efficient ways to get
+              work done with AI and process.
             </p>
             <p className="about-bio">
               Outside of class and work I&apos;m a big Warriors and 49ers fan.
