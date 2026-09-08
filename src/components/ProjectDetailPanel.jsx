@@ -6,7 +6,7 @@ import './ProjectDetailPanel.css'
 /**
  * Slide-over for fuller project story. Popup stays a teaser; this holds depth.
  */
-function ProjectDetailPanel({ project, onClose }) {
+function ProjectDetailPanel({ project, onClose, onViewOnMap }) {
   const gallery = project?.screenshots?.length
     ? project.screenshots
     : project?.screenshot
@@ -183,8 +183,17 @@ function ProjectDetailPanel({ project, onClose }) {
               Live site →
             </a>
           )}
+          {onViewOnMap && (
+            <button
+              type="button"
+              className="project-detail-map"
+              onClick={onViewOnMap}
+            >
+              View on map
+            </button>
+          )}
           <button type="button" className="project-detail-dismiss" onClick={onClose}>
-            Back to map
+            Close
           </button>
         </footer>
       </aside>

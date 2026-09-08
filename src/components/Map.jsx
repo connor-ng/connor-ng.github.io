@@ -1054,33 +1054,33 @@ function Map() {
 
                     <div className="mission-card-footer">
                       <div className="mission-card-actions">
+                        {project.liveLink && (
+                          <a
+                            className="mission-card-live"
+                            href={project.liveLink}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={(event) => event.stopPropagation()}
+                            onKeyDown={(event) => event.stopPropagation()}
+                          >
+                            Live site →
+                          </a>
+                        )}
                         {canReadMore && (
-                          <span className="mission-card-open">Read more</span>
+                          <span className="mission-card-read">Read more</span>
                         )}
                         <button
                           type="button"
-                          className={`mission-card-map${canReadMore ? '' : ' mission-card-open'}`}
+                          className="mission-card-map"
                           onClick={(event) => {
                             event.stopPropagation()
                             dismissIdleHint()
                             openOnMap(project.id)
                           }}
                         >
-                          Open on map
+                          View on map
                         </button>
                       </div>
-                      {project.liveLink && (
-                        <a
-                          className="mission-card-live"
-                          href={project.liveLink}
-                          target="_blank"
-                          rel="noreferrer"
-                          onClick={(event) => event.stopPropagation()}
-                          onKeyDown={(event) => event.stopPropagation()}
-                        >
-                          Live site →
-                        </a>
-                      )}
                     </div>
                   </div>
                 </article>
@@ -1095,6 +1095,15 @@ function Map() {
           key={detailProject.id}
           project={detailProject}
           onClose={() => setDetailProjectId(null)}
+          onViewOnMap={() => {
+            const id = detailProject.id
+            setDetailProjectId(null)
+            setShowingList(false)
+            window.setTimeout(() => {
+              mapRef.current?.invalidateSize()
+              jumpTo(id)
+            }, 40)
+          }}
         />
       )}
     </div>
