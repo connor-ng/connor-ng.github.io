@@ -1,8 +1,7 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Nav from './components/Nav'
 import Home from './pages/Home'
 import About from './pages/About'
-import Contact from './pages/Contact'
 
 function App() {
   const { pathname } = useLocation()
@@ -15,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/contact" element={<Navigate to="/about" replace />} />
         </Routes>
       </main>
     </div>

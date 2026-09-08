@@ -4,7 +4,6 @@ import './Nav.css'
 const navLinks = [
   { to: '/', label: 'Home', end: true },
   { to: '/about', label: 'About' },
-  { to: '/contact', label: 'Contact' },
 ]
 
 function Nav() {

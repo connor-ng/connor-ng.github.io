@@ -2,18 +2,18 @@
 export const PROJECT_STATUS = {
   done: {
     label: 'shipped',
-    color: '#7fae6b',
+    color: '#6f8f6a',
     badge: '✓',
   },
   current: {
     label: 'building',
-    color: '#e0b04a',
-    badge: '⏳',
+    color: '#c4a15a',
+    badge: '·',
   },
   locked: {
     label: 'sealed',
-    color: '#7a8794',
-    badge: '🔒',
+    color: '#7a7a74',
+    badge: '–',
   },
 }
 
