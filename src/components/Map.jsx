@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import projects from '../data/projects'
@@ -94,6 +95,7 @@ function buildPopupHtml(project) {
 }
 
 function Map() {
+  const navigate = useNavigate()
   const mapContainerRef = useRef(null)
   const mapRef = useRef(null)
   const markerByIdRef = useRef({})
@@ -542,6 +544,11 @@ function Map() {
       setShowIntro(false)
       setIntroLeaving(false)
 
+      if (next === 'about') {
+        navigate('/about')
+        return
+      }
+
       if (next === 'list') {
         setShowingList(true)
         return
@@ -798,13 +805,13 @@ function Map() {
           aria-labelledby="map-intro-heading"
         >
           <div className="map-intro-card">
-            <p className="map-intro-eyebrow">Portfolio map</p>
+            <p className="map-intro-eyebrow">Personal site</p>
             <h1 id="map-intro-heading" className="map-intro-brand">
               Connor Ng
             </h1>
-            <p className="map-intro-role">Product &amp; business</p>
             <p className="map-intro-copy">
-              Selected work I&apos;ve owned end to end, pinned across San Francisco.
+              I&apos;m a junior Informatics student at UC Irvine. This map is
+              where I pin work I&apos;ve owned end to end — across San Francisco.
             </p>
             <ul className="map-intro-legend" aria-label="How to read the map">
               <li>
@@ -828,14 +835,14 @@ function Map() {
                 className="map-intro-btn map-intro-btn--primary"
                 onClick={() => dismissIntro('explore')}
               >
-                Explore projects
+                Explore map
               </button>
               <button
                 type="button"
                 className="map-intro-btn map-intro-btn--ghost"
-                onClick={() => dismissIntro('list')}
+                onClick={() => dismissIntro('about')}
               >
-                View projects
+                About me
               </button>
             </div>
           </div>
